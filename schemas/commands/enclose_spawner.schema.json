@@ -1,0 +1,69 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/enclose_spawner.schema.json",
+	"title": "enclose_spawner: baut am nächsten Spawner (bis 16 Blöcke) einen geschlossenen Raum um Spawner und Bot: Wände in 2 Blöcken Abstand, 2 hoch, Dach darüber, etwa 60 Bausteine. Lohen erscheinen dann im Raum, können nicht wegfliegen und keine Feuerbälle von außen schießen; erledige sie mit attack. Vorhandene Wände der Festung zählen mit",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"spawner": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				}
+			},
+			"blocks_placed": {
+				"type": "integer"
+			},
+			"gaps_left": {
+				"type": "integer",
+				"description": "Offene Stellen in Wand und Dach danach"
+			},
+			"blocks_left": {
+				"type": "integer"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"no_spawner",
+			"out_of_reach",
+			"no_blocks",
+			"not_enclosed"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"damage"
+		]
+	}
+}

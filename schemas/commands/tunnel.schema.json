@@ -1,0 +1,143 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/tunnel.schema.json",
+	"title": "tunnel: gräbt einen Gang (1 breit, 2 hoch) geradeaus in eine Himmelsrichtung, ein Befehl für den ganzen Gang. Zum Erkunden im Fels und im Nether und zum Erzsuchen (Strip-Mining auf y -58 für Diamanten). Hält vor Lava und Wasser im nächsten Abschnitt oder seinen Wänden an (found), überbrückt Löcher im Boden mit einem Block und meldet Erze in den Wänden (ores_seen); bei neuem Erz hält er an (stop_at_ore). Festungsblöcke (Netherziegel) gräbt er nie ab: Er hält am Festungsrand an, und ein Gang in der Festung endet an ihrer Wand oder Grenze",
+	"args": {
+		"type": "object",
+		"required": [
+			"direction"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"direction": {
+				"type": "string",
+				"enum": [
+					"north",
+					"south",
+					"east",
+					"west"
+				]
+			},
+			"length": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 200,
+				"description": "Wie viele Blöcke weit, Standard 16, höchstens 200"
+			},
+			"stop_at_ore": {
+				"type": "boolean",
+				"description": "Bei neu gesehenem Erz anhalten (stopped_because: ore_found), Standard true"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"held_item": {
+				"description": "Item in der Hand danach mit Haltbarkeit; null bei leerer Hand"
+			},
+			"direction": {
+				"type": "string"
+			},
+			"length_done": {
+				"type": "integer"
+			},
+			"blocks_dug": {
+				"type": "integer"
+			},
+			"blocks_placed": {
+				"type": "integer"
+			},
+			"ores_seen": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"block": {
+							"type": "string"
+						},
+						"pos": {
+							"type": "array",
+							"items": {
+								"type": "integer"
+							},
+							"minItems": 3,
+							"maxItems": 3,
+							"description": "Standort des Bots nach der Aktion"
+						}
+					}
+				}
+			},
+			"gained": {
+				"type": "array",
+				"description": "Was dabei ins Inventar kam (id, count)"
+			},
+			"stopped_because": {
+				"type": "string",
+				"enum": [
+					"ore_found",
+					"fortress_reached",
+					"fortress_wall",
+					"left_fortress"
+				],
+				"description": "fortress_reached: vor Netherziegeln oder in eine Festung hinein angehalten, du bist da; fortress_wall: in der Festung vor ihrer Wand (Festungsblöcke gräbt er nie ab); left_fortress: in der Festung begonnen und hinausgelaufen"
+			},
+			"fortress_block": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"description": "Der Festungsblock, vor dem er angehalten hat"
+			},
+			"found": {
+				"type": "object",
+				"description": "Bei lava_ahead/fluid_ahead: block und pos"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"not_on_ground",
+			"lava_ahead",
+			"fluid_ahead",
+			"no_floor",
+			"under_fire",
+			"wrong_tool",
+			"tool_worn",
+			"unbreakable",
+			"dig_failed",
+			"stuck"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

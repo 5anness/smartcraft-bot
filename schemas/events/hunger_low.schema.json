@@ -1,0 +1,30 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/hunger_low.schema.json",
+	"title": "data von hunger_low: Der Hunger ist auf 6 oder weniger gefallen (ab 6 kein Sprinten, bei 0 Schaden). Kommt einmal, bis der Hunger wieder über 6 war",
+	"type": "object",
+	"required": [
+		"food",
+		"health"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"food": {
+			"type": "integer"
+		},
+		"health": {
+			"type": "number"
+		},
+		"best_food": {
+			"description": "Bestes Essen im Inventar oder null",
+			"oneOf": [
+				{
+					"type": "null"
+				},
+				{
+					"type": "string"
+				}
+			]
+		}
+	}
+}

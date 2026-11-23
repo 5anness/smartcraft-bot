@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"id": "aiplayer",
+	"version": "${version}",
+	"name": "AI Player",
+	"description": "Ein Sprachmodell spielt als eigener, zweiter Spieler mit. Nur für Einzelspieler, LAN und lokale Server.",
+	"authors": [
+		"Hannes"
+	],
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"de.hannes.aiplayer.AiPlayerMod"
+		],
+		"client": [
+			"de.hannes.aiplayer.client.ShotClient"
+		]
+	},
+	"mixins": [
+		"aiplayer.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

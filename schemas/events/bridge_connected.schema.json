@@ -1,0 +1,23 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/bridge_connected.schema.json",
+	"title": "data von bridge_connected: erstes Event nach dem Verbinden des Begleitprozesses",
+	"type": "object",
+	"required": [
+		"mod_version",
+		"bot"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"mod_version": {
+			"type": "string"
+		},
+		"bot": {
+			"type": [
+				"string",
+				"null"
+			],
+			"description": "Name des KI-Spielers oder null, wenn keiner im Spiel ist"
+		}
+	}
+}

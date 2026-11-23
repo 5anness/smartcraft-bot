@@ -1,0 +1,77 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/goto_entity.schema.json",
+	"title": "goto_entity: läuft zu einem Spieler oder Wesen und endet, sobald der Abstand erreicht ist. Folgt dem Ziel, wenn es sich bewegt",
+	"args": {
+		"type": "object",
+		"required": [
+			"target"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"target": {
+				"type": "string",
+				"description": "Spielername oder Wesen-Typ, z. B. cow oder minecraft:zombie. Bei einem Typ zählt das nächste im Umkreis von 48 Blöcken"
+			},
+			"distance": {
+				"type": "number",
+				"minimum": 1,
+				"maximum": 16,
+				"default": 2,
+				"description": "So nah heran, in Blöcken"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"target": {
+				"type": "object",
+				"description": "Das Ziel: id, type, name (bei Spielern), pos, alive"
+			},
+			"distance": {
+				"type": "number",
+				"description": "Abstand zum Ziel in Blöcken"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"entity_not_found",
+			"target_lost",
+			"no_path",
+			"stuck"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

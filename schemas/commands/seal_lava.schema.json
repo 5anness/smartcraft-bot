@@ -1,0 +1,75 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/seal_lava.schema.json",
+	"title": "seal_lava: baut Lava im Umkreis mit nicht brennbaren Blöcken zu (Bruchstein, Erde, Netherrack), Quellen zuerst. Macht einen Weg über oder neben Lava sicher, statt sie zu umgehen. Brennbares (Holz) setzt die Figur nie neben Lava",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {
+			"radius": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 5,
+				"description": "Umkreis, Standard 3"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"held_item": {
+				"description": "Item in der Hand danach mit Haltbarkeit; null bei leerer Hand"
+			},
+			"blocks_placed": {
+				"type": "integer"
+			},
+			"water_left": {
+				"type": "integer",
+				"description": "Lavafelder im Umkreis danach"
+			},
+			"in_water": {
+				"type": "boolean"
+			},
+			"blocks_left": {
+				"type": "integer",
+				"description": "Bau-Blöcke im Inventar danach"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"no_lava",
+			"no_blocks",
+			"nothing_sealed"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded"
+		]
+	}
+}

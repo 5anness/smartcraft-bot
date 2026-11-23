@@ -1,0 +1,71 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/shield.schema.json",
+	"title": "shield: hebt den Schild (on true, Standard) oder senkt ihn (on false). Liegt der Schild im Inventar, kommt er in die Zweithand. Er bleibt oben, auch während anderer Aktionen, bis shield mit on false kommt; zum Zuschlagen und Essen senkt der Bot ihn kurz. Mit gehobenem Schild läuft der Bot langsam wie ein Spieler. Antwort kommt sofort",
+	"args": {
+		"type": "object",
+		"required": [],
+		"additionalProperties": false,
+		"properties": {
+			"on": {
+				"type": "boolean",
+				"default": true
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"raised": {
+				"type": "boolean"
+			},
+			"shield": {
+				"oneOf": [
+					{
+						"type": "null"
+					},
+					{
+						"type": "object",
+						"required": [
+							"id",
+							"count"
+						],
+						"properties": {
+							"id": {
+								"type": "string"
+							},
+							"count": {
+								"type": "integer"
+							},
+							"durability": {
+								"type": "object",
+								"description": "Nur bei Werkzeug und Rüstung",
+								"properties": {
+									"left": {
+										"type": "integer"
+									},
+									"max": {
+										"type": "integer"
+									}
+								}
+							}
+						}
+					}
+				],
+				"description": "Der Schild in der Zweithand mit Haltbarkeit"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"no_shield"
+		]
+	}
+}

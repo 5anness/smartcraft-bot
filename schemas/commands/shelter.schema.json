@@ -1,0 +1,96 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/shelter.schema.json",
+	"title": "shelter: baut eine Notunterkunft für die Nacht. Mit mindestens 10 Blöcken im Inventar eine Hütte um sich herum (3×3 Grundfläche, innen 1 Feld, zwei hoch, Dach; die Ecken bleiben offen, diagonal kommt nichts durch). Mit weniger, oder wenn die Hütte nicht klappt (Hang ohne Halt), gräbt er sich drei Blöcke tief ein und verschließt das Loch über sich. Vorhandene Wände zählen mit. Schaden bricht den Bau nicht ab Nachts in der Oberwelt lehnt er bei voller Ausrüstung ab (well_equipped: Rüstungswert ab 15 und Schwert aus Eisen oder besser), außer im Notfall (Leben bis 10, 3 Gegner bis 16 Blöcke) oder mit force.",
+	"args": {
+		"type": "object",
+		"required": [],
+		"additionalProperties": false,
+		"properties": {
+			"force": {
+				"type": "boolean",
+				"description": "Trotz voller Ausrüstung einbauen (Notfall)"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"kind": {
+				"type": "string",
+				"enum": [
+					"hut",
+					"burrow"
+				]
+			},
+			"enclosed": {
+				"type": "boolean",
+				"description": "Ob alle Seiten und die Decke jetzt zu sind"
+			},
+			"blocks_placed": {
+				"type": "integer"
+			},
+			"blocks_dug": {
+				"type": "integer"
+			},
+			"blocks_needed": {
+				"type": "integer"
+			},
+			"blocks_available": {
+				"type": "integer"
+			},
+			"hut_failed": {
+				"type": "string",
+				"description": "Die Hütte ging nicht (z. B. am Hang ohne Halt); der Bot hat sich stattdessen eingegraben"
+			},
+			"exit": {
+				"type": "string",
+				"description": "Wie er wieder herauskommt"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"not_on_ground",
+			"in_water",
+			"no_pickaxe",
+			"no_space",
+			"obstructed",
+			"no_blocks",
+			"unsafe_ground",
+			"dig_failed",
+			"place_failed",
+			"well_equipped"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger"
+		]
+	}
+}

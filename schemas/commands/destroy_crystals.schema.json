@@ -1,0 +1,67 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/destroy_crystals.schema.json",
+	"title": "destroy_crystals: nur im End. Zerstört alle Endkristalle der Hauptinsel nacheinander mit EINEM Befehl: freie vom Standplatz am Boden mit dem Bogen; Kristalle im Käfig oder ohne Platz am Boden von einem eigenen Turm 13 Blöcke daneben (baut ihn selbst, im End mit Geländer), bei Käfigen erst die Gitter in der Schusslinie abbauen; danach wieder zum Boden. Braucht Bogen, Pfeile und Bausteine. Ergebnis: destroyed, left, skipped (pos, reason). Danach den Drachen",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {
+			"ground_only": {
+				"type": "boolean",
+				"description": "nur Kristalle mit Schussplatz am Boden, Käfige und Türme ohne Platz überspringen (vor bed_cycle)"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"destroyed": {
+				"type": "integer"
+			},
+			"left": {
+				"type": "integer"
+			},
+			"arrows_shot": {
+				"type": "integer"
+			},
+			"skipped": {
+				"type": "array",
+				"items": {
+					"type": "object"
+				}
+			},
+			"health": {
+				"type": "number"
+			},
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				}
+			},
+			"outcome": {
+				"type": "string"
+			},
+			"hint": {
+				"type": "string"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"not_in_end",
+			"crystals_left",
+			"stuck_on_tower",
+			"none_destroyed"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"health_low"
+		]
+	}
+}

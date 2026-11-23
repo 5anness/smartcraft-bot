@@ -1,0 +1,64 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/event.schema.json",
+	"title": "Event (Mod → Begleitprozess), Protokollversion 1",
+	"type": "object",
+	"required": [
+		"v",
+		"type",
+		"name",
+		"seq",
+		"tick",
+		"prio",
+		"data"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"v": {
+			"const": 1
+		},
+		"type": {
+			"const": "event"
+		},
+		"name": {
+			"type": "string",
+			"pattern": "^[a-z][a-z0-9_]*$",
+			"description": "Fakten in Vergangenheitsform; Antworten auf Befehle heißen <befehl>_started und <befehl>_result"
+		},
+		"seq": {
+			"type": "integer",
+			"minimum": 1,
+			"description": "Fortlaufend über alle Events einer Sitzung"
+		},
+		"tick": {
+			"type": "integer",
+			"description": "Spiel-Tick der Welt"
+		},
+		"prio": {
+			"enum": [
+				"normal",
+				"high"
+			]
+		},
+		"cmd_id": {
+			"type": "string",
+			"description": "Nur bei Antworten auf Befehle: die id des Befehls"
+		},
+		"status": {
+			"enum": [
+				"ok",
+				"failed",
+				"cancelled"
+			],
+			"description": "Nur bei <befehl>_result"
+		},
+		"reason": {
+			"type": "string",
+			"description": "Pflicht bei status failed oder cancelled; aus der festen Liste des Befehls"
+		},
+		"data": {
+			"type": "object",
+			"description": "Eventspezifisch, siehe events/<name>.schema.json bzw. commands/<befehl>.schema.json"
+		}
+	}
+}

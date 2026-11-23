@@ -1,0 +1,61 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/block_broken.schema.json",
+	"title": "data von block_broken: Ein Spieler hat im Umkreis von 16 Blöcken um den Bot einen Block abgebaut (vom Server bestätigt)",
+	"type": "object",
+	"required": [
+		"block",
+		"pos",
+		"by"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"block": {
+			"type": "string",
+			"description": "Block-ID, z. B. minecraft:oak_log"
+		},
+		"pos": {
+			"type": "array",
+			"items": {
+				"type": "integer"
+			},
+			"minItems": 3,
+			"maxItems": 3,
+			"description": "Blockposition [x, y, z]"
+		},
+		"by": {
+			"type": "string",
+			"description": "\"self\" für den Bot, sonst der Spielername"
+		},
+		"held_item": {
+			"description": "Nur bei by=self: Item in der Haupthand danach, null bei leerer Hand",
+			"oneOf": [
+				{
+					"type": "null"
+				},
+				{
+					"type": "object",
+					"required": [
+						"id",
+						"count"
+					],
+					"additionalProperties": false,
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"count": {
+							"type": "integer",
+							"minimum": 1
+						}
+					}
+				}
+			]
+		},
+		"count": {
+			"type": "integer",
+			"minimum": 2,
+			"description": "Nur bei zusammengefassten Events: so viele gleichartige Vorgänge stecken in diesem Event"
+		}
+	}
+}

@@ -1,0 +1,150 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/take.schema.json",
+	"title": "take: holt Items aus der nächsten Truhe (läuft selbst hin, auch zu einer gemerkten). Teilerfolg ist ok mit stopped_because. Mit pos jeder Behälter an dieser Stelle",
+	"args": {
+		"type": "object",
+		"required": [
+			"item"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"item": {
+				"type": "string",
+				"description": "Item-ID, z. B. stick oder minecraft:stick"
+			},
+			"count": {
+				"type": "integer",
+				"minimum": 1,
+				"description": "Standard: alle"
+			},
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Genau dieser Behälter: Truhe, Fass, Shulkerkiste, Trichter, Spender … Ohne: die nächste Truhe"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"item": {
+				"type": "string"
+			},
+			"requested": {
+				"type": "integer"
+			},
+			"chest": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Blockposition [x, y, z]"
+			},
+			"chest_contents": {
+				"type": "object",
+				"description": "Inhalt der Truhe danach: Item-ID zu Anzahl (höchstens 30 Einträge)"
+			},
+			"chest_free_slots": {
+				"type": "integer"
+			},
+			"held_item": {
+				"description": "Item in der Haupthand danach mit Anzahl und, bei Werkzeug, Haltbarkeit; null bei leerer Hand",
+				"oneOf": [
+					{
+						"type": "null"
+					},
+					{
+						"type": "object",
+						"required": [
+							"id",
+							"count"
+						],
+						"properties": {
+							"id": {
+								"type": "string"
+							},
+							"count": {
+								"type": "integer"
+							},
+							"durability": {
+								"type": "object",
+								"description": "Nur bei Werkzeug und Rüstung",
+								"properties": {
+									"left": {
+										"type": "integer"
+									},
+									"max": {
+										"type": "integer"
+									}
+								}
+							}
+						}
+					}
+				]
+			},
+			"has_chest_item": {
+				"type": "boolean"
+			},
+			"can_craft_chest": {
+				"type": "boolean"
+			},
+			"taken": {
+				"type": "integer"
+			},
+			"stopped_because": {
+				"type": "string",
+				"description": "Bei Teilerfolg: warum es nicht die ganze Menge wurde",
+				"enum": [
+					"inventory_full",
+					"not_enough_in_chest"
+				]
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"not_in_chest",
+			"no_chest",
+			"inventory_full",
+			"nothing_moved"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/usage.schema.json",
+	"title": "usage: nur für den Begleitprozess, nicht für das Modell. Meldet den Gesamtverbrauch seit seinem Start; der Mod zeigt ihn menschlichen Spielern in der XP-Leiste (Level = Cent) und darüber als Text (/aiplayer xpbar on|off, Standard an beim Join). Echte XP bleiben unverändert",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"required": ["tokens", "cost"],
+		"properties": {
+			"tokens": {"type": "integer", "minimum": 0, "description": "Alle Tokens (Eingabe, Cache, Ausgabe)"},
+			"cost": {"type": "number", "minimum": 0, "description": "Dollar"}
+		}
+	},
+	"result": {"type": "object", "properties": {}},
+	"reasons": {"failed": ["no_bot", "invalid_args"], "cancelled": []}
+}

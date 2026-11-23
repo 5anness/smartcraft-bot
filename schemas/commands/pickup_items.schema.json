@@ -1,0 +1,94 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/pickup_items.schema.json",
+	"title": "pickup_items: sammelt herumliegende Items im Umkreis ein",
+	"args": {
+		"type": "object",
+		"required": [],
+		"additionalProperties": false,
+		"properties": {
+			"radius": {
+				"type": "number",
+				"minimum": 1,
+				"maximum": 32,
+				"default": 8
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"gained": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"required": [
+						"id",
+						"count"
+					],
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"count": {
+							"type": "integer"
+						},
+						"durability": {
+							"type": "object",
+							"description": "Nur bei Werkzeug und Rüstung",
+							"properties": {
+								"left": {
+									"type": "integer"
+								},
+								"max": {
+									"type": "integer"
+								}
+							}
+						}
+					}
+				},
+				"description": "Was dabei neu ins Inventar kam"
+			},
+			"left_behind": {
+				"type": "integer",
+				"description": "Items, an die der Bot nicht herankam"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"inventory_full"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

@@ -1,0 +1,12 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/reflex_dropped_junk.schema.json",
+	"title": "data von reflex_dropped_junk: Reflex des Mods: Inventar voll, er hat einen Stapel Abraum weggeworfen (Gestein wie Granit/Tuff/Kies, oder Bausteine über 192). Erze bleiben. Geht nicht an das Modell",
+	"type": "object",
+	"required": ["item", "count"],
+	"additionalProperties": false,
+	"properties": {
+		"item": {"type": "string"},
+		"count": {"type": "integer"}
+	}
+}

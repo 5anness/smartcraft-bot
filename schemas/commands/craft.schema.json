@@ -1,0 +1,129 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/craft.schema.json",
+	"title": "craft: stellt ein Item nach den Rezepten des Spiels her. Kleine Rezepte (2×2) im eigenen Inventar, größere an einer Werkbank in der Nähe (läuft selbst hin, auch zu einer gemerkten). Fehlende Zwischenprodukte (Bretter für Stöcke, Stöcke für Fackeln, bis 3 Stufen) craftet er vorher selbst, Schmelzen nicht. Stellt keine Werkbank auf: dafür place_utility. Teilerfolg ist ok mit crafted kleiner als requested und stopped_because",
+	"args": {
+		"type": "object",
+		"required": [
+			"item"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"item": {
+				"type": "string",
+				"description": "Item-ID, z. B. stick oder minecraft:stick"
+			},
+			"count": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 256,
+				"default": 1,
+				"description": "So viele Stück sollen es mindestens werden. Ein Rezept kann mehr ergeben (1 Stamm = 4 Bretter)"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"item": {
+				"type": "string"
+			},
+			"requested": {
+				"type": "integer"
+			},
+			"crafted": {
+				"type": "integer",
+				"description": "So viele Stück sind wirklich dazugekommen"
+			},
+			"in_inventory": {
+				"type": "integer",
+				"description": "Bestand des Items danach"
+			},
+			"stopped_because": {
+				"type": "string",
+				"description": "Bei Teilerfolg: warum es nicht die ganze Menge wurde",
+				"enum": [
+					"missing_ingredients",
+					"inventory_full"
+				]
+			},
+			"missing": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"item": {
+							"type": "string",
+							"description": "Item-ID oder Tag mit # davor, z. B. #minecraft:planks (jede Holzart zählt)"
+						},
+						"count": {
+							"type": "integer"
+						}
+					}
+				},
+				"description": "Was für die verlangte Menge fehlt, mit Anzahl"
+			},
+			"intermediates": {
+				"type": "array",
+				"description": "Selbst hergestellte Zwischenprodukte: item, crafted, status, bei Fehlschlag reason"
+			},
+			"needs": {
+				"type": "array",
+				"description": "Bei missing_ingredients: alle Zutaten mit count (Bedarf) und have (Bestand)"
+			},
+			"crafting_table": {
+				"type": "object",
+				"description": "Benutzte Werkbank: block, pos"
+			},
+			"has_crafting_table_item": {
+				"type": "boolean",
+				"description": "Bei no_crafting_table: liegt eine Werkbank im Inventar"
+			},
+			"can_craft_crafting_table": {
+				"type": "boolean",
+				"description": "Bei no_crafting_table: könnte er jetzt eine craften"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"unknown_item",
+			"no_recipe",
+			"missing_ingredients",
+			"no_crafting_table",
+			"inventory_full",
+			"craft_failed"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

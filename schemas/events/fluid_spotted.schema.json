@@ -1,0 +1,46 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/fluid_spotted.schema.json",
+	"title": "data von fluid_spotted: Eine Wasser- oder Lavaquelle oder Obsidian (auch weinendes, etwa ein zerfallenes Portal) ist neu in Sicht, ebenso ein Spawner, eine Lohe, ein Endportalrahmen oder (im Nether) eine Netherfestung bis 100 Blöcke (Prüfung alle 5 Sekunden, Umkreis 24 Blöcke, im Nether 32, 10 nach oben und unten). Kommt erneut, wenn die Art zwischendurch aus dem Umkreis verschwunden war. Priorität normal",
+	"type": "object",
+	"required": [
+		"kind",
+		"pos",
+		"distance",
+		"size"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"kind": {
+			"enum": [
+				"water",
+				"lava",
+				"obsidian",
+				"spawner",
+				"blaze",
+				"end_portal_frame",
+				"fortress",
+				"village",
+				"end_portal_room"
+			]
+		},
+		"pos": {
+			"type": "array",
+			"items": {
+				"type": "integer"
+			},
+			"description": "Die nächste Quelle"
+		},
+		"distance": {
+			"type": "integer"
+		},
+		"size": {
+			"type": "integer",
+			"description": "Wie viele gleichartige Blöcke zusammenhängend an der Fundstelle liegen (Quellen bzw. Obsidian), bis 64. Für Obsidian lohnt Lava ab etwa 10"
+		},
+		"direction": {
+			"type": "string",
+			"description": "Nur bei fortress: north, south, east oder west"
+		}
+	}
+}

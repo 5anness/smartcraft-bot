@@ -1,0 +1,35 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/command.schema.json",
+	"title": "Befehl (Begleitprozess → Mod), Protokollversion 1. Jeder Befehl wird mit genau einem <name>_result beantwortet",
+	"type": "object",
+	"required": [
+		"v",
+		"type",
+		"id",
+		"name"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"v": {
+			"const": 1
+		},
+		"type": {
+			"const": "command"
+		},
+		"id": {
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 64,
+			"description": "Vom Absender vergeben; kommt als cmd_id zurück"
+		},
+		"name": {
+			"type": "string",
+			"pattern": "^[a-z][a-z0-9_]*$"
+		},
+		"args": {
+			"type": "object",
+			"description": "Siehe commands/<name>.schema.json; darf fehlen"
+		}
+	}
+}

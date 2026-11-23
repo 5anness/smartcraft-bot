@@ -1,0 +1,26 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/chat_received.schema.json",
+	"title": "data von chat_received: Jemand anderes als der Bot hat in den Chat geschrieben (als Spieler oder mit /say, auch von der Serverkonsole). Priorität normal",
+	"type": "object",
+	"required": [
+		"from",
+		"text",
+		"direct"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"from": {
+			"type": "string",
+			"description": "Wer geschrieben hat (Spielername oder Server)"
+		},
+		"text": {
+			"type": "string",
+			"description": "Die Nachricht, wie sie im Chat steht"
+		},
+		"direct": {
+			"type": "boolean",
+			"description": "true, wenn die Nachricht dem Bot gilt: Sie nennt seinen Namen, oder außer ihm ist höchstens ein Spieler im Spiel"
+		}
+	}
+}

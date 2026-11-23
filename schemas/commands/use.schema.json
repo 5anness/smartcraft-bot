@@ -1,0 +1,230 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/use.schema.json",
+	"title": "use: Rechtsklick wie ein Spieler, mit einem Item aus dem Inventar (item) oder leerer Hand. Mit pos auf einen Block: Feuerzeug (Netherportal anzünden: auf die Innenseite des Obsidianrahmens unten), Tür, Falltür, Zauntor, Hebel, Knopf, Knochenmehl, Hacke, Samen pflanzen, Enderauge in einen Endportalrahmen, Behälter öffnen und Inhalt ansehen. Mit entity auf ein Wesen: Kuh melken (bucket), Schaf scheren (shears), Tiere füttern/züchten (wheat, seeds, carrot), Boot oder Lore besteigen, Leine. Ohne pos und entity in die Luft, ausgerichtet auf look_at: Enderperle, Enderauge, Bogen/Dreizack (spannt und schießt), Trank trinken. Läuft vorher in Reichweite. Lava gießt nur bucket aus Enderperle nur mit look_at auf festen Boden ohne Lava (sonst unsafe_landing).",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {
+			"item": {
+				"type": "string",
+				"description": "Item-ID, die in die Hand genommen wird; ohne: leere Hand"
+			},
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Block, auf den geklickt wird (Weltkoordinaten, höchstens 24 Blöcke entfernt, sonst invalid_args)"
+			},
+			"face": {
+				"type": "string",
+				"enum": [
+					"up",
+					"down",
+					"north",
+					"south",
+					"east",
+					"west"
+				],
+				"description": "Welche Seite des Blocks; Standard: oben, wenn dort frei ist, sonst die freie Seite zum Bot"
+			},
+			"entity": {
+				"type": "string",
+				"description": "Wesen: Typ wie cow (das nächste im Umkreis von 32 Blöcken) oder die id aus entity_nearby"
+			},
+			"look_at": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Ohne pos/entity: wohin der Bot zielt (Enderperle, Bogen, Enderauge)"
+			},
+			"sneak": {
+				"type": "boolean",
+				"description": "Geduckt klicken (dann öffnet ein Block kein Fenster, das Item wird auf ihn angewendet). Standard false"
+			},
+			"force": {
+				"type": "boolean",
+				"default": false,
+				"description": "Nur Enderperle: wirft auch ohne sicheren Landeplatz (nur zur Flucht vor sicherem Tod)"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"target": {
+				"type": "string",
+				"enum": [
+					"block",
+					"entity",
+					"air"
+				]
+			},
+			"item": {
+				"type": "string"
+			},
+			"block_pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Blockposition [x, y, z]"
+			},
+			"face": {
+				"type": "string"
+			},
+			"block_before": {
+				"type": "string"
+			},
+			"block_after": {
+				"type": "string"
+			},
+			"beside_pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Das Feld vor der angeklickten Seite (dort entsteht z. B. Feuer)"
+			},
+			"beside_before": {
+				"type": "string"
+			},
+			"beside_after": {
+				"type": "string"
+			},
+			"entity": {
+				"type": "object",
+				"description": "id, type, pos des Wesens"
+			},
+			"riding": {
+				"type": "string",
+				"description": "Worauf der Bot jetzt sitzt"
+			},
+			"opened": {
+				"type": "string",
+				"description": "Welches Fenster aufging (wird gleich wieder geschlossen)"
+			},
+			"contents": {
+				"type": "object",
+				"description": "Inhalt des geöffneten Behälters: Item-ID → Anzahl"
+			},
+			"gained": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"count": {
+							"type": "integer"
+						}
+					}
+				}
+			},
+			"used_up": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"count": {
+							"type": "integer"
+						}
+					}
+				}
+			},
+			"held_item": {
+				"description": "Item in der Haupthand danach mit Anzahl und, bei Werkzeug, Haltbarkeit; null bei leerer Hand",
+				"oneOf": [
+					{
+						"type": "null"
+					},
+					{
+						"type": "object",
+						"required": [
+							"id",
+							"count"
+						],
+						"properties": {
+							"id": {
+								"type": "string"
+							},
+							"count": {
+								"type": "integer"
+							},
+							"durability": {
+								"type": "object",
+								"description": "Nur bei Werkzeug und Rüstung",
+								"properties": {
+									"left": {
+										"type": "integer"
+									},
+									"max": {
+										"type": "integer"
+									}
+								}
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"missing_item",
+			"use_bucket_command",
+			"entity_not_found",
+			"target_lost",
+			"out_of_reach",
+			"unsafe",
+			"nothing_to_use",
+			"nothing_happened",
+			"unsafe_landing"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

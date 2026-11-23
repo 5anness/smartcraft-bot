@@ -1,0 +1,61 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/player_died.schema.json",
+	"title": "data von player_died: Der Bot ist gestorben. Priorität high",
+	"type": "object",
+	"required": [
+		"cause",
+		"message",
+		"pos",
+		"dimension",
+		"lost_items"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"cause": {
+			"type": "string",
+			"description": "Schadensart, z. B. minecraft:fall"
+		},
+		"message": {
+			"type": "string",
+			"description": "Todesnachricht des Spiels"
+		},
+		"attacker": {
+			"type": "string",
+			"description": "Entity-Typ des Angreifers, falls es einen gibt"
+		},
+		"pos": {
+			"type": "array",
+			"items": {
+				"type": "integer"
+			},
+			"minItems": 3,
+			"maxItems": 3,
+			"description": "Blockposition [x, y, z]"
+		},
+		"dimension": {
+			"type": "string"
+		},
+		"lost_items": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": [
+					"id",
+					"count"
+				],
+				"additionalProperties": false,
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"count": {
+						"type": "integer",
+						"minimum": 1
+					}
+				}
+			},
+			"description": "Was der Bot dabei aus dem Inventar verloren hat (leer bei keepInventory)"
+		}
+	}
+}

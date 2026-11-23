@@ -1,0 +1,31 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/sprint.schema.json",
+	"title": "sprint: schaltet Sprinten ein (on true, Standard) oder aus (on false). Gilt für alle Wege (goto, collect, flee …), bis sprint erneut kommt. An: schneller, kostet mehr Hunger. Aus: z. B. an Kanten, auf Brücken oder bei wenig Essen. Antwort kommt sofort",
+	"args": {
+		"type": "object",
+		"required": [],
+		"additionalProperties": false,
+		"properties": {
+			"on": {
+				"type": "boolean",
+				"default": true
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"sprint": {
+				"type": "boolean",
+				"description": "Ob Sprinten jetzt erlaubt ist"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"invalid_args"
+		]
+	}
+}

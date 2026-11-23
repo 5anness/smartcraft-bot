@@ -1,0 +1,25 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/player_respawned.schema.json",
+	"title": "data von player_respawned: Der Bot ist nach dem Tod wieder im Spiel",
+	"type": "object",
+	"required": [
+		"pos",
+		"dimension"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"pos": {
+			"type": "array",
+			"items": {
+				"type": "integer"
+			},
+			"minItems": 3,
+			"maxItems": 3,
+			"description": "Blockposition [x, y, z]"
+		},
+		"dimension": {
+			"type": "string"
+		}
+	}
+}

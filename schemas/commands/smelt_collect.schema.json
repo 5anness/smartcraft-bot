@@ -1,0 +1,129 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/smelt_collect.schema.json",
+	"title": "smelt_collect: holt das Ergebnis aus dem Ofen, den der Bot zuletzt befüllt hat (sonst aus dem nächsten bekannten). Läuft selbst hin",
+	"args": {
+		"type": "object",
+		"required": [],
+		"additionalProperties": false,
+		"properties": {}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"gained": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"required": [
+						"id",
+						"count"
+					],
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"count": {
+							"type": "integer"
+						},
+						"durability": {
+							"type": "object",
+							"description": "Nur bei Werkzeug und Rüstung",
+							"properties": {
+								"left": {
+									"type": "integer"
+								},
+								"max": {
+									"type": "integer"
+								}
+							}
+						}
+					}
+				},
+				"description": "Was dabei neu ins Inventar kam"
+			},
+			"furnace": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Blockposition [x, y, z]"
+			},
+			"still_cooking": {
+				"oneOf": [
+					{
+						"type": "null"
+					},
+					{
+						"type": "object",
+						"required": [
+							"id",
+							"count"
+						],
+						"properties": {
+							"id": {
+								"type": "string"
+							},
+							"count": {
+								"type": "integer"
+							},
+							"durability": {
+								"type": "object",
+								"description": "Nur bei Werkzeug und Rüstung",
+								"properties": {
+									"left": {
+										"type": "integer"
+									},
+									"max": {
+										"type": "integer"
+									}
+								}
+							}
+						}
+					}
+				],
+				"description": "Was noch ungeschmolzen im Ofen liegt; null, wenn er leer ist"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"no_furnace",
+			"nothing_ready",
+			"inventory_full"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

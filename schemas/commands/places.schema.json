@@ -1,0 +1,37 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/places.schema.json",
+	"title": "places: Ortsgedächtnis abfragen. Der Mod merkt sich selbst, was du siehst oder setzt: Werkbänke, Öfen, Truhen, Betten, Netherportale, Lavaseen (ab 10 Quellen), Spawner, Netherfestungen, Dörfer, Endportalräume, Baumstellen. Gilt pro Welt und über Neustarts. Liefert bis 20 Orte, die nächsten zuerst; Orte anderer Dimensionen mit dim statt distance. Antwort kommt sofort",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {
+			"kind": {
+				"type": "string",
+				"enum": ["crafting_table", "furnace", "chest", "bed", "trees", "nether_portal", "lava_lake", "spawner", "fortress", "village", "end_portal"],
+				"description": "Nur Orte dieser Art"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"places": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"kind": {"type": "string"},
+						"pos": {"type": "array", "items": {"type": "integer"}, "minItems": 3, "maxItems": 3},
+						"distance": {"type": "integer", "description": "Nur in deiner Dimension"},
+						"dim": {"type": "string", "description": "Nur bei Orten in einer anderen Dimension"}
+					}
+				}
+			},
+			"total": {"type": "integer", "description": "Alle gemerkten Orte zusammen"}
+		}
+	},
+	"reasons": {
+		"failed": ["no_bot", "invalid_args"]
+	}
+}

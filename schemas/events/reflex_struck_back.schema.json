@@ -1,0 +1,13 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/reflex_struck_back.schema.json",
+	"title": "data von reflex_struck_back: Reflex des Mods: Ohne laufende Aktion hat ein Gegner den Bot im Nahkampf getroffen, und der Bot hat mit der besten Waffe zurückgeschlagen. Weiterkämpfen (attack, defend) oder fliehen entscheidest du",
+	"type": "object",
+	"required": ["target", "id", "health"],
+	"additionalProperties": false,
+	"properties": {
+		"target": {"type": "string"},
+		"id": {"type": "integer"},
+		"health": {"type": "number"}
+	}
+}

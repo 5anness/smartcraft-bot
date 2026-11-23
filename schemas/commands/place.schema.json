@@ -1,0 +1,130 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/place.schema.json",
+	"title": "place: setzt einen Block aus dem Inventar an eine Position. Wählt den Block selbst aus dem Inventar, läuft vorher in Reichweite und prüft, dass ein Nachbarblock zum Ansetzen da ist",
+	"args": {
+		"type": "object",
+		"required": [
+			"block",
+			"pos"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"block": {
+				"type": "string",
+				"description": "Item-ID des Blocks, z. B. crafting_table"
+			},
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Wo der Block stehen soll"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"block": {
+				"type": "string"
+			},
+			"block_pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Blockposition [x, y, z]"
+			},
+			"now_there": {
+				"type": "string",
+				"description": "Was jetzt an der Position steht"
+			},
+			"left_in_inventory": {
+				"type": "integer"
+			},
+			"held_item": {
+				"description": "Item in der Haupthand danach mit Anzahl und, bei Werkzeug, Haltbarkeit; null bei leerer Hand",
+				"oneOf": [
+					{
+						"type": "null"
+					},
+					{
+						"type": "object",
+						"required": [
+							"id",
+							"count"
+						],
+						"properties": {
+							"id": {
+								"type": "string"
+							},
+							"count": {
+								"type": "integer"
+							},
+							"durability": {
+								"type": "object",
+								"description": "Nur bei Werkzeug und Rüstung",
+								"properties": {
+									"left": {
+										"type": "integer"
+									},
+									"max": {
+										"type": "integer"
+									}
+								}
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"missing_item",
+			"not_a_block",
+			"occupied",
+			"no_support",
+			"obstructed",
+			"out_of_reach",
+			"flammable_near_fire",
+			"place_failed"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

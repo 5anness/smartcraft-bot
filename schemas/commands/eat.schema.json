@@ -1,0 +1,86 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/eat.schema.json",
+	"title": "eat: isst ein Item aus dem Inventar. Ohne item wählt der Bot das beste Essen: am meisten Sättigung, nichts Schädliches (verdorbenes Fleisch, Spinnenauge, rohes Huhn), solange es etwas anderes gibt; Essen mit Sonderwirkung (goldener Apfel) erst danach. Schaden bricht das Essen nicht ab",
+	"args": {
+		"type": "object",
+		"required": [],
+		"additionalProperties": false,
+		"properties": {
+			"item": {
+				"type": "string",
+				"description": "Item-ID, z. B. bread oder minecraft:bread"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"ate": {
+				"type": "string",
+				"description": "Was gegessen wurde"
+			},
+			"left": {
+				"type": "integer",
+				"description": "So viele davon sind noch da"
+			},
+			"food_before": {
+				"type": "integer"
+			},
+			"food": {
+				"type": "integer",
+				"description": "Hunger des Bots danach (0–20)"
+			},
+			"saturation": {
+				"type": "number"
+			},
+			"health": {
+				"type": "number",
+				"description": "Leben des Bots danach (0–20)"
+			},
+			"harmful": {
+				"type": "boolean",
+				"description": "true, wenn das Essen eine schädliche Wirkung haben kann"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"no_food",
+			"missing_item",
+			"not_edible",
+			"not_hungry",
+			"interrupted"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger"
+		]
+	}
+}

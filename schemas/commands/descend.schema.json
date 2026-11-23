@@ -1,0 +1,83 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/descend.schema.json",
+	"title": "descend: gräbt senkrecht nach unten bis zur Höhe to_y (ein Befehl statt eines mine pro Block). Prüft vor jedem Block: keine Lava, kein Wasser unter oder neben dem Schacht, kein tiefer Hohlraum darunter, kein loser Kies oder Sand über dem Kopf. Hält vorher an und meldet, was im Weg ist. Hebt die Beute unterwegs auf. Für Erz, Diamanten (y -50 bis 16) und Lava-Seen (meist unter y 0)",
+	"args": {
+		"type": "object",
+		"required": [
+			"to_y"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"to_y": {
+				"type": "integer",
+				"minimum": -64,
+				"maximum": 320,
+				"description": "Zielhöhe der Füße; muss unter der aktuellen Höhe liegen"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"blocks_dug": {
+				"type": "integer",
+				"description": "So viele Blöcke hat er auf dem Weg nach unten abgebaut"
+			},
+			"gained": {
+				"type": "array",
+				"description": "Was dabei ins Inventar kam (id, count)"
+			},
+			"found": {
+				"type": "object",
+				"description": "Bei lava_below, fluid_below, cave_below, falling_block_above: der Block und seine Position [x, y, z]"
+			},
+			"held_item": {
+				"description": "Item in der Hand danach mit Haltbarkeit; null bei leerer Hand"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"not_on_ground",
+			"lava_below",
+			"fluid_below",
+			"cave_below",
+			"falling_block_above",
+			"in_water",
+			"dig_failed",
+			"wrong_tool"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

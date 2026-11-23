@@ -1,0 +1,50 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/fight_dragon.schema.json",
+	"title": "fight_dragon: nur im End, nach destroy_crystals. Kämpft mit EINEM Befehl gegen den Enderdrachen: wartet am Boden etwa 24 Blöcke vom Brunnen; hockt der Drache auf dem Brunnen, läuft er zum Kopf und schlägt mit dem Schwert zu (voller Schaden); vor dem Atem weicht der Reflex aus. Endet, wenn der Drache tot ist (outcome dragon_dead) oder mit health_low (essen, dann wieder fight_dragon). Ergebnis: dragon_health, hits",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"dragon_health": {
+				"type": "number"
+			},
+			"hits": {
+				"type": "integer"
+			},
+			"health": {
+				"type": "number"
+			},
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				}
+			},
+			"outcome": {
+				"type": "string"
+			},
+			"hint": {
+				"type": "string"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"not_in_end"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"health_low"
+		]
+	}
+}

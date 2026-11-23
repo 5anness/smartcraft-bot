@@ -1,0 +1,31 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/reflex_left_lava.schema.json",
+	"title": "data von reflex_left_lava: Reflex des Mods: Der Bot stand in Lava und ist zum nächsten sicheren Feld gelaufen. Eine laufende Aktion hat so lange gewartet. Brennt er noch (on_fire), lauf weiter weg von Lava und iss",
+	"type": "object",
+	"required": [
+		"ticks_in_lava",
+		"health",
+		"on_fire"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"ticks_in_lava": {
+			"type": "integer"
+		},
+		"health": {
+			"type": "number"
+		},
+		"blocks_placed": {
+			"type": "integer",
+			"description": "So viele Bausteine hat der Reflex in die Lava gesetzt, um herauszukommen (Insel)"
+		},
+		"on_fire": {
+			"type": "boolean"
+		},
+		"pearls_thrown": {
+			"type": "integer",
+			"description": "Enderperlen, die der Reflex zum Ufer geworfen hat (nach 1,5 s in Lava ohne Feuerresistenz)"
+		}
+	}
+}

@@ -1,0 +1,92 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/farm_endermen.schema.json",
+	"title": "farm_endermen: tötet Endermen nacheinander (bis 48 Blöcke; ist keiner da, steuert er einen bis 128 Blöcke an oder zieht umher, bis 3 Minuten ohne Enderman) (ansehen lockt sie an, dann Nahkampf) und hebt die Perlen auf, bis count Perlen dazugekommen sind. Steht der Bot an einer Kante, geht er zuerst selbst zu einem sicheren Platz bis 20 Blöcke (unsafe_spot nur, wenn es keinen gibt). Nach 5 Kämpfen in Folge ohne Kill zieht er selbst 40 Blöcke weiter, nach dem dritten Mal endet er mit stalled. Ein Befehl statt vieler attack. Am besten im Warped-Wald (locate warped_forest) oder nachts auf offener Fläche. Etwa jeder zweite Enderman lässt eine Perle fallen. Ergebnis: killed, pearls_gained, ender_pearls, health",
+	"args": {
+		"type": "object",
+		"required": [],
+		"additionalProperties": false,
+		"properties": {
+			"count": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 24,
+				"default": 12,
+				"description": "So viele Perlen dazu"
+			},
+			"min_health": {
+				"type": "number",
+				"minimum": 0,
+				"maximum": 20,
+				"default": 8,
+				"description": "Darunter endet die Aktion mit cancelled: health_low"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"killed": {
+				"type": "integer"
+			},
+			"pearls_gained": {
+				"type": "integer"
+			},
+			"ender_pearls": {
+				"type": "integer",
+				"description": "Enderperlen im Inventar danach"
+			},
+			"health": {
+				"type": "number"
+			},
+			"moved_to_safe_spot": {
+				"type": "boolean",
+				"description": "Bei unsafe_spot: ob der Bot vorher schon zu einem anderen Platz gegangen ist"
+			},
+			"fights": {
+				"type": "object",
+				"description": "Ausgänge der einzelnen Kämpfe mit Anzahl (killed, no_path, target_lost, timeout …)"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_kills",
+			"unsafe_spot",
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"no_enderman",
+			"few_blocks",
+			"not_in_nether",
+			"stalled"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"health_low"
+		]
+	}
+}

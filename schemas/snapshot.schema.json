@@ -1,0 +1,214 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/snapshot.schema.json",
+	"title": "Snapshot: kompakter Zustand des Bots auf Abruf (/aiplayer look), Protokollversion 1",
+	"type": "object",
+	"required": [
+		"v",
+		"type",
+		"tick",
+		"pos",
+		"dim",
+		"yaw",
+		"pitch",
+		"facing",
+		"health",
+		"food",
+		"time",
+		"daytime",
+		"held",
+		"ground",
+		"blocks"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"v": {
+			"const": 1
+		},
+		"type": {
+			"const": "snapshot"
+		},
+		"tick": {
+			"type": "integer"
+		},
+		"pos": {
+			"type": "array",
+			"items": {
+				"type": "integer"
+			},
+			"minItems": 3,
+			"maxItems": 3,
+			"description": "Blockposition [x, y, z]"
+		},
+		"dim": {
+			"type": "string"
+		},
+		"world": {
+			"type": "string",
+			"description": "Name der Welt; zusammen mit seed die Kennung der Welt (z. B. für Notizen pro Welt)"
+		},
+		"seed": {
+			"type": "integer",
+			"description": "Weltseed"
+		},
+		"yaw": {
+			"type": "integer",
+			"description": "Blickrichtung horizontal in Grad, 0 = Süden, 90 = Westen"
+		},
+		"pitch": {
+			"type": "integer",
+			"description": "Blickrichtung vertikal in Grad, positiv = nach unten"
+		},
+		"facing": {
+			"enum": [
+				"N",
+				"NE",
+				"E",
+				"SE",
+				"S",
+				"SW",
+				"W",
+				"NW",
+				"HERE"
+			],
+			"description": "Himmelsrichtung vom Bot aus"
+		},
+		"health": {
+			"type": "number"
+		},
+		"food": {
+			"type": "integer"
+		},
+		"time": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 23999,
+			"description": "Tageszeit in Ticks, 0 = Sonnenaufgang, 6000 = Mittag"
+		},
+		"daytime": {
+			"enum": [
+				"day",
+				"night"
+			]
+		},
+		"held": {
+			"oneOf": [
+				{
+					"type": "null"
+				},
+				{
+					"type": "object",
+					"required": [
+						"id",
+						"count"
+					],
+					"additionalProperties": false,
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"count": {
+							"type": "integer",
+							"minimum": 1
+						}
+					}
+				}
+			]
+		},
+		"ground": {
+			"type": "array",
+			"minItems": 3,
+			"maxItems": 3,
+			"description": "Die 3x3 Blöcke unter Fußhöhe: Zeilen von Nord nach Süd, darin West nach Ost; die Mitte ist der Block unter dem Bot",
+			"items": {
+				"type": "array",
+				"minItems": 3,
+				"maxItems": 3,
+				"items": {
+					"type": "string"
+				}
+			}
+		},
+		"blocks": {
+			"type": "object",
+			"description": "Interessante Blöcke (Erze, Stämme, Wasser, Lava, Truhen, Fässer, Werkbank, Öfen) im Umkreis von 8 Blöcken horizontal und 5 vertikal, nach Block-ID",
+			"additionalProperties": {
+				"type": "object",
+				"required": [
+					"n",
+					"near"
+				],
+				"additionalProperties": false,
+				"properties": {
+					"n": {
+						"type": "integer",
+						"description": "Anzahl im Umkreis"
+					},
+					"near": {
+						"type": "array",
+						"maxItems": 3,
+						"description": "Die nächsten Vorkommen als [dx, dy, dz] relativ zur Fußposition (+x = Osten, +y = oben, +z = Süden)",
+						"items": {
+							"type": "array",
+							"items": {
+								"type": "integer"
+							},
+							"minItems": 3,
+							"maxItems": 3,
+							"description": "Blockposition [x, y, z]"
+						}
+					}
+				}
+			}
+		},
+		"known_trees": {
+			"type": "array",
+			"description": "Nur in der Oberwelt: die zwei nächsten gemerkten Stellen, an denen du schon Holz gefällt hast (bis 512 Blöcke). Für Holz dorthin gehen statt suchen",
+			"items": {
+				"type": "object",
+				"properties": {
+					"pos": {"type": "array", "items": {"type": "integer"}, "minItems": 3, "maxItems": 3},
+					"distance": {"type": "integer"}
+				}
+			}
+		},
+		"known_places": {
+			"type": "array",
+			"description": "Ortsgedächtnis: je Art der nächste gemerkte Ort in dieser Dimension bis 2000 Blöcke, die nächsten zuerst. kind: crafting_table, furnace, chest, bed, nether_portal, lava_lake (ab 10 Quellen), spawner, fortress, village, end_portal. Merkt sich der Mod selbst beim Sehen; alle Orte (auch anderer Dimensionen) über places",
+			"items": {
+				"type": "object",
+				"properties": {
+					"kind": {"type": "string"},
+					"pos": {"type": "array", "items": {"type": "integer"}, "minItems": 3, "maxItems": 3},
+					"distance": {"type": "integer"}
+				}
+			}
+		},
+		"portal_room_near": {
+			"type": "object",
+			"description": "Nur in der Oberwelt: Portalraum der Festung bis 96 Blöcke waagerecht entfernt (aus den Strukturdaten). pos (Mitte des Raums), distance, dy (Höhe relativ zu dir), direction, hint"
+		},
+		"in_fortress": {
+			"type": "boolean",
+			"description": "Nur im Nether und nur wenn wahr: Du stehst in einem Teil einer Netherfestung (Gang, Brücke, Raum)"
+		},
+		"fortress_in_sight": {
+			"type": "object",
+			"description": "Nur im Nether: eine Netherfestung bis etwa 100 Blöcke entfernt, so weit wie ein Spieler über offene Flächen sieht. approx_pos (Höhe = eigene), distance, direction (north/south/east/west)",
+			"properties": {
+				"approx_pos": {
+					"type": "array",
+					"items": {
+						"type": "integer"
+					}
+				},
+				"distance": {
+					"type": "integer"
+				},
+				"direction": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}

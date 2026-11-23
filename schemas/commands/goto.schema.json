@@ -1,0 +1,152 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/goto.schema.json",
+	"title": "goto: läuft zu einer Blockposition. Findet selbst den Weg: springt einen Block hoch, umgeht Hindernisse, schwimmt, klettert Leitern, geht über Platten und Treppen, fällt höchstens 3 Blöcke, meidet Lava und Feuer. Zäune, Zauntore und Türen sind Hindernisse. Ohne allow_dig/allow_place ändert er nichts an der Welt",
+	"args": {
+		"type": "object",
+		"required": [
+			"pos"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Ziel: der Block, in dem die Füße stehen sollen"
+			},
+			"tolerance": {
+				"type": "number",
+				"minimum": 0,
+				"maximum": 64,
+				"default": 1,
+				"description": "So viele Blöcke Abstand zum Ziel reichen. 0 = genau dieses Feld"
+			},
+			"allow_dig": {
+				"type": "boolean",
+				"default": false,
+				"description": "Darf Blöcke abbauen, die im Weg sind (durch einen Hügel, Stufen nach unten). Nur was das vorhandene Werkzeug schafft; nichts neben Wasser/Lava oder unter Kies"
+			},
+			"allow_place": {
+				"type": "boolean",
+				"default": false,
+				"description": "Darf Lücken überbrücken und sich hochbauen. Braucht einfache volle Blöcke im Inventar (Erde, Bruchstein, Stämme)"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"bridging_off": {
+				"type": "string",
+				"description": "Nur im Nether: Die Bausteine reichten nicht für eine Brücke bis zum Ziel (Luftlinie), deshalb wurde nicht gebaut"
+			},
+			"way_back": {
+				"type": "array",
+				"items": {"type": "integer"},
+				"description": "Bei few_blocks und Fehlschlag: Anfang deiner eigenen Brücke auf festem Boden (weiter als 8 Blöcke). Über die Brücke zurück geht ohne Bausteine"
+			},
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"distance_left": {
+				"type": "number",
+				"description": "Restentfernung zum Ziel in Blöcken"
+			},
+			"replans": {
+				"type": "integer",
+				"description": "Wie oft der Weg neu gesucht wurde"
+			},
+			"search_nodes": {
+				"type": "integer"
+			},
+			"search_ms_peak": {
+				"type": "number",
+				"description": "Längste Wegsuche in einem Tick, in ms"
+			},
+			"blocks_dug": {
+				"type": "integer"
+			},
+			"blocks_placed": {
+				"type": "integer"
+			},
+			"closest": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Bei no_path/stuck: das erreichbare Feld, das dem Ziel am nächsten liegt"
+			},
+			"closest_distance": {
+				"type": "number",
+				"description": "Wie weit closest noch vom Ziel entfernt ist"
+			},
+			"goal_block": {
+				"type": "string",
+				"description": "Bei goal_not_standable: der Block am Ziel"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"no_path",
+			"stuck",
+			"no_blocks",
+			"few_blocks",
+			"under_fire"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		],
+		"hints": {
+			"no_path": {
+				"goal_not_standable": "Am Ziel kann niemand stehen (im Fels oder in der Luft)",
+				"enclosed": "Alles Erreichbare abgesucht, das Ziel ist nicht dabei",
+				"search_stalled": "Lange gesucht, ohne näher zu kommen: vermutlich unerreichbar",
+				"search_limit": "Suchgrenze erreicht, das beste Teilstück führt nicht näher heran",
+				"no_start": "Der Bot steht nirgends, wo die Suche beginnen kann"
+			},
+			"stuck": {
+				"no_progress": "Mehrfach neu gesucht, aber nicht vom Fleck gekommen",
+				"blocked_drop_ahead": "Sicherheitsnetz: der nächste Schritt hätte ins Leere oder in Lava geführt",
+				"blocked_path_changed": "Der Weg wurde wiederholt verbaut",
+				"pushed_off_path": "Wiederholt vom Weg gestoßen",
+				"dig_failed_<grund>": "Ein Block im Weg ließ sich nicht abbauen, z. B. dig_failed_wrong_tool",
+				"place_failed_<grund>": "Ein Block ließ sich nicht setzen"
+			},
+			"no_blocks": {
+				"nothing to build with": "allow_place, aber kein passender Block im Inventar"
+			}
+		}
+	}
+}

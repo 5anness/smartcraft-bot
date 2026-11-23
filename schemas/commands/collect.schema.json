@@ -1,0 +1,219 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/collect.schema.json",
+	"title": "collect: sucht die nächsten Blöcke einer Art im Umkreis, läuft hin, baut sie ab und sammelt die Beute ein, bis die Anzahl erreicht ist oder keiner mehr erreichbar ist. Bei Erz baut er die angefangene Ader ganz ab (vein_extra). Nach 8 unerreichbaren Blöcken nacheinander gibt er auf. Hängt ein Block zu hoch (obere Stämme eines Baums), baut sich der Bot mit Blöcken aus dem Inventar hoch und baut den Turm danach wieder ab. Bei Holz und Stein erlegt er in der Oberwelt nebenbei Nutztiere bis 16 Blöcke (animals_killed) und hebt die Beute auf",
+	"args": {
+		"type": "object",
+		"required": [
+			"block"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"block": {
+				"type": "string",
+				"description": "Block-ID wie oak_log oder stone, oder ein Tag mit # wie #logs"
+			},
+			"count": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 64,
+				"default": 1,
+				"description": "So viele Blöcke abbauen"
+			},
+			"radius": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 48,
+				"default": 32,
+				"description": "Suchumkreis um den Startpunkt in Blöcken (senkrecht höchstens 20)"
+			},
+			"allow_dig": {
+				"type": "boolean",
+				"default": false,
+				"description": "Kommt er zu Fuß nicht an den Block, darf er sich hingraben (z. B. zu Erz im Fels). Braucht das passende Werkzeug für das, was im Weg ist"
+			},
+			"allow_place": {
+				"type": "boolean",
+				"default": false,
+				"description": "Darf auf dem Weg Lücken überbrücken und sich hochbauen; die Blöcke bleiben stehen"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"block": {
+				"type": "string"
+			},
+			"mined": {
+				"type": "integer",
+				"description": "Abgebaute Blöcke; bei ok kann das weniger sein als requested, wenn keine mehr erreichbar waren"
+			},
+			"requested": {
+				"type": "integer"
+			},
+			"unreachable": {
+				"type": "integer",
+				"description": "Gefundene Blöcke, an die der Bot nicht herankam"
+			},
+			"items_left": {
+				"type": "integer",
+				"description": "Fallengelassene Items, die am Ende liegen blieben. Fehlt, wenn alles eingesammelt wurde"
+			},
+			"items_left_reason": {
+				"type": "string",
+				"description": "Warum zuletzt ein Item liegen blieb, z. B. no_path, not_picked_up, inventory_full"
+			},
+			"gained": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"required": [
+						"id",
+						"count"
+					],
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"count": {
+							"type": "integer"
+						},
+						"durability": {
+							"type": "object",
+							"description": "Nur bei Werkzeug und Rüstung",
+							"properties": {
+								"left": {
+									"type": "integer"
+								},
+								"max": {
+									"type": "integer"
+								}
+							}
+						}
+					}
+				},
+				"description": "Was dabei neu ins Inventar kam"
+			},
+			"held_item": {
+				"description": "Item in der Haupthand danach mit Anzahl und, bei Werkzeug, Haltbarkeit; null bei leerer Hand",
+				"oneOf": [
+					{
+						"type": "null"
+					},
+					{
+						"type": "object",
+						"required": [
+							"id",
+							"count"
+						],
+						"properties": {
+							"id": {
+								"type": "string"
+							},
+							"count": {
+								"type": "integer"
+							},
+							"durability": {
+								"type": "object",
+								"description": "Nur bei Werkzeug und Rüstung",
+								"properties": {
+									"left": {
+										"type": "integer"
+									},
+									"max": {
+										"type": "integer"
+									}
+								}
+							}
+						}
+					}
+				]
+			},
+			"standing_on_own_pillar": {
+				"type": "integer",
+				"description": "Nur wenn der Bot noch auf seinem Turm steht (Abbruch von außen oder Turm ließ sich nicht abbauen): Höhe in Blöcken"
+			},
+			"pillar_not_removed": {
+				"type": "string",
+				"description": "Warum der Turm stehen blieb"
+			},
+			"dug_on_the_way": {
+				"type": "integer",
+				"description": "Blöcke, die er auf dem Weg zu den Zielen abgebaut hat"
+			},
+			"placed_on_the_way": {
+				"type": "integer",
+				"description": "Blöcke, die er auf dem Weg gesetzt hat"
+			},
+			"known_trees": {
+					"type": "array",
+					"description": "Bei Holz und none_found: bis zu 3 gemerkte Baumstellen außerhalb des Suchradius",
+					"items": {
+							"type": "object",
+							"properties": {
+								"pos": {"type": "array", "items": {"type": "integer"}, "minItems": 3, "maxItems": 3},
+								"distance": {"type": "integer"}
+							}
+					}
+				},
+				"animals_killed": {
+				"type": "integer",
+				"description": "Bei Holz und Stein: so viele Nutztiere nebenbei erlegt"
+			},
+			"vein_extra": {
+				"type": "integer",
+				"description": "Bei Erz: so viele Blöcke über requested hinaus, weil der Bot die angefangene Ader ganz abgebaut hat"
+			},
+			"stopped_because": {
+				"type": "string",
+				"enum": [
+					"time_limit",
+					"unreachable_streak"
+				],
+				"description": "Bei ok mit mined kleiner als requested: Die Zeit der Aktion (600 + 400 Ticks je Block, höchstens 12000) war fast um. Einfach erneut schicken. unreachable_streak: 8 Blöcke nacheinander unerreichbar, anderswo suchen"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"unknown_block",
+			"none_found",
+			"none_reachable",
+			"wrong_tool",
+			"unbreakable",
+			"inventory_full"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

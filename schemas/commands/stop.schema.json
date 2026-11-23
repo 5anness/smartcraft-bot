@@ -1,0 +1,27 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/stop.schema.json",
+	"title": "stop: bricht die laufende Aktion ab. Deren Ergebnis kommt als cancelled mit reason stopped; stop selbst ist immer ok",
+	"args": {
+		"type": "object",
+		"additionalProperties": false
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"stopped": {
+				"type": [
+					"string",
+					"null"
+				],
+				"description": "Name der abgebrochenen Aktion oder null"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot"
+		],
+		"cancelled": []
+	}
+}

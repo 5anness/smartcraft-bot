@@ -1,0 +1,78 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/seal_water.schema.json",
+	"title": "seal_water: baut das Wasser um dich mit Blöcken aus dem Inventar zu (Bruchstein, Erde), Quellen zuerst. Danach ist es trocken: Abbauen geht wieder schnell (im Wasser dauert es ein Vielfaches), und aus einer Wassertasche kommst du heraus, indem du danach gräbst. Steht er danach selbst noch in einer Quelle, gräbt er sich einen Schritt zur Seite und baut die alte Stelle zu",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {
+			"radius": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 4,
+				"description": "Umkreis, Standard 2"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"held_item": {
+				"description": "Item in der Hand danach mit Haltbarkeit; null bei leerer Hand"
+			},
+			"blocks_placed": {
+				"type": "integer"
+			},
+			"water_left": {
+				"type": "integer",
+				"description": "Wasserfelder im Umkreis danach (ohne das eigene Feld)"
+			},
+			"in_water": {
+				"type": "boolean"
+			},
+			"blocks_left": {
+				"type": "integer",
+				"description": "Bau-Blöcke im Inventar danach"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"no_water",
+			"no_blocks",
+			"nothing_sealed",
+			"step_out_failed",
+			"low_air"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger"
+		]
+	}
+}

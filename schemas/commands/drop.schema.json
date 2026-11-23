@@ -1,0 +1,100 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/drop.schema.json",
+	"title": "drop: wirft Items aus dem Inventar auf den Boden",
+	"args": {
+		"type": "object",
+		"required": [
+			"item"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"item": {
+				"type": "string"
+			},
+			"count": {
+				"type": "integer",
+				"minimum": 1,
+				"description": "Ohne Angabe: alle"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"dropped": {
+				"type": "object",
+				"required": [
+					"id",
+					"count"
+				],
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"count": {
+						"type": "integer"
+					},
+					"durability": {
+						"type": "object",
+						"description": "Nur bei Werkzeug und Rüstung",
+						"properties": {
+							"left": {
+								"type": "integer"
+							},
+							"max": {
+								"type": "integer"
+							}
+						}
+					}
+				}
+			},
+			"left_in_inventory": {
+				"type": "integer"
+			},
+			"held_item": {
+				"description": "Item in der Haupthand danach mit Anzahl und, bei Werkzeug, Haltbarkeit; null bei leerer Hand",
+				"oneOf": [
+					{
+						"type": "null"
+					},
+					{
+						"type": "object",
+						"required": [
+							"id",
+							"count"
+						],
+						"properties": {
+							"id": {
+								"type": "string"
+							},
+							"count": {
+								"type": "integer"
+							},
+							"durability": {
+								"type": "object",
+								"description": "Nur bei Werkzeug und Rüstung",
+								"properties": {
+									"left": {
+										"type": "integer"
+									},
+									"max": {
+										"type": "integer"
+									}
+								}
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"invalid_args",
+			"missing_item"
+		],
+		"cancelled": []
+	}
+}

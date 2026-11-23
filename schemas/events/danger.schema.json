@@ -1,0 +1,63 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/danger.schema.json",
+	"title": "data von danger: Gefahren im direkten Umfeld. Nur bei Änderung, höchstens zweimal pro Sekunde. Priorität high; eine leere Liste (Gefahr vorbei) hat normal",
+	"type": "object",
+	"required": [
+		"dangers"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"dangers": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": [
+					"kind",
+					"dir"
+				],
+				"additionalProperties": false,
+				"properties": {
+					"kind": {
+						"enum": [
+							"lava",
+							"fire",
+							"drop"
+						],
+						"description": "lava: Lava im Umkreis von 3 Blöcken; fire: Feuer im Umkreis von 2 Blöcken oder der Bot brennt; drop: neben dem Bot geht es mehr als 3 Blöcke nach unten"
+					},
+					"dir": {
+						"enum": [
+							"N",
+							"NE",
+							"E",
+							"SE",
+							"S",
+							"SW",
+							"W",
+							"NW",
+							"HERE"
+						],
+						"description": "Himmelsrichtung vom Bot aus"
+					},
+					"dist": {
+						"type": "integer",
+						"description": "lava/fire: Entfernung in Blöcken"
+					},
+					"dy": {
+						"type": "integer",
+						"description": "lava/fire: Höhenunterschied, positiv = über dem Bot"
+					},
+					"depth": {
+						"type": "integer",
+						"description": "drop: Fallhöhe in Blöcken, 24 heißt 24 oder mehr"
+					},
+					"burning": {
+						"const": true,
+						"description": "fire: der Bot selbst brennt"
+					}
+				}
+			}
+		}
+	}
+}

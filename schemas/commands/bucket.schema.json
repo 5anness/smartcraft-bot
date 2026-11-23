@@ -1,0 +1,178 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/bucket.schema.json",
+	"title": "bucket: füllt einen leeren Eimer an einer Lava- oder Wasserquelle (fill) oder gießt Lava oder Wasser aus (empty). Läuft vorher in Reichweite. fill ohne pos sucht die nächste erreichbare Quelle der Flüssigkeit. Bei empty darf pos auch ein fester Block sein, dann landet die Flüssigkeit oben drauf. Obsidian: empty mit fluid water und pos = eine Lavaquelle gießt das Wasser über (oder neben) die Quelle, die Quelle wird zu Obsidian (lava_now); danach das Wasser mit fill an block_pos wieder aufnehmen. Für Lava sucht er sich selbst einen sicheren Standplatz: nie unterhalb der Stelle, auf gleicher Höhe mindestens 4 Blöcke entfernt",
+	"args": {
+		"type": "object",
+		"required": [
+			"action"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"action": {
+				"type": "string",
+				"enum": [
+					"fill",
+					"empty"
+				],
+				"description": "fill: Eimer füllen, empty: ausgießen"
+			},
+			"fluid": {
+				"type": "string",
+				"enum": [
+					"lava",
+					"water"
+				],
+				"description": "Welche Flüssigkeit. Bei fill ohne pos Pflicht; bei empty Standard: was im Eimer ist, Wasser zuerst"
+			},
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "fill: die Quelle; empty: wohin die Flüssigkeit soll (Luft oder Flüssigkeit, oder ein fester Block, dann auf dessen Oberseite). Bei empty Pflicht"
+			},
+			"radius": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 32,
+				"description": "fill ohne pos: Suchradius, Standard 16"
+			},
+			"anywhere": {
+				"type": "boolean",
+				"description": "Wasser auch dort ausgießen, wo keine Lava ist (Feuer löschen, Fall abfangen). Standard false: Ohne Lava an oder neben pos lehnt empty mit Wasser ab (no_lava_here)"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"action": {
+				"type": "string"
+			},
+			"fluid": {
+				"type": "string"
+			},
+			"block_pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Die Quelle bzw. die Stelle des Ausgießens"
+			},
+			"now_there": {
+				"type": "string",
+				"description": "Was jetzt an der Position steht"
+			},
+			"buckets": {
+				"type": "integer",
+				"description": "Leere Eimer danach"
+			},
+			"water_buckets": {
+				"type": "integer"
+			},
+			"lava_buckets": {
+				"type": "integer"
+			},
+			"held_item": {
+				"description": "Item in der Haupthand danach mit Anzahl und, bei Werkzeug, Haltbarkeit; null bei leerer Hand",
+				"oneOf": [
+					{
+						"type": "null"
+					},
+					{
+						"type": "object",
+						"required": [
+							"id",
+							"count"
+						],
+						"properties": {
+							"id": {
+								"type": "string"
+							},
+							"count": {
+								"type": "integer"
+							},
+							"durability": {
+								"type": "object",
+								"description": "Nur bei Werkzeug und Rüstung",
+								"properties": {
+									"left": {
+										"type": "integer"
+									},
+									"max": {
+										"type": "integer"
+									}
+								}
+							}
+						}
+					}
+				]
+			},
+			"lava_pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Wasser auf Lava: die Lavaquelle"
+			},
+			"lava_now": {
+				"type": "string",
+				"description": "Was jetzt an lava_pos steht (minecraft:obsidian bei Erfolg)"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"no_bucket",
+			"no_filled_bucket",
+			"not_a_source",
+			"none_found",
+			"none_reachable",
+			"out_of_reach",
+			"obstructed",
+			"occupied",
+			"no_support",
+			"no_lava_here",
+			"unsafe",
+			"pour_failed",
+			"evaporates"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"damage"
+		]
+	}
+}

@@ -1,0 +1,79 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/fill_portal.schema.json",
+	"title": "fill_portal: setzt in jeden leeren Endportalrahmen im Umkreis von 16 Blöcken ein Enderauge, den nächsten zuerst, und läuft dafür hin. portal_open meldet, ob das Endportal offen ist (alle 12 Rahmen gefüllt)",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"filled_now": {
+				"type": "integer"
+			},
+			"frames": {
+				"type": "integer"
+			},
+			"frames_with_eye": {
+				"type": "integer"
+			},
+			"eyes_needed": {
+				"type": "integer"
+			},
+			"eyes_left": {
+				"type": "integer"
+			},
+			"portal_open": {
+				"type": "boolean"
+			},
+			"unreachable": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"no_frames",
+			"no_eye",
+			"out_of_reach"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

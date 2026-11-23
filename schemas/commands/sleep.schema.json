@@ -1,0 +1,84 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/sleep.schema.json",
+	"title": "sleep: geht zu einem Bett im Umkreis von 24 Blöcken und schläft. ok, sobald der Morgen da ist. Setzt wie im Spiel den Spawnpunkt. Die Nacht wird nur übersprungen, wenn kein anderer Spieler wach ist (Zuschauer zählen nicht)",
+	"args": {
+		"type": "object",
+		"required": [],
+		"additionalProperties": false,
+		"properties": {}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"bed": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Blockposition [x, y, z]"
+			},
+			"slept": {
+				"type": "boolean"
+			},
+			"time": {
+				"type": "integer",
+				"description": "Tageszeit danach (0–23999)"
+			},
+			"sleep_possible_in_ticks": {
+				"type": "integer",
+				"description": "Bei not_night: so lange bis zum Abend"
+			},
+			"spawn_set": {
+				"type": "boolean"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"no_bed",
+			"not_night",
+			"monsters_nearby",
+			"bed_obstructed",
+			"bed_occupied",
+			"out_of_reach",
+			"not_possible_here",
+			"woken_up",
+			"night_not_skipped",
+			"sleep_failed"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

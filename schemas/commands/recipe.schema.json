@@ -1,0 +1,126 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/recipe.schema.json",
+	"title": "recipe: nennt das Rezept eines Items und was davon im Inventar fehlt, ohne etwas herzustellen. Antwort kommt sofort",
+	"args": {
+		"type": "object",
+		"required": [
+			"item"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"item": {
+				"type": "string",
+				"description": "Item-ID, z. B. stick oder minecraft:stick"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"item": {
+				"type": "string"
+			},
+			"in_inventory": {
+				"type": "integer"
+			},
+			"craft": {
+				"type": "array",
+				"description": "Bis zu zwei Rezepte, das passendste zuerst",
+				"items": {
+					"type": "object",
+					"properties": {
+						"makes": {
+							"type": "integer",
+							"description": "Stück pro Durchgang"
+						},
+						"needs_crafting_table": {
+							"type": "boolean"
+						},
+						"ingredients": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"item": {
+										"type": "string",
+										"description": "Item-ID oder Tag mit # davor, z. B. #minecraft:planks (jede Holzart zählt)"
+									},
+									"count": {
+										"type": "integer"
+									},
+									"have": {
+										"type": "integer"
+									},
+									"any_of": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										},
+										"description": "Beispiele, wenn mehrere Items passen"
+									},
+									"options": {
+										"type": "integer",
+										"description": "Wie viele Items insgesamt passen"
+									}
+								}
+							}
+						},
+						"missing": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"item": {
+										"type": "string",
+										"description": "Item-ID oder Tag mit # davor, z. B. #minecraft:planks (jede Holzart zählt)"
+									},
+									"count": {
+										"type": "integer"
+									}
+								}
+							},
+							"description": "Was für einen Durchgang fehlt; leer, wenn alles da ist"
+						},
+						"can_craft_now": {
+							"type": "integer",
+							"description": "So viele Durchgänge gibt das Inventar her"
+						}
+					}
+				}
+			},
+			"more_recipes": {
+				"type": "integer",
+				"description": "Weitere Rezepte, die nicht aufgeführt sind"
+			},
+			"smelt": {
+				"type": "array",
+				"description": "Falls das Item aus dem Ofen kommt",
+				"items": {
+					"type": "object",
+					"properties": {
+						"from": {
+							"type": "string"
+						},
+						"have": {
+							"type": "integer"
+						},
+						"ticks": {
+							"type": "integer",
+							"description": "Dauer pro Stück"
+						}
+					}
+				}
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"invalid_args",
+			"unknown_item",
+			"no_recipe"
+		],
+		"cancelled": []
+	}
+}

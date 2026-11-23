@@ -1,0 +1,28 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/protocol_error.schema.json",
+	"title": "data von protocol_error: Eine Zeile vom Begleitprozess war kein gültiger Befehl und wurde verworfen",
+	"type": "object",
+	"required": [
+		"reason",
+		"line"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"reason": {
+			"enum": [
+				"invalid_json",
+				"not_an_object",
+				"unsupported_version",
+				"not_a_command",
+				"invalid_id",
+				"invalid_name",
+				"invalid_args"
+			]
+		},
+		"line": {
+			"type": "string",
+			"description": "Die ersten 200 Zeichen der Zeile"
+		}
+	}
+}

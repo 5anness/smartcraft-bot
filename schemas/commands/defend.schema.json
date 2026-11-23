@@ -1,0 +1,164 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/defend.schema.json",
+	"title": "defend: bekämpft nacheinander alle feindlichen Mobs im Umkreis, den nächsten zuerst, ein zischender Creeper hat Vorrang. Endet mit ok, wenn keiner mehr da ist. Neutrale Wesen (Enderman, Zombie-Piglin, Wolf) nur, wenn sie den Bot angreifen. Kampfregeln wie bei attack",
+	"args": {
+		"type": "object",
+		"required": [],
+		"additionalProperties": false,
+		"properties": {
+			"radius": {
+				"type": "number",
+				"minimum": 2,
+				"maximum": 32,
+				"default": 12
+			},
+			"min_health": {
+				"type": "number",
+				"minimum": 0,
+				"maximum": 19,
+				"default": 6,
+				"description": "Fällt das Leben auf diesen Wert oder darunter, bricht der Bot ab (cancelled: health_low)"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"outcome": {
+				"type": "string",
+				"enum": [
+					"area_clear",
+					"no_enemies"
+				]
+			},
+			"killed": {
+				"type": "array",
+				"items": {
+					"type": "string"
+				},
+				"description": "Typen der besiegten Mobs in Reihenfolge"
+			},
+			"remaining": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "integer"
+						},
+						"type": {
+							"type": "string",
+							"description": "z. B. minecraft:zombie"
+						},
+						"pos": {
+							"type": "array",
+							"items": {
+								"type": "integer"
+							},
+							"minItems": 3,
+							"maxItems": 3,
+							"description": "Blockposition [x, y, z]"
+						},
+						"health": {
+							"type": "number"
+						},
+						"alive": {
+							"type": "boolean"
+						}
+					}
+				},
+				"description": "Feinde, die noch im Umkreis sind (bei Abbruch oder unerreichbar)"
+			},
+			"hits": {
+				"type": "integer"
+			},
+			"crits": {
+				"type": "integer"
+			},
+			"health": {
+				"type": "number",
+				"description": "Leben des Bots danach (0–20)"
+			},
+			"food": {
+				"type": "integer",
+				"description": "Hunger des Bots danach (0–20)"
+			},
+			"weapon": {
+				"oneOf": [
+					{
+						"type": "null"
+					},
+					{
+						"type": "object",
+						"required": [
+							"id",
+							"count"
+						],
+						"properties": {
+							"id": {
+								"type": "string"
+							},
+							"count": {
+								"type": "integer"
+							},
+							"durability": {
+								"type": "object",
+								"description": "Nur bei Werkzeug und Rüstung",
+								"properties": {
+									"left": {
+										"type": "integer"
+									},
+									"max": {
+										"type": "integer"
+									}
+								}
+							}
+						}
+					}
+				],
+				"description": "Waffe in der Hand danach mit Haltbarkeit; null bei leerer Hand"
+			},
+			"drops_nearby": {
+				"type": "integer"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"enemies_unreachable",
+			"in_water"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"health_low"
+		]
+	}
+}

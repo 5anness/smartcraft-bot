@@ -1,0 +1,86 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/build_portal.schema.json",
+	"title": "build_portal: baut ein Netherportal auf dem nächsten freien Platz (4 breit, 5 hoch, fester Boden, bis 8 Blöcke weit; im Fels gräbt er den Platz frei) und zündet es an. Braucht 10 Obsidian, ein Feuerzeug (oder eine Feuerkugel) und 4 Bausteine für die Ecken. Lehnt ab, wenn ein Spawner bis 20 Blöcke nah ist (near_spawner: erst weggehen). In der Oberwelt erst, wenn alles für den Nether da ist (sonst not_prepared mit missing: Diamantrüstung plus Goldteil, Diamantschwert, 2 Spitzhacken, Bogen, 32 Pfeile, Schild, 16 gegartes Essen, 192 Bausteine (3 Stacks), Feuerzeug); force baut trotzdem. Ein Befehl statt vieler place. Ergebnis: portal_pos (ein Feld im Portal), portal_open. Danach enter_portal",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {
+			"force": {
+				"type": "boolean",
+				"description": "Notfall: Oberwelt-Portal trotz fehlender Nether-Ausrüstung bauen"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"portal_pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				}
+			},
+			"portal_open": {
+				"type": "boolean"
+			},
+			"blocks_placed": {
+				"type": "integer"
+			},
+			"obsidian_left": {
+				"type": "integer"
+			},
+			"missing": {
+				"type": "array",
+				"items": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"not_prepared",
+			"missing_obsidian",
+			"near_spawner",
+			"unsafe_spot",
+			"no_igniter",
+			"no_blocks",
+			"no_space",
+			"out_of_reach",
+			"place_failed",
+			"dig_failed",
+			"not_lit"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

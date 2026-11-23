@@ -1,0 +1,61 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/control_requested.schema.json",
+	"title": "data von control_requested: Ein Mensch hat im Spiel /aiplayer pause, resume oder stop gegeben. pause: die KI hält an und behält ihr Ziel; resume: sie macht weiter; stop: das Ziel ist beendet; settings (/aiplayer tts|humor|talkmode|dimensionfollow|streamer): alle Einstellungen, sofort übernehmen; apikey (/aiplayer apikey): neuer API-Schlüssel; tts_on/tts_off: ältere Form für die Sprachausgabe. Die laufende Aktion des Bots hält der Mod bei pause und stop selbst an. Priorität normal",
+	"type": "object",
+	"required": [
+		"action",
+		"by"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"action": {
+			"enum": [
+				"pause",
+				"resume",
+				"stop",
+				"tts_on",
+				"tts_off",
+				"settings",
+				"apikey"
+			]
+		},
+		"by": {
+			"type": "string",
+			"description": "Wer den Befehl gegeben hat (Spielername oder Server)"
+		},
+		"tts": {
+			"type": "boolean",
+			"description": "Nur bei action settings"
+		},
+		"humor": {
+			"enum": [
+				"light",
+				"medium",
+				"hard",
+				"crazy"
+			],
+			"description": "Nur bei action settings"
+		},
+		"talkmode": {
+			"enum": [
+				"light",
+				"medium",
+				"hard"
+			],
+			"description": "Nur bei action settings"
+		},
+		"dimension_follow": {
+			"type": "boolean",
+			"description": "Nur bei action settings"
+		},
+		"streamer": {
+			"type": "boolean",
+			"description": "Nur bei action settings"
+		},
+		"api_key": {
+			"type": "string",
+			"description": "Nur bei action apikey (/aiplayer apikey): der neue Anthropic-API-Schlüssel. Der Begleitprozess speichert ihn in companion/api_key.txt; in Logs steht er als ***"
+		}
+	}
+}

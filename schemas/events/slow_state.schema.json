@@ -1,0 +1,14 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/slow_state.schema.json",
+	"title": "data von slow_state: Messung des Mods: Der Bot war ohne Grund geduckt oder benutzte ein Item (beides bremst); geduckt wird sofort zurückgesetzt. Höchstens alle 5 s",
+	"type": "object",
+	"required": ["shift", "pose", "using_item", "speed"],
+	"additionalProperties": false,
+	"properties": {
+		"shift": {"type": "boolean"},
+		"pose": {"type": "string"},
+		"using_item": {"type": "string"},
+		"speed": {"type": "number"}
+	}
+}

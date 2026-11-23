@@ -1,0 +1,77 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/entity_nearby.schema.json",
+	"title": "data von entity_nearby: Feindliche Mobs im Umkreis von 16 Blöcken. Nur bei Änderung (Mob kommt/geht oder wechselt die Entfernungszone 0-5/6-10/11-16), höchstens einmal pro Sekunde. Priorität high, wenn einer näher als 6 Blöcke ist, bei Creepern schon ab 12 (eigene Zone unter 4, wird noch einmal gemeldet)",
+	"type": "object",
+	"required": [
+		"mobs"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"mobs": {
+			"type": "array",
+			"maxItems": 8,
+			"description": "Die nächsten zuerst; leer heißt: keine mehr in der Nähe",
+			"items": {
+				"type": "object",
+				"required": [
+					"id",
+					"type",
+					"dist",
+					"dir",
+					"dy"
+				],
+				"additionalProperties": false,
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "Entity-ID zum späteren Anvisieren"
+					},
+					"type": {
+						"type": "string",
+						"description": "z. B. minecraft:zombie"
+					},
+					"dist": {
+						"type": "integer",
+						"description": "Entfernung in Blöcken"
+					},
+					"dir": {
+						"enum": [
+							"N",
+							"NE",
+							"E",
+							"SE",
+							"S",
+							"SW",
+							"W",
+							"NW",
+							"HERE"
+						],
+						"description": "Himmelsrichtung vom Bot aus"
+					},
+					"dy": {
+						"type": "integer",
+						"description": "Höhenunterschied in Blöcken, positiv = über dem Bot"
+					},
+					"baby": {
+						"type": "boolean",
+						"description": "Nur gesetzt, wenn es ein Jungtier ist"
+					},
+					"neutral": {
+						"type": "boolean",
+						"description": "Nur gesetzt bei friedlichen Zombie-Piglins und Endermen, die den Bot nicht verfolgen; sie machen das Event nicht dringend"
+					},
+					"behind_wall": {
+						"type": "boolean",
+						"description": "Nur gesetzt, wenn der Mob den Bot nicht sieht, ihn nicht als Ziel hat und mindestens 3 Blöcke weg ist (z. B. hinter Fels); er macht das Event nicht dringend"
+					}
+				}
+			}
+		},
+		"more": {
+			"type": "integer",
+			"minimum": 1,
+			"description": "So viele weitere Mobs sind nicht aufgelistet"
+		}
+	}
+}

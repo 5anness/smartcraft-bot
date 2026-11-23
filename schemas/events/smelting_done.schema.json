@@ -1,0 +1,93 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/smelting_done.schema.json",
+	"title": "data von smelting_done: Ein Ofen, den der Bot befüllt hat, ist fertig oder steht ohne Brennstoff still. Kommt einmal je Befüllung, solange der Ofen geladen ist",
+	"type": "object",
+	"required": [
+		"furnace",
+		"ready",
+		"complete"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"furnace": {
+			"type": "array",
+			"items": {
+				"type": "integer"
+			},
+			"minItems": 3,
+			"maxItems": 3,
+			"description": "Blockposition [x, y, z]"
+		},
+		"ready": {
+			"oneOf": [
+				{
+					"type": "null"
+				},
+				{
+					"type": "object",
+					"required": [
+						"id",
+						"count"
+					],
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"count": {
+							"type": "integer"
+						},
+						"durability": {
+							"type": "object",
+							"description": "Nur bei Werkzeug und Rüstung",
+							"properties": {
+								"left": {
+									"type": "integer"
+								},
+								"max": {
+									"type": "integer"
+								}
+							}
+						}
+					}
+				}
+			],
+			"description": "Was im Ergebnisfach liegt"
+		},
+		"complete": {
+			"type": "boolean",
+			"description": "false: Brennstoff alle, Rohstoff liegt noch drin"
+		},
+		"unsmelted": {
+			"type": "object",
+			"required": [
+				"id",
+				"count"
+			],
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"count": {
+					"type": "integer"
+				},
+				"durability": {
+					"type": "object",
+					"description": "Nur bei Werkzeug und Rüstung",
+					"properties": {
+						"left": {
+							"type": "integer"
+						},
+						"max": {
+							"type": "integer"
+						}
+					}
+				}
+			},
+			"description": "Nur bei complete=false"
+		},
+		"hint": {
+			"type": "string"
+		}
+	}
+}

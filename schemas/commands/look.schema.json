@@ -1,0 +1,40 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/look.schema.json",
+	"title": "look: liefert den Snapshot des Bots (snapshot.schema.json)",
+	"args": {
+		"type": "object",
+		"additionalProperties": false
+	},
+	"result": {
+		"$ref": "../snapshot.schema.json",
+		"properties": {
+			"end_missing": {
+				"type": "array",
+				"items": { "type": "string" },
+				"description": "Oberwelt und Nether: was für das End und den Drachen noch fehlt (12 Betten, 18 Enderaugen, Bogen, 64 Pfeile, 128 Bausteine, 16 Essen; Vorstufen zählen mit)"
+			},
+			"end_ready": {
+				"type": "boolean",
+				"description": "Alles für das End beisammen"
+			},
+			"nether_missing": {
+				"type": "array",
+				"items": {
+					"type": "string"
+				},
+				"description": "Nur in der Oberwelt: was für den Nether noch fehlt (wie build_portal not_prepared, plus 10 Obsidian)"
+			},
+			"nether_ready": {
+				"type": "boolean",
+				"description": "Nur in der Oberwelt: alles für den Nether da"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot"
+		],
+		"cancelled": []
+	}
+}

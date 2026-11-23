@@ -1,0 +1,61 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/bed_cycle.schema.json",
+	"title": "bed_cycle: nur im End, braucht Betten (mind. 5) und 32 Bausteine. Besiegt den Drachen OHNE Kristalle zu zerstören: baut einen Käfig etwa 8 Blöcke vom Brunnen, geht beim Hocken unter den Kopf und sprengt jedes Mal, wenn der Kopf in Reichweite ist (Hocken, Abheben, Vorbeiflug), ein Bett direkt unter dem Kopf, alle 0,5 s. Vier Treffer in Folge töten den Drachen. Endet mit dragon_dead, no_beds, no_blocks oder health_low (essen, dann wieder bed_cycle). Ergebnis: dragon_health, beds_used, hits",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {
+			"mode": {
+				"type": "string",
+				"enum": ["combo", "cage", "climb"],
+				"description": "combo (Standard): Käfig, nimmt bis 10 Schaden in Kauf; cage: Käfig, bis 4; climb: offene Säule, baut beim Abheben mit hoch"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"dragon_health": {
+				"type": "number"
+			},
+			"hits": {
+				"type": "integer"
+			},
+			"beds_used": {
+				"type": "integer"
+			},
+			"health": {
+				"type": "number"
+			},
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				}
+			},
+			"outcome": {
+				"type": "string"
+			},
+			"hint": {
+				"type": "string"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"not_in_end",
+			"no_beds",
+			"no_blocks"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"health_low"
+		]
+	}
+}

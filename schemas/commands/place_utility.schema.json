@@ -1,0 +1,93 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/place_utility.schema.json",
+	"title": "place_utility: stellt Werkbank, Ofen oder Truhe aus dem Inventar auf einen freien Platz mit festem Boden neben dem Bot (oder nahe einer Position) und merkt sich die Stelle für craft, smelt, store und take",
+	"args": {
+		"type": "object",
+		"required": [
+			"block"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"block": {
+				"type": "string",
+				"enum": [
+					"crafting_table",
+					"furnace",
+					"chest"
+				]
+			},
+			"near": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Gewünschte Stelle; der Bot läuft hin und nimmt den nächsten freien Platz"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"block": {
+				"type": "string"
+			},
+			"block_pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Wo der Block jetzt steht"
+			},
+			"left_in_inventory": {
+				"type": "integer"
+			},
+			"can_craft": {
+				"type": "boolean",
+				"description": "Bei missing_item: könnte er den Block jetzt craften"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"missing_item",
+			"no_space",
+			"out_of_reach"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

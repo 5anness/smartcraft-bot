@@ -1,0 +1,103 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/shoot.schema.json",
+	"title": "shoot: schießt mit dem Bogen auf ein Ziel bis 64 Blöcke weit, voll gespannt und mit Vorhalt für Bewegung und Pfeilfall. Für Ziele, die du nicht erreichst: Lohen, Ghasts, Endkristalle (end_crystal), der Enderdrache (zielt auf den Kopf), Skelette über Abgründen. Braucht Bogen und Pfeile, freie Sicht. Endet, wenn das Ziel tot oder zerstört ist oder die Schüsse verbraucht sind. Nach 3 Fehlschüssen in Folge auf ein Lebewesen bis 14 Blöcke wechselt er zum Schwert",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {
+			"target": {
+				"type": "string",
+				"description": "Typ wie blaze, end_crystal, ender_dragon (das nächste in Sicht) oder die id"
+			},
+			"shots": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 32,
+				"description": "Höchstzahl Pfeile, Standard 5"
+			}
+		},
+		"required": [
+			"target"
+		]
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"defended_against": {
+				"type": "string",
+				"description": "Ein Wesen traf dich im Nahkampf; shoot kämpfte zuerst mit dem Schwert dagegen (Ergebnis bezieht sich dann auf diesen Kampf)"
+			},
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"target": {
+				"type": "object"
+			},
+			"damage_dealt": {
+				"type": "number"
+			},
+			"arrows_shot": {
+				"type": "integer"
+			},
+			"arrows_left": {
+				"type": "integer"
+			},
+			"outcome": {
+				"enum": [
+					"destroyed",
+					"shots_done",
+					"lost_sight",
+					"out_of_arrows",
+					"cannot_draw",
+					"killed_melee",
+					"line_blocked"
+				],
+				"description": "killed_melee: nach 3 Fehlschüssen in Folge auf ein Ziel bis 14 Blöcke mit dem Schwert erledigt"
+			},
+			"switched_to_melee": {
+				"type": "boolean",
+				"description": "true, wenn nach 3 Fehlschüssen in Folge auf ein Ziel bis 14 Blöcke zum Nahkampf gewechselt wurde"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"entity_not_found",
+			"no_bow",
+			"no_arrows",
+			"no_line_of_sight",
+			"cannot_draw",
+			"line_blocked",
+			"enderman_in_line",
+			"too_close"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger"
+		]
+	}
+}

@@ -1,0 +1,21 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/goal_requested.schema.json",
+	"title": "data von goal_requested: Ein Mensch hat im Spiel mit /aiplayer goal <text> ein Ziel vorgegeben. Ein neues Ziel ersetzt das laufende. Priorität normal",
+	"type": "object",
+	"required": [
+		"text",
+		"by"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"text": {
+			"type": "string",
+			"description": "Das Ziel in Worten"
+		},
+		"by": {
+			"type": "string",
+			"description": "Wer den Befehl gegeben hat (Spielername oder Server)"
+		}
+	}
+}

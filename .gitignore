@@ -1,0 +1,55 @@
+# gradle
+
+.gradle/
+build/
+out/
+classes/
+
+# eclipse
+
+*.launch
+
+# idea
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+
+# macos
+
+*.DS_Store
+
+# fabric
+
+run/
+
+# java
+
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr
+companion/voices/
+companion/api_key.txt
+
+# python
+__pycache__/
+*.pyc
+
+# Begleitprozess: Laufdaten, Notizen pro Welt, Stimmmodelle (groß, werden heruntergeladen)
+companion/logs/
+companion/memory/
+
+# lokale Einstellungen
+.claude/settings.local.json
+.claudesettings.json
+*.vor-test

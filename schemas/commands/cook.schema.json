@@ -1,0 +1,167 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/cook.schema.json",
+	"title": "cook: gart rohes Essen im Ofen. Verhält sich wie smelt (Ofen in der Nähe, Brennstoff automatisch, endet nach dem Befüllen, smelting_done meldet das Ende, smelt_collect holt ab), nimmt aber nur Items an, die gegart etwas Essbares ergeben",
+	"args": {
+		"type": "object",
+		"required": [
+			"item"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"item": {
+				"type": "string",
+				"description": "Rohes Essen, z. B. beef, porkchop, chicken, potato"
+			},
+			"count": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 64,
+				"default": 1
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"item": {
+				"type": "string"
+			},
+			"requested": {
+				"type": "integer"
+			},
+			"loaded": {
+				"type": "integer"
+			},
+			"makes": {
+				"type": "string",
+				"description": "Was dabei herauskommt"
+			},
+			"ready_in_ticks": {
+				"type": "integer"
+			},
+			"fuel": {
+				"type": "object",
+				"required": [
+					"id",
+					"count"
+				],
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"count": {
+						"type": "integer"
+					},
+					"durability": {
+						"type": "object",
+						"description": "Nur bei Werkzeug und Rüstung",
+						"properties": {
+							"left": {
+								"type": "integer"
+							},
+							"max": {
+								"type": "integer"
+							}
+						}
+					}
+				}
+			},
+			"stopped_because": {
+				"type": "string",
+				"enum": [
+					"not_enough_items",
+					"not_enough_fuel",
+					"furnace_full"
+				]
+			},
+			"furnace": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Blockposition [x, y, z]"
+			},
+			"collected": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"required": [
+						"id",
+						"count"
+					],
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"count": {
+							"type": "integer"
+						},
+						"durability": {
+							"type": "object",
+							"description": "Nur bei Werkzeug und Rüstung",
+							"properties": {
+								"left": {
+									"type": "integer"
+								},
+								"max": {
+									"type": "integer"
+								}
+							}
+						}
+					}
+				}
+			},
+			"has_furnace_item": {
+				"type": "boolean"
+			},
+			"can_craft_furnace": {
+				"type": "boolean"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"unknown_item",
+			"not_cookable",
+			"missing_item",
+			"no_fuel",
+			"no_furnace",
+			"furnace_busy",
+			"load_failed"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

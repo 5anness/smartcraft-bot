@@ -1,0 +1,51 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/equip_best_armor.schema.json",
+	"title": "equip_best_armor: zieht für Kopf, Brust, Beine und Füße jeweils das Teil mit dem höchsten Rüstungswert an (Rüstung plus Härte) und legt einen Schild in die Zweithand, wenn dort keiner ist. Was vorher getragen wurde, kommt ins Inventar. Antwort kommt sofort",
+	"args": {
+		"type": "object",
+		"required": [],
+		"additionalProperties": false,
+		"properties": {}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"changed": {
+				"type": "array",
+				"description": "Was neu angelegt wurde; leer, wenn schon das Beste getragen wird",
+				"items": {
+					"type": "object",
+					"properties": {
+						"slot": {
+							"type": "string"
+						},
+						"item": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"worn": {
+				"type": "object",
+				"description": "Was er jetzt trägt: head, chest, legs, feet, offhand"
+			},
+			"armor": {
+				"type": "integer",
+				"description": "Rüstungspunkte danach (0–20)"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"no_armor"
+		]
+	}
+}

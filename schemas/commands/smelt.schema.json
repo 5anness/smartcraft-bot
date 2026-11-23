@@ -1,0 +1,176 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/smelt.schema.json",
+	"title": "smelt: geht zu einem Ofen in der Nähe (auch zu einem gemerkten), legt Rohstoff und Brennstoff ein und ist dann fertig. Der Ofen arbeitet allein weiter, der Bot kann anderes tun. Das Event smelting_done meldet das Ende, smelt_collect holt das Ergebnis. Liegt im Ofen schon etwas Fertiges, nimmt er es mit. Stellt keinen Ofen auf: dafür place_utility",
+	"args": {
+		"type": "object",
+		"required": [
+			"item"
+		],
+		"additionalProperties": false,
+		"properties": {
+			"item": {
+				"type": "string",
+				"description": "Der Rohstoff, z. B. raw_iron"
+			},
+			"count": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 64,
+				"default": 1
+			},
+			"fuel": {
+				"type": "string",
+				"description": "Brennstoff. Ohne Angabe: Kohle, dann Holzkohle, Bretter, Stämme, anderes Brennbares. Reicht der bevorzugte Vorrat nicht für die Menge, wird der nächste genommen, der reicht. Es wird nur so viel eingelegt, wie die Menge braucht"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"item": {
+				"type": "string"
+			},
+			"requested": {
+				"type": "integer"
+			},
+			"loaded": {
+				"type": "integer",
+				"description": "So viele Stück liegen jetzt zusätzlich im Ofen"
+			},
+			"makes": {
+				"type": "string",
+				"description": "Was daraus wird"
+			},
+			"ready_in_ticks": {
+				"type": "integer",
+				"description": "Ungefähre Dauer für das Eingelegte"
+			},
+			"fuel": {
+				"type": "object",
+				"required": [
+					"id",
+					"count"
+				],
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"count": {
+						"type": "integer"
+					},
+					"durability": {
+						"type": "object",
+						"description": "Nur bei Werkzeug und Rüstung",
+						"properties": {
+							"left": {
+								"type": "integer"
+							},
+							"max": {
+								"type": "integer"
+							}
+						}
+					}
+				},
+				"description": "Eingelegter Brennstoff"
+			},
+			"stopped_because": {
+				"type": "string",
+				"description": "Bei Teilerfolg: warum es nicht die ganze Menge wurde",
+				"enum": [
+					"not_enough_items",
+					"not_enough_fuel",
+					"furnace_full"
+				]
+			},
+			"furnace": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Blockposition [x, y, z]"
+			},
+			"collected": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"required": [
+						"id",
+						"count"
+					],
+					"properties": {
+						"id": {
+							"type": "string"
+						},
+						"count": {
+							"type": "integer"
+						},
+						"durability": {
+							"type": "object",
+							"description": "Nur bei Werkzeug und Rüstung",
+							"properties": {
+								"left": {
+									"type": "integer"
+								},
+								"max": {
+									"type": "integer"
+								}
+							}
+						}
+					}
+				},
+				"description": "Was er an Fertigem aus dem Ofen mitgenommen hat"
+			},
+			"has_furnace_item": {
+				"type": "boolean"
+			},
+			"can_craft_furnace": {
+				"type": "boolean"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"unknown_item",
+			"not_smeltable",
+			"missing_item",
+			"no_fuel",
+			"no_furnace",
+			"furnace_busy",
+			"load_failed"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

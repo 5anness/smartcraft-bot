@@ -1,0 +1,78 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/enter_portal.schema.json",
+	"title": "enter_portal: geht zum nächsten Nether- oder Endportal (bis 16 Blöcke) und hinein, bis der Bot in der anderen Dimension ist. Ergebnis: dim (die neue Dimension), portal Von der Oberwelt in den Nether nur mit der ganzen Nether-Ausrüstung wie bei build_portal (Diamantrüstung und ein Goldteil, Diamantschwert, 2 Spitzhacken, Bogen, 32 Pfeile, Schild, 16 gegartes Essen, 192 Bausteine (3 Stacks), Feuerzeug); die Rüstung zieht die Figur vor dem Durchgehen selbst an, sonst not_prepared mit missing. Ins End ebenso nur mit allem aus end_missing (Betten, Enderaugen, Bogen, Pfeile, Bausteine, Essen), sonst not_prepared; force geht trotzdem.",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {
+			"force": {
+				"type": "boolean",
+				"default": false,
+				"description": "In den Nether auch ohne Diamantrüstung und Goldteil (nur im Notfall)"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"dim": {
+				"type": "string"
+			},
+			"portal": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3
+			},
+			"missing": {
+				"type": "array",
+				"items": {
+					"type": "string"
+				},
+				"description": "Bei not_prepared: was für den Nether bzw. das End fehlt"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"no_portal",
+			"out_of_reach",
+			"not_teleported",
+			"not_prepared"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

@@ -1,0 +1,31 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/tool_low_durability.schema.json",
+	"title": "data von tool_low_durability: Das Werkzeug in der Hand hat höchstens 10 % Haltbarkeit übrig. Kommt einmal je Werkzeug",
+	"type": "object",
+	"required": [
+		"item",
+		"left",
+		"max"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"item": {
+			"type": "string"
+		},
+		"gold_armor": {
+			"type": "boolean",
+			"description": "Nur im Nether: das getragene Goldteil ist fast kaputt oder zerbrochen (left 0); ohne Gold greifen Piglins an"
+		},
+		"hint": {
+			"type": "string"
+		},
+		"left": {
+			"type": "integer",
+			"description": "So viele Benutzungen hält es noch"
+		},
+		"max": {
+			"type": "integer"
+		}
+	}
+}

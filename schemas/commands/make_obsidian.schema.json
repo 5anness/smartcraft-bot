@@ -1,0 +1,97 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/make_obsidian.schema.json",
+	"title": "make_obsidian: besorgt Obsidian bis count, ein Befehl für die ganze Arbeit. Baut erst liegendes Obsidian ab (nicht aus Portalrahmen), wandelt dann selbst Lavaquellen mit dem Wassereimer um (findet die Quelle und den Platz fürs Wasser allein), holt das Wasser zurück und baut ab. Braucht Diamantspitzhacke und Wassereimer. Nutze es statt bucket mit eigenen Koordinaten, sobald Lava oder Obsidian gemeldet ist.",
+	"args": {
+		"type": "object",
+		"required": [],
+		"additionalProperties": false,
+		"properties": {
+			"count": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 64,
+				"default": 10,
+				"description": "So viel Obsidian dazu"
+			},
+			"radius": {
+				"type": "integer",
+				"minimum": 4,
+				"maximum": 24,
+				"default": 16
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"nearest_lava": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Bei no_lava: nächste Lavaquelle bis 64 Blöcke (geladene Chunks); dorthin gehen und erneut make_obsidian"
+			},
+			"obsidian_gained": {
+				"type": "integer"
+			},
+			"obsidian": {
+				"type": "integer",
+				"description": "Obsidian im Inventar danach"
+			},
+			"lava_converted": {
+				"type": "integer"
+			},
+			"mined": {
+				"type": "integer"
+			},
+			"water_buckets": {
+				"type": "integer"
+			},
+			"last_problem": {
+				"type": "string",
+				"description": "Letzter gescheiterter Teilschritt (mine/pour/refill: Grund)"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"wrong_tool",
+			"no_water_bucket",
+			"no_lava",
+			"lava_unreachable"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"damage"
+		]
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/no_pickaxe.schema.json",
+	"title": "data von no_pickaxe: Die letzte Spitzhacke ist weg (zerbrochen, weggeworfen, nach dem Tod verloren). Kommt einmal je Verlust, Priorität high",
+	"type": "object",
+	"required": [
+		"craft",
+		"enough_wood",
+		"hint"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"craft": {
+			"type": "string",
+			"description": "Die beste Spitzhacke, für die das Material im Inventar reicht, z. B. minecraft:stone_pickaxe; ohne Material minecraft:wooden_pickaxe"
+		},
+		"enough_wood": {
+			"type": "boolean",
+			"description": "Ob das Holz im Inventar (Stämme, Bretter, Stöcke) für Stiel und Kopf reicht"
+		},
+		"hint": {
+			"type": "string"
+		}
+	}
+}

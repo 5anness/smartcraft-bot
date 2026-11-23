@@ -1,0 +1,98 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/throw_eye.schema.json",
+	"title": "throw_eye: wirft ein Enderauge (nur in der Oberwelt) und beobachtet den Flug. Meldet direction/yaw (wohin die Festung liegt), ended_at, descending (true: die Festung liegt fast direkt unter dir, etwa 12 Blöcke Umkreis) und eye_dropped (das Auge liegt dann bei pickup_at und kann aufgehoben werden; sonst ist es zerbrochen; eye_in_fluid: in Wasser oder Lava gefallen, nicht hinterher). Ab dem zweiten Wurf von einem anderen Ort (mindestens 4 Grad andere Richtung) kommt estimated_stronghold mit x, z und Entfernung. eyes_lost zählt verlorene Augen; ab 4 lehnt der Mod ab (eye_budget, force wirft trotzdem). Ist locate freigeschaltet, lehnt der Mod ab (use_locate: nimm locate end_portal); force wirft trotzdem",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {
+			"force": {
+				"type": "boolean",
+				"default": false,
+				"description": "Auch werfen, wenn locate freigeschaltet ist"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string",
+				"description": "Genauer, woran es lag, oder was als Nächstes hilft"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"from": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3
+			},
+			"ended_at": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3
+			},
+			"direction": {
+				"type": "string"
+			},
+			"yaw": {
+				"type": "integer"
+			},
+			"descending": {
+				"type": "boolean"
+			},
+			"eye_dropped": {
+				"type": "boolean"
+			},
+			"estimated_stronghold": {
+				"type": "object",
+				"description": "x, z, distance, angle_between_throws"
+			},
+			"eyes_left": {
+				"type": "integer"
+			},
+			"throws_known": {
+				"type": "integer"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"wrong_dimension",
+			"no_eye",
+			"no_stronghold",
+			"use_locate"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"danger",
+			"damage"
+		]
+	}
+}

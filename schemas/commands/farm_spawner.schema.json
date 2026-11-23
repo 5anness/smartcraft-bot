@@ -1,0 +1,127 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/commands/farm_spawner.schema.json",
+	"title": "farm_spawner: geht zum nächsten Spawner (bis 24 Blöcke, ±12 in der Höhe), tötet alle Feinde dort (bis 12 Blöcke; in Reichweite mit dem Schwert, hoch schwebende Lohen mit dem Bogen, falls da; Feuer am Boden löscht er), hebt die Beute auf und bleibt am Spawner, bis count Stück von item im Inventar sind (outcome: enough) oder seconds um sind (outcome: time_up). Ein Befehl für das ganze Farmen. Schaden und Feuer brechen nicht ab, nur Leben bis min_health (cancelled: health_low). Er entfernt sich im Kampf höchstens 16 Blöcke vom Spawner: dann essen und erneut starten",
+	"args": {
+		"type": "object",
+		"additionalProperties": false,
+		"properties": {
+			"item": {
+				"type": "string",
+				"description": "Worauf er farmt, Standard blaze_rod"
+			},
+			"count": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 64,
+				"description": "So viele insgesamt im Inventar, Standard 10"
+			},
+			"min_health": {
+				"type": "number",
+				"minimum": 0,
+				"maximum": 19,
+				"description": "Standard 12 (ein Witherskelett trifft mit bis zu 8)"
+			},
+			"seconds": {
+				"type": "integer",
+				"minimum": 10,
+				"maximum": 1800,
+				"description": "Höchstens so lange farmen, Standard 600"
+			}
+		}
+	},
+	"result": {
+		"type": "object",
+		"properties": {
+			"pos": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				},
+				"minItems": 3,
+				"maxItems": 3,
+				"description": "Standort des Bots nach der Aktion"
+			},
+			"ticks": {
+				"type": "integer",
+				"description": "Dauer der Aktion in Ticks (20 pro Sekunde)"
+			},
+			"hint": {
+				"type": "string"
+			},
+			"trigger": {
+				"type": "object",
+				"description": "Bei cancelled wegen danger/damage: das auslösende Event"
+			},
+			"spawner": {
+				"type": "array",
+				"items": {
+					"type": "integer"
+				}
+			},
+			"item": {
+				"type": "string"
+			},
+			"have": {
+				"type": "integer"
+			},
+			"stand_off": {
+				"type": "number",
+				"description": "Nur wenn er nicht dicht herankam: Abstand zum Spawner, mit dem er sich begnügt hat. Beute fällt dann oft unerreichbar"
+			},
+			"path_problem": {
+				"type": "string",
+				"description": "Warum der Weg zum Spawner scheiterte"
+			},
+			"gained": {
+				"type": "integer"
+			},
+			"killed": {
+				"type": "object",
+				"description": "Getötete je Typ"
+			},
+			"hits": {
+				"type": "integer"
+			},
+			"seconds": {
+				"type": "integer"
+			},
+			"fires_out": {
+				"type": "integer",
+				"description": "Gelöschte Feuer am Boden"
+			},
+			"outcome": {
+				"type": "string",
+				"enum": [
+					"enough",
+					"time_up"
+				]
+			},
+			"health": {
+				"type": "number"
+			},
+			"food": {
+				"type": "integer"
+			}
+		}
+	},
+	"reasons": {
+		"failed": [
+			"no_blocks",
+			"wrong_spawner",
+			"no_bot",
+			"bot_died",
+			"invalid_args",
+			"timeout",
+			"no_spawner",
+			"out_of_reach",
+			"inventory_full",
+			"stalled"
+		],
+		"cancelled": [
+			"stopped",
+			"superseded",
+			"health_low"
+		]
+	}
+}

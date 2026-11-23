@@ -1,0 +1,40 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/reflex_ate.schema.json",
+	"title": "data von reflex_ate: Notfall-Reflex des Mods: Bei Leben 4 oder weniger hat der Bot von selbst gegessen. Eine laufende Aktion hat so lange gewartet. Frühestens alle 10 Sekunden",
+	"type": "object",
+	"required": [
+		"item",
+		"eaten",
+		"health",
+		"food"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"item": {
+			"type": "string"
+		},
+		"eaten": {
+			"type": "boolean",
+			"description": "false, wenn das Essen unterbrochen wurde"
+		},
+		"health": {
+			"type": "number"
+		},
+		"food": {
+			"type": "integer"
+		},
+		"paused_action": {
+			"type": "boolean",
+			"description": "Ob dabei eine Aktion gewartet hat"
+		},
+		"reason": {
+			"enum": [
+				"emergency",
+				"top_up",
+				"fire_resistance"
+			],
+			"description": "emergency: Leben höchstens 4, auch Giftiges; top_up: Leben nicht voll und Hunger unter 20, kein Gegner bis 10 Blöcke, nur Unbedenkliches ohne goldene Äpfel; fire_resistance: Trank der Feuerresistenz getrunken (in Lava sofort, brennend ab 8 Leben)"
+		}
+	}
+}

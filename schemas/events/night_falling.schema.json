@@ -1,0 +1,28 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/night_falling.schema.json",
+	"title": "data von night_falling: Die Sonne geht unter; in monsters_in_ticks Ticks können an der Oberfläche Monster erscheinen. Kommt einmal je Abend, nur in der Oberwelt",
+	"type": "object",
+	"required": [
+		"time",
+		"monsters_in_ticks"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"time": {
+			"type": "integer",
+			"description": "Tageszeit 0–23999"
+		},
+		"monsters_in_ticks": {
+			"type": "integer"
+		},
+		"underground": {
+			"type": "boolean",
+			"description": "true, wenn der Bot keinen Himmel über sich hat (Höhle, Stollen); dort ändert die Nacht nichts"
+		},
+		"can_sleep_in_ticks": {
+			"type": "integer",
+			"description": "Ab dann lässt sich ein Bett benutzen"
+		}
+	}
+}

@@ -1,0 +1,49 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "aiplayer/events/damage_taken.schema.json",
+	"title": "data von damage_taken: Der Bot hat Schaden genommen und lebt noch. Priorität high",
+	"type": "object",
+	"required": [
+		"amount",
+		"source",
+		"health"
+	],
+	"additionalProperties": false,
+	"properties": {
+		"amount": {
+			"type": "number",
+			"description": "Schaden in Lebenspunkten; bei zusammengefassten Events die Summe"
+		},
+		"source": {
+			"type": "string",
+			"description": "Schadensart, z. B. minecraft:fall, minecraft:mob_attack"
+		},
+		"attacker": {
+			"type": "string",
+			"description": "Entity-Typ des Angreifers, falls es einen gibt"
+		},
+		"attacker_dir": {
+			"enum": [
+				"N",
+				"NE",
+				"E",
+				"SE",
+				"S",
+				"SW",
+				"W",
+				"NW",
+				"HERE"
+			],
+			"description": "Himmelsrichtung vom Bot aus"
+		},
+		"health": {
+			"type": "number",
+			"description": "Verbleibende Lebenspunkte (voll = 20)"
+		},
+		"count": {
+			"type": "integer",
+			"minimum": 2,
+			"description": "Nur bei zusammengefassten Events: so viele gleichartige Vorgänge stecken in diesem Event"
+		}
+	}
+}
