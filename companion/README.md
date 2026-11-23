@@ -94,7 +94,14 @@ Der Bot selbst tritt weiterhin im Spiel mit `/smartcraft join` bei.
 | `SMARTCRAFT_FALLBACKS` | `0` schaltet das Ausweichmodell bei einer abgelehnten Anfrage ab | `1` |
 | `SMARTCRAFT_CHAT` | `plans`: nur kurze Ansagen, was er vorhat (spart Tokens); `full` (oder `1`): gesprächig mit Humor und Anstößen zum Reden; `off` (oder `0`): kein Chat | `plans` |
 | (entfällt) | Wie oft der Bot redet, regelt jetzt `/smartcraft talkmode light\|medium\|hard` (Abstände in `TALK_SETTINGS`) | – |
-| `SMARTCRAFT_TTS` | `1` startet mit Sprachausgabe (Chatnachrichten des Bots werden unter Windows vorgelesen); im Spiel umschalten mit `/smartcraft tts on` bzw. `off` | `0` |
-| `SMARTCRAFT_TTS_RATE` | Sprechtempo, `-10` bis `10` | `1` |
-| `SMARTCRAFT_TTS_PIPER_VOICE` | Piper-Stimmmodell in `companion/voices/` (laden: dort `python -m piper.download_voices <name>`); fehlt es, spricht die Windows-Stimme | `de_DE-thorsten-high` |
-| `SMARTCRAFT_TTS_VOICE` | Teil des Stimmennamens, z. B. `Katja`; sonst die erste deutsche Stimme | – |
+| `SMARTCRAFT_TTS` | `1` startet mit Sprachausgabe (Chatnachrichten des Bots werden vorgelesen); im Spiel umschalten mit `/smartcraft tts on` bzw. `off` | `0` |
+| `SMARTCRAFT_TTS_LANG` | Sprache der Stimme, z. B. `en_US`; sonst die Systemsprache | Systemsprache |
+| `SMARTCRAFT_TTS_RATE` | Sprechtempo der Windows-Stimme, `-10` bis `10` | `3` |
+| `SMARTCRAFT_TTS_PIPER_VOICE` | Piper-Stimmmodell (Name wie `en_US-lessac-medium`); sonst eine vorhandene Stimme der Sprache in `voices/`, sonst die Standardstimme der Sprache (wird geladen) | – |
+| `SMARTCRAFT_TTS_VOICE` | Teil des Namens der Windows-Stimme, z. B. `Katja`; sonst die erste Stimme der Sprache | – |
+
+**Sprachausgabe:** Die Sprache folgt der Systemsprache. Beim ersten `/smartcraft tts on` lädt der Begleitprozess die
+Piper-Stimme der Sprache (Deutsch, Englisch, Französisch, Spanisch, Italienisch, Polnisch, Portugiesisch, Russisch;
+je ca. 63 MB, einmalig nach `voices/`) und installiert `piper-tts`, falls es fehlt – aber nur in der eigenen Umgebung
+des Mods, nie ins System-Python. Bis dahin, ohne Internet oder bei anderen Sprachen spricht die Systemstimme
+(Windows: eingebaute Stimme, macOS: `say`, Linux: `espeak-ng`, falls installiert).

@@ -80,7 +80,7 @@ You can also just write to the AI in chat. It answers there and does what you as
 | `/smartcraft stats on\|off` | Hearts and hunger above the bot |
 | `/smartcraft xpbar on\|off` | Token usage and cost in your XP bar |
 | `/smartcraft inventar` | Open the bot's inventory |
-| `/smartcraft tts on\|off` | Voice output on the host |
+| `/smartcraft tts on\|off` | Voice output on the host, in the system language (see below) |
 | `/smartcraft humor light\|medium\|hard\|crazy` | How funny the AI tries to be |
 | `/smartcraft talkmode light\|medium\|hard` | How often the AI talks in chat |
 | `/smartcraft locate on\|off` | Allow the AI to look up structures (a cheat, off by default) |
@@ -100,6 +100,18 @@ The full list (including test helpers) is in [CLAUDE.md](CLAUDE.md).
 Prices as listed by the providers on Nov 23, 2026. Switch with `/smartcraft provider openai`; any other model of
 that provider works with `/smartcraft model <name>`. Only Claude uses prompt caching tuned for this project, so the
 other providers may cost more per step.
+
+## Voice output
+
+`/smartcraft tts on` reads the bot's chat messages aloud on the host, in your system language. The first time, the
+companion downloads a neural [Piper](https://github.com/OHF-Voice/piper1-gpl) voice for that language (about 63 MB,
+once) and installs `piper-tts` into its own Python environment. Piper voices exist for German, English, French,
+Spanish, Italian, Polish, Portuguese and Russian. Until the download is done, offline, or for other languages, the
+built-in system voice speaks (Windows; `say` on macOS; `espeak-ng` on Linux if installed). Force a language with
+`SMARTCRAFT_TTS_LANG=en_US`.
+
+> The bot currently writes its chat in German (the system prompt is German), so a non-German voice will read
+> German text.
 
 ## Costs
 
