@@ -110,8 +110,9 @@ def show(line):
     if "reason" in message:
         parts.append(f"reason={message['reason']}")
     data = message.get("data")
-    if data and "api_key" in data:
-        data = {**data, "api_key": "***"}
+    if data and ("api_key" in data or "api_keys" in data):
+        data = {**data, **({"api_key": "***"} if "api_key" in data else {}),
+                **({"api_keys": {name: "***" for name in data["api_keys"]}} if "api_keys" in data else {})}
     if data:
         parts.append(json.dumps(data, ensure_ascii=False, separators=(",", ":")))
     marker = "!!" if message.get("prio") == "high" else "<-"

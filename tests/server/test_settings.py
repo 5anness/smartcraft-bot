@@ -68,8 +68,40 @@ def main():
         report.check("/smartcraft apikey mit Unsinn: Absage",
                      server.find_in_output("API-Schl", mark) is not None, "")
         result, _ = server.run("settings", {})
-        report.check("settings ohne gemerkten Schlüssel: kein api_key", "api_key" not in result.get("data", {}),
+        report.check("settings ohne gemerkten Schlüssel: kein api_keys", "api_keys" not in result.get("data", {}),
                      summary(result))
+
+        # --- Anbieter: Schlüssel am Präfix erkannt oder ausdrücklich, Wechsel von Anbieter und Modell.
+        def apikey_events(command):
+            server.drain(0.3)
+            server.console(command, wait=0.2)
+            return [e["data"] for e in server.drain(1.0)
+                    if e.get("name") == "control_requested" and e["data"].get("action") == "apikey"]
+
+        sent = apikey_events("smartcraft apikey AIzaSyTest0123456789012345678")
+        report.check("apikey AIza…: als gemini erkannt", len(sent) == 1 and sent[0].get("provider") == "gemini",
+                     str(sent and sent[0].get("provider")))
+        sent = apikey_events("smartcraft apikey openai sk-proj-test-01234567890123456789")
+        report.check("apikey openai <key>: Anbieter openai", len(sent) == 1 and sent[0].get("provider") == "openai",
+                     str(sent and sent[0].get("provider")))
+        mark = server.output_mark()
+        server.console("smartcraft apikey unbekannt-0123456789012345678", wait=1)
+        report.check("apikey ohne erkennbaren Anbieter: Absage", server.find_in_output("Anbieter nicht erkannt", mark)
+                     is not None and not apikey_events("smartcraft info"), "")
+        server.console("smartcraft provider openai", wait=0.5)
+        result, _ = server.run("settings", {})
+        report.check("/smartcraft provider openai: settings provider openai, Standardmodell",
+                     result["data"].get("provider") == "openai" and result["data"].get("model") == "", summary(result))
+        server.console("smartcraft model gpt-6-sol", wait=0.5)
+        result, _ = server.run("settings", {})
+        report.check("/smartcraft model gpt-6-sol", result["data"].get("model") == "gpt-6-sol", summary(result))
+        server.console("smartcraft provider anthropic", wait=0.5)
+        result, _ = server.run("settings", {})
+        report.check("/smartcraft provider anthropic: Modell zurück auf Standard",
+                     result["data"].get("provider") == "anthropic" and result["data"].get("model") == "",
+                     summary(result))
+        report.check("Schlüssel der Anbieter nie im Server-Log",
+                     all("0123456789012345678" not in line or line.startswith(">>>") for line in server._output), "")
 
         # --- shelter nachts: voll ausgerüstet lehnt ab, mit force nicht, ohne Rüstung nicht.
         server.console("time set midnight")

@@ -56,6 +56,18 @@
 		"api_key": {
 			"type": "string",
 			"description": "Nur bei action apikey (/smartcraft apikey): der neue Anthropic-API-Schlüssel. Der Begleitprozess speichert ihn in companion/api_key.txt; in Logs steht er als ***"
+		},
+		"provider": {
+			"enum": [
+				"anthropic",
+				"openai",
+				"gemini"
+			],
+			"description": "Bei action apikey: Anbieter des Schlüssels; bei action settings: gewählter Anbieter"
+		},
+		"model": {
+			"type": "string",
+			"description": "Nur bei action settings; leer heißt Standardmodell"
 		}
 	}
 }

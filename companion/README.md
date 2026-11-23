@@ -17,11 +17,18 @@ Für den Start von Hand einmalig einrichten:
 pip install -r companion/requirements.txt
 ```
 
-Den API-Schlüssel am einfachsten im Spiel festlegen:
+Den API-Schlüssel am einfachsten im Spiel festlegen (der Anbieter wird am Präfix erkannt):
 
 ```
-/smartcraft apikey sk-ant-...
+/smartcraft apikey sk-ant-...            # Anthropic (Claude, Standard)
+/smartcraft apikey openai sk-...         # OpenAI (ChatGPT)
+/smartcraft apikey gemini AIza...        # Google (Gemini)
+/smartcraft provider openai              # Anbieter wechseln (Standardmodell), zurück mit provider anthropic
+/smartcraft model gpt-6-sol              # anderes Modell, zurück mit model default
 ```
+
+Getestet ist alles nur mit Claude Haiku 5.5; OpenAI und Gemini übersetzt `providers.py`, echte Läufe damit gab es noch
+nicht. Schlüsseldateien je Anbieter: `api_key.txt`, `openai_key.txt`, `gemini_key.txt` (alle in `.gitignore`).
 
 Der Mod ruft selbst keine API auf; er reicht den Schlüssel an den Begleitprozess weiter (sofort oder beim
 nächsten Verbinden), der ihn in `companion/api_key.txt` speichert (steht in `.gitignore`). In den Logs steht

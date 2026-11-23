@@ -94,9 +94,14 @@ public final class BotCommand {
 								.then(Commands.literal("autostart")
 										.then(Commands.literal("on").executes(ctx -> companionAutostart(ctx.getSource(), true)))
 										.then(Commands.literal("off").executes(ctx -> companionAutostart(ctx.getSource(), false)))))
-						.then(Commands.literal("apikey")
-								.then(Commands.argument("key", StringArgumentType.greedyString())
-										.executes(ctx -> apiKey(ctx.getSource(), StringArgumentType.getString(ctx, "key")))))
+						.then(apiKeyNode())
+						.then(levels("provider", AiSettings.Provider.values(),
+								(source, provider) -> provider(source, AiSettings.Provider.valueOf(provider))))
+						.then(Commands.literal("model")
+								.executes(ctx -> showModel(ctx.getSource()))
+								.then(Commands.literal("default").executes(ctx -> model(ctx.getSource(), null)))
+								.then(Commands.argument("name", StringArgumentType.greedyString())
+										.executes(ctx -> model(ctx.getSource(), StringArgumentType.getString(ctx, "name")))))
 						.then(levels("humor", AiSettings.Humor.values(), (source, level) -> humor(source, AiSettings.Humor.valueOf(level))))
 						.then(levels("talkmode", AiSettings.Talk.values(), (source, level) -> talkmode(source, AiSettings.Talk.valueOf(level))))
 						.then(Commands.literal("dimensionfollow")
@@ -196,23 +201,73 @@ public final class BotCommand {
 	 * Legt den Anthropic-API-Schlüssel fest. Der Mod ruft selbst keine API auf: Er reicht den Schlüssel an den
 	 * Begleitprozess weiter (sofort oder beim nächsten Verbinden), der ihn in {@code companion/api_key.txt} speichert.
 	 */
-	private int apiKey(CommandSourceStack source, String raw) {
+	/** {@code apikey <key>} (Anbieter am Präfix erkannt) oder {@code apikey <anthropic|openai|gemini> <key>}. */
+	private com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> apiKeyNode() {
+		var node = Commands.literal("apikey");
+		for (AiSettings.Provider provider : AiSettings.Provider.values()) {
+			node.then(Commands.literal(provider.id())
+					.then(Commands.argument("key", StringArgumentType.greedyString())
+							.executes(ctx -> apiKey(ctx.getSource(), provider, StringArgumentType.getString(ctx, "key")))));
+		}
+		return node.then(Commands.argument("key", StringArgumentType.greedyString())
+				.executes(ctx -> apiKey(ctx.getSource(), null, StringArgumentType.getString(ctx, "key"))));
+	}
+
+	private int apiKey(CommandSourceStack source, AiSettings.Provider given, String raw) {
 		String key = raw.trim();
 		if (key.length() < 20 || key.contains(" ")) {
-			source.sendFailure(Component.literal("Das sieht nicht wie ein API-Schlüssel aus (sk-ant-…)."));
+			source.sendFailure(Component.literal("Das sieht nicht wie ein API-Schlüssel aus (sk-ant-…, sk-…, AIza…)."));
 			return 0;
 		}
-		String hint = "…" + key.substring(key.length() - 4);
+		AiSettings.Provider provider = given != null ? given : AiSettings.Provider.detect(key);
+		if (provider == null) {
+			source.sendFailure(Component.literal("Anbieter nicht erkannt: /smartcraft apikey anthropic|openai|gemini <key>"));
+			return 0;
+		}
+		String hint = provider.id() + "-Schlüssel …" + key.substring(key.length() - 4);
+		String note = provider == AiSettings.provider ? "" : " Aktiver Anbieter ist " + AiSettings.provider.id()
+				+ "; wechseln mit /smartcraft provider " + provider.id() + ".";
 		if (bridge.isClientConnected()) {
 			JsonObject data = new JsonObject();
 			data.addProperty("action", "apikey");
 			data.addProperty("by", source.getTextName());
+			data.addProperty("provider", provider.id());
 			data.addProperty("api_key", key);
 			events.emit("control_requested", source.getServer().overworld().getGameTime(), Priority.NORMAL, data);
-			return say(source, "API-Schlüssel " + hint + " an den Begleitprozess übergeben.");
+			return say(source, "API-" + hint + " an den Begleitprozess übergeben." + note);
 		}
-		AiSettings.pendingApiKey = key;
-		return say(source, "API-Schlüssel " + hint + " gemerkt; der Begleitprozess übernimmt ihn beim Verbinden.");
+		AiSettings.pendingApiKeys.put(provider, key);
+		return say(source, "API-" + hint + " gemerkt; der Begleitprozess übernimmt ihn beim Verbinden." + note);
+	}
+
+	/**
+	 * Wechselt den Anbieter. Läuft ein vom Mod gestarteter Begleitprozess, startet er neu: Dabei installiert der Starter
+	 * das Paket des Anbieters (openai, google-genai), falls es fehlt.
+	 */
+	private int provider(CommandSourceStack source, AiSettings.Provider provider) {
+		boolean changed = provider != AiSettings.provider;
+		AiSettings.provider = provider;
+		AiSettings.model = null;
+		pushSettings(source);
+		say(source, "Anbieter: " + provider.id() + " (Standardmodell; anderes mit /smartcraft model <name>)."
+				+ companionNote());
+		if (changed && companion.active()) {
+			companion.stop();
+			companionStart(source, false);
+		}
+		return 1;
+	}
+
+	private int model(CommandSourceStack source, String name) {
+		AiSettings.model = name == null || name.isBlank() ? null : name.trim();
+		pushSettings(source);
+		return say(source, "Modell: " + (AiSettings.model == null ? "Standard von " + AiSettings.provider.id()
+				: AiSettings.model) + companionNote());
+	}
+
+	private int showModel(CommandSourceStack source) {
+		return say(source, "Anbieter " + AiSettings.provider.id() + ", Modell "
+				+ (AiSettings.model == null ? "Standard" : AiSettings.model));
 	}
 
 	private int tts(CommandSourceStack source, boolean on) {
@@ -312,6 +367,7 @@ public final class BotCommand {
 		say(source, "TTS: " + onOff(AiSettings.tts));
 		say(source, "Locate: " + onOff(CommandDispatcher.locateEnabled));
 		say(source, "Events (Chat-Anzeige): " + onOff(chatMirror.enabled()));
+		say(source, "KI: " + AiSettings.provider.id() + ", Modell " + (AiSettings.model == null ? "Standard" : AiSettings.model));
 		say(source, "Humor: " + AiSettings.humor.name());
 		say(source, "Talkmode: " + AiSettings.talk.name());
 		say(source, "Gamemode (du): " + (player != null ? player.gameMode().getName() : "-"));

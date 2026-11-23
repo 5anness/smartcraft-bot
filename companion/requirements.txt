@@ -1,2 +1,6 @@
 anthropic>=1.0
+# Nur für den jeweiligen Anbieter nötig (/smartcraft provider openai|gemini):
+openai>=1.0
+google-genai>=1.0
+# Optional: Stimme (Sprachausgabe), groß
 piper-tts>=1.3

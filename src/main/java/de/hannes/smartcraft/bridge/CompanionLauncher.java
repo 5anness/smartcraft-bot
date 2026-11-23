@@ -33,8 +33,28 @@ import java.util.stream.Stream;
  * Ausgabe: {@code logs/smartcraft/companion.log}.
  */
 public final class CompanionLauncher {
-	/** Was in die eigene Umgebung kommt; die Stimme (piper-tts) ist optional und groß. */
-	private static final String PACKAGES = "anthropic>=1.0";
+	/**
+	 * Was in die eigene Umgebung kommt: anthropic immer, dazu das Paket des gewählten Anbieters. Die Stimme (piper-tts)
+	 * ist optional und groß.
+	 */
+	private static List<String> packages() {
+		List<String> packages = new ArrayList<>(List.of("anthropic>=1.0"));
+		switch (de.hannes.smartcraft.bot.AiSettings.provider) {
+			case OPENAI -> packages.add("openai>=1.0");
+			case GEMINI -> packages.add("google-genai>=1.0");
+			default -> { }
+		}
+		return packages;
+	}
+
+	/** Python-Modul des gewählten Anbieters, das im Entwicklungs-Python vorhanden sein muss. */
+	private static String providerModule() {
+		return switch (de.hannes.smartcraft.bot.AiSettings.provider) {
+			case OPENAI -> "openai";
+			case GEMINI -> "google.genai";
+			default -> "anthropic";
+		};
+	}
 	private static final int MAX_RESTARTS = 3;
 
 	public enum State { STOPPED, PREPARING, RUNNING, FAILED }
@@ -248,8 +268,9 @@ public final class CompanionLauncher {
 		boolean windows = System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("win");
 		Path venvPython = windows ? venv.resolve("Scripts").resolve("python.exe") : venv.resolve("bin").resolve("python");
 		Path marker = venv.resolve(".smartcraft-installed");
+		String wanted = String.join(" ", packages());
 		if (Files.isRegularFile(venvPython) && Files.isRegularFile(marker)
-				&& Files.readString(marker, StandardCharsets.UTF_8).trim().equals(PACKAGES)) {
+				&& Files.readString(marker, StandardCharsets.UTF_8).trim().equals(wanted)) {
 			return List.of(venvPython.toString());
 		}
 		List<String> python = findPython(false);
@@ -260,20 +281,25 @@ public final class CompanionLauncher {
 		}
 		if (!Files.isRegularFile(venvPython)) {
 			detail = "lege die Python-Umgebung an";
-			report.accept("Erster Start: lege eine Python-Umgebung an und installiere anthropic (kann eine Minute dauern) …");
+			report.accept("Erster Start: lege eine Python-Umgebung an und installiere " + wanted
+					+ " (kann eine Minute dauern) …");
 			List<String> create = new ArrayList<>(python);
 			create.addAll(List.of("-m", "venv", venv.toString()));
 			if (!runQuiet(create, log)) {
 				fail(report, "Python-Umgebung konnte nicht angelegt werden, siehe logs/smartcraft/companion.log");
 				return null;
 			}
+		} else {
+			report.accept("Installiere " + wanted + " für den gewählten Anbieter (kann ein bis zwei Minuten dauern) …");
 		}
-		detail = "installiere anthropic";
-		if (!runQuiet(List.of(venvPython.toString(), "-m", "pip", "install", "--upgrade", PACKAGES), log)) {
-			fail(report, "pip install anthropic gescheitert, siehe logs/smartcraft/companion.log");
+		detail = "installiere " + wanted;
+		List<String> pip = new ArrayList<>(List.of(venvPython.toString(), "-m", "pip", "install", "--upgrade"));
+		pip.addAll(packages());
+		if (!runQuiet(pip, log)) {
+			fail(report, "pip install " + wanted + " gescheitert, siehe logs/smartcraft/companion.log");
 			return null;
 		}
-		Files.writeString(marker, PACKAGES, StandardCharsets.UTF_8);
+		Files.writeString(marker, wanted, StandardCharsets.UTF_8);
 		return List.of(venvPython.toString());
 	}
 
@@ -295,7 +321,8 @@ public final class CompanionLauncher {
 	 * eines, in dem {@code anthropic} schon installiert ist.
 	 */
 	private static List<String> findPython(boolean withAnthropic) {
-		String check = "import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)" + (withAnthropic ? "; import anthropic" : "");
+		String check = "import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)"
+				+ (withAnthropic ? "; import anthropic; import " + providerModule() : "");
 		for (List<String> candidate : List.of(List.of("python"), List.of("python3"), List.of("py", "-3"))) {
 			List<String> command = new ArrayList<>(candidate);
 			command.addAll(List.of("-c", check));

@@ -40,6 +40,8 @@ replay_*.log
 *.jfr
 companion/voices/
 companion/api_key.txt
+companion/openai_key.txt
+companion/gemini_key.txt
 
 # python
 __pycache__/

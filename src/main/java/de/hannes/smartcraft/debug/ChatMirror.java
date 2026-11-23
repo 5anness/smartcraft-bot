@@ -40,12 +40,8 @@ public final class ChatMirror {
 		if (event.reason() != null) {
 			text.append(" (").append(event.reason()).append(')');
 		}
-		com.google.gson.JsonObject data = event.data();
-		if (data != null && data.has("api_key")) {
-			// Den API-Schlüssel nie im Chat zeigen (alle Spieler sehen diese Zeilen).
-			data = data.deepCopy();
-			data.addProperty("api_key", "***");
-		}
+		// Den API-Schlüssel nie im Chat zeigen (alle Spieler sehen diese Zeilen).
+		com.google.gson.JsonObject data = de.hannes.smartcraft.perception.EventBus.maskKeys(event.data());
 		Component line = Component.literal(text.append(' ').append(data).toString())
 				.withStyle(event.prio() == Priority.HIGH ? ChatFormatting.RED : ChatFormatting.GRAY);
 		server.getPlayerList().broadcastSystemMessage(line, false);
