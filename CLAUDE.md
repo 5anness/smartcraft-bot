@@ -765,3 +765,6 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   sonst beim ersten `tts on` die mittlere Stimme laden (8 Sprachen, je 63 MB, nach `voices/`) und `piper-tts` nachinstallieren, nur
   in einer venv; sonst Systemstimme (Windows-Stimme der Sprache, macOS `say`, Linux `espeak-ng`). Stimmen nicht in der Jar (über
   100 MB, GitHub-Grenze), Entscheidung von Hannes: nachladen. Der Chat des Bots bleibt deutsch – Wunsch von Hannes
+- 2026-11-24 – Der Bot chattet in der Systemsprache (gleiche Erkennung wie die Sprachausgabe): Hinweis im `[Einstellung]`-Text der
+  Eröffnung statt im Systemprompt (Cache bleibt), bei Deutsch kein Hinweis; Antworten an Spieler in deren Sprache – Wunsch von Hannes,
+  sonst las eine englische Stimme deutschen Text. Nur ohne API geprüft

@@ -181,6 +181,22 @@ TALK_NOTES = {
 REPLY_WINDOW = 60
 SETTINGS_TEXT = ("[Einstellung] Humor {humor}: {humor_note} Talkmode {talk}: {talk_note} Das gilt ab jetzt für jedes `chat`, "
                  "bis ein neuer Hinweis kommt.")
+# Chat in der Systemsprache (wie die Sprachausgabe, SMARTCRAFT_TTS_LANG überschreibt); Deutsch braucht keinen Hinweis,
+# weil Prompt und Beispiele deutsch sind. Wunsch von Hannes (24.11.2026).
+LANGUAGE_NAMES = {"en": "Englisch", "fr": "Französisch", "es": "Spanisch", "it": "Italienisch", "pl": "Polnisch",
+                  "pt": "Portugiesisch", "ru": "Russisch", "nl": "Niederländisch", "tr": "Türkisch", "cs": "Tschechisch",
+                  "sv": "Schwedisch", "da": "Dänisch", "fi": "Finnisch", "no": "Norwegisch", "nb": "Norwegisch",
+                  "uk": "Ukrainisch", "ja": "Japanisch", "zh": "Chinesisch", "ko": "Koreanisch", "hu": "Ungarisch"}
+LANGUAGE_TEXT = (" Sprache: Schreibe jede `chat`-Nachricht auf {name} (Systemsprache des Spielers, {code}), auch Witze und "
+                 "Ansagen; Beispiele im Prompt sinngemäß übersetzen. Schreibt dir jemand in einer anderen Sprache, antworte "
+                 "in seiner.")
+
+
+def language_text(code):
+    family = code.split("_")[0].lower()
+    if family == "de":
+        return ""
+    return LANGUAGE_TEXT.format(name=LANGUAGE_NAMES.get(family, f"der Sprache mit dem Code {code}"), code=code)
 CHAT_MODE = {"1": "full", "0": "off"}.get(os.environ.get("SMARTCRAFT_CHAT", "plans"), os.environ.get("SMARTCRAFT_CHAT", "plans"))
 # Startwert des Talkmode aus SMARTCRAFT_CHAT (plans = light, full = hard); danach gilt /smartcraft talkmode.
 START_TALKMODE = {"full": "hard", "plans": "light"}.get(CHAT_MODE, "light")
@@ -570,8 +586,9 @@ class Agent:
               flush=True)
 
     def settings_text(self):
-        return SETTINGS_TEXT.format(humor=self.humor.upper(), humor_note=HUMOR_NOTES[self.humor],
-                                    talk=self.talkmode.upper(), talk_note=TALK_NOTES[self.talkmode])
+        return (SETTINGS_TEXT.format(humor=self.humor.upper(), humor_note=HUMOR_NOTES[self.humor],
+                                     talk=self.talkmode.upper(), talk_note=TALK_NOTES[self.talkmode])
+                + language_text(SPEAKER.language))
 
     def sync_settings(self):
         """Beim Verbinden: Startwerte aus der Umgebung an den Mod, dann seine Einstellungen übernehmen."""

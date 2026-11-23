@@ -110,8 +110,8 @@ Spanish, Italian, Polish, Portuguese and Russian. Until the download is done, of
 built-in system voice speaks (Windows; `say` on macOS; `espeak-ng` on Linux if installed). Force a language with
 `SMARTCRAFT_TTS_LANG=en_US`.
 
-> The bot currently writes its chat in German (the system prompt is German), so a non-German voice will read
-> German text.
+The bot also writes its chat messages in your system language (the same setting), and answers players in the
+language they write in. Its internal reasoning and the developer docs stay German.
 
 ## Costs
 

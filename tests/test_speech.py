@@ -68,6 +68,22 @@ def main():
     check("nur die neueste Nachricht wartet", speaker.queue.qsize() == 1 and speaker.queue.get() == "zwei")
     shutil.rmtree(voices, ignore_errors=True)
 
+    # Chat in der Systemsprache: Hinweis an das Modell in der Eröffnung jedes Ziels.
+    os.environ.setdefault("ANTHROPIC_API_KEY", "test-kein-echter-schluessel")
+    import agent
+    check("Chat: Deutsch ohne Sprachhinweis", agent.language_text("de_DE") == "" and agent.language_text("de_AT") == "")
+    check("Chat: Englisch mit Hinweis", "auf Englisch" in agent.language_text("en_US")
+          and "en_US" in agent.language_text("en_US"))
+    check("Chat: unbekannte Sprache mit Code", "Code ja_JP" in agent.language_text("ja_JP") or
+          "Japanisch" in agent.language_text("ja_JP"))
+    bot = agent.Agent.__new__(agent.Agent)
+    bot.humor, bot.talkmode = "medium", "light"
+    agent.SPEAKER.language = "fr_FR"
+    check("Chat: Einstellungs-Hinweis nennt die Sprache", "auf Französisch" in bot.settings_text()
+          and bot.settings_text().startswith("[Einstellung] Humor MEDIUM"))
+    agent.SPEAKER.language = "de_DE"
+    check("Chat: auf Deutsch bleibt der Hinweis wie bisher", "Sprache:" not in bot.settings_text())
+
     if "--download" in sys.argv:
         voices = tempfile.mkdtemp()
         speech.VOICES_DIR = voices
