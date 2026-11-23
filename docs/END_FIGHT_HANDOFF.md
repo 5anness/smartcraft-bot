@@ -50,7 +50,7 @@ Grep-Muster im Serverlog: `destroy_crystals phase|bed|roof|skip|no_bed_space`, `
 
 ## Was der Bot jetzt tut
 
-1. `destroy_crystals` ([DestroyCrystalsAction.java](../src/main/java/de/hannes/aiplayer/action/DestroyCrystalsAction.java)),
+1. `destroy_crystals` ([DestroyCrystalsAction.java](../src/main/java/de/hannes/smartcraft/action/DestroyCrystalsAction.java)),
    Konstante `TOWERS=false`:
    - Freie Kristalle schießt er vom Boden. Den Schussplatz liefert `ShootAction.shootFrom`, im End nie näher als
      14 Blöcke an der Mitte.
@@ -65,7 +65,7 @@ Grep-Muster im Serverlog: `destroy_crystals phase|bed|roof|skip|no_bed_space`, `
    - Fehlen Bausteine (etwa 5 je Stufe), baut er zuerst Endstein ab (`TO_GATHER`/`GATHER`, bis zu 6-mal). Die Zeit
      dafür zählt nicht zum Limit von 90 s je Kristall.
    - Angreifer bekämpft er zuerst (`FIGHT`), auch auf dem Weg zum Turmfuß.
-2. `bed_bomb` ([BedBombAction.java](../src/main/java/de/hannes/aiplayer/action/BedBombAction.java)):
+2. `bed_bomb` ([BedBombAction.java](../src/main/java/de/hannes/smartcraft/action/BedBombAction.java)):
    - Wartet 18 Blöcke vom Brunnen.
    - Baut eine Bettsäule 6 Blöcke von der Mitte vor (Bett auf Höhe 65).
    - Setzt beim Hocken des Drachen ein Bett etwa 2 Blöcke unter den Kopf, steht hinter einer Wand und zündet.

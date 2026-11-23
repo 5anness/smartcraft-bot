@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"id": "aiplayer",
+	"id": "smartcraft",
 	"version": "${version}",
 	"name": "SmartCraft",
 	"description": "Ein Sprachmodell spielt als eigener, zweiter Spieler mit. Nur für Einzelspieler, LAN und lokale Server.",
@@ -11,14 +11,14 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"de.hannes.aiplayer.AiPlayerMod"
+			"de.hannes.smartcraft.AiPlayerMod"
 		],
 		"client": [
-			"de.hannes.aiplayer.client.ShotClient"
+			"de.hannes.smartcraft.client.ShotClient"
 		]
 	},
 	"mixins": [
-		"aiplayer.mixins.json"
+		"smartcraft.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",

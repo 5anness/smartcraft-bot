@@ -134,7 +134,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
 6. **Mod und KI getrennt.** Keine API-Aufrufe und keine Schlüssel im Mod.
 
 ## Konventionen
-- Package-Root: `de.hannes.aiplayer`, Mod-ID `aiplayer`
+- Package-Root: `de.hannes.smartcraft`, Mod-ID `smartcraft`, Befehl `/aiplayer`; Datenordner (`logs/aiplayer/`, `<welt>/aiplayer/places.json`) heißen weiter `aiplayer`
 - Events und Befehle sind versioniertes JSON (`"v": 1`). Schema zuerst ändern, dann Code.
 - Event-Namen: `snake_case`, Vergangenheitsform für Fakten (`block_broken`,
   `damage_taken`), Ergebnis-Events als `<befehl>_result`
@@ -746,4 +746,4 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   `EventBus` und `console.py` maskieren `api_key` – Wunsch von Hannes (Veröffentlichung auf Git), Kernprinzip 6 bleibt
 - 2026-11-23 – Statusanzeige über dem Bot: durch Blöcke sichtbar und volle Helligkeit, beim Absteigen wieder aufsitzen statt
   neu anlegen – Hannes: HP/Hunger manchmal unsichtbar (in 2 Blöcke hohen Gängen steckte sie in der Decke)
-- 2026-11-23 – Projekt heißt SmartCraft (Anzeigename, Jar-Name); Mod-ID, Package und Befehl `/aiplayer` bleiben – Wunsch von Hannes, Umbenennung der IDs hätte Welten, Tests und Begleitprozess gebrochen
+- 2026-11-23 – Projekt heißt SmartCraft: Anzeigename, Jar, Mod-ID `smartcraft`, Package `de.hannes.smartcraft`; Befehl `/aiplayer` und die Datenordner `aiplayer` bleiben (bestehende Welten, Logs und Auswerteskripte) – Wunsch von Hannes

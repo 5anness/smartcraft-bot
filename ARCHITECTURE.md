@@ -460,7 +460,7 @@ Spielbefehl das, statt das Ziel zu verschlucken.
 - **Nicht gebaut:** Private Nachrichten (`/msg`) liest der Bot nicht. Das Gespräch wird nicht gekürzt;
   bei sehr langen Zielen wächst es, bis die Obergrenze der Schritte greift.
 
-## Module im Mod (`de.hannes.aiplayer`)
+## Module im Mod (`de.hannes.smartcraft`)
 
 | Paket | Aufgabe | Ab Etappe |
 |---|---|---|
