@@ -1,55 +1,110 @@
-# SmartCraft – KI-Minecraft-Spieler (Fabric-Mod)
+# SmartCraft
 
-Ein Fabric-Mod für Minecraft Java Edition 26.2, über den Claude (Anthropic API) eine eigene, zweite Spielfigur steuert –
-mit dem langfristigen Ziel, selbstständig bis zum Enderdrachen zu kommen.
+A Fabric mod that lets Claude play Minecraft as a real second player, from punching trees all the way to the
+Ender Dragon.
 
-Die KI tritt als „Fake Player“ bei: Join-Nachricht, Tab-Liste, Skin, sichtbar für alle LAN-Spieler. Der Mod muss nur beim
-Host installiert sein. Wahrnehmung, Events, Wegfindung und Aktionen stecken im Mod; ein Python-Begleitprozess spricht
-über einen lokalen Socket (`127.0.0.1`) mit dem Mod und ruft das Modell auf. Der Mod selbst macht keine API-Aufrufe.
+SmartCraft is a server-side mod for Minecraft Java Edition 26.2. An LLM (Claude via the Anthropic API) controls its
+own player in your world. The AI joins like a real LAN player, with a join message, a tab list entry, a skin and its
+own inventory and health. You can watch it, chat with it, or give it goals like
+`/smartcraft goal Defeat the Ender Dragon`.
+
+Unlike Mineflayer-based bots, SmartCraft runs inside the game itself. The mod provides perception, events, A*
+pathfinding and a library of high-level actions (mining, crafting, smelting, combat, building Nether portals,
+bartering, fighting the dragon …). A small Python companion process sends these to Claude as tools over a local
+socket. Every action reports back `ok`/`failed` with a reason, and safety reflexes handle what can't wait (lava,
+drowning, dragon breath).
 
 ```
-Minecraft ── Fabric-Mod (Java) ──Socket/JSON── Begleitprozess (Python) ──API── Claude
+Minecraft ── Fabric mod (Java) ──socket/JSON── companion (Python) ──API── Claude
 ```
 
-## Voraussetzungen
+- Only the host needs the mod; other LAN players join with vanilla clients
+- The mod starts the companion process by itself; you only need Python installed
+- The mod never calls the API and never stores your key; only the companion does
+- Optional voice output, live health/hunger above the bot, token cost shown in the XP bar
+- Meant for singleplayer, LAN and local test worlds only, not for public servers
 
-- Minecraft Java Edition 26.2 mit Fabric Loader und Fabric API
-- Java 25 (zum Bauen), Python 3.11
-- Ein Anthropic-API-Schlüssel
+> **Note:** The in-game messages, the AI's system prompt and most of the developer docs are in German.
 
-## Schnellstart
+## Requirements
+
+- Minecraft Java Edition 26.2 with Fabric Loader 0.19.5+ and Fabric API
+- Python 3.11 or newer (from [python.org](https://www.python.org/downloads/); on Windows tick "Add python.exe to PATH")
+- An Anthropic API key ([console.anthropic.com](https://console.anthropic.com/))
+- Java 25 only if you want to build the mod yourself
+
+## Getting started
+
+1. Put `smartcraft-<version>.jar` and Fabric API into your `mods` folder and start the game.
+2. Open a world (singleplayer works; "Open to LAN" lets friends join too).
+3. In chat:
+
+   ```
+   /smartcraft join                 # the AI joins and the mod starts the companion process
+   /smartcraft apikey sk-ant-...    # set your API key once; it is remembered
+   /smartcraft goal Build a stone pickaxe
+   ```
+
+The first start takes about a minute: the mod unpacks the companion to `config/smartcraft/`, creates its own Python
+environment there (`config/smartcraft/venv`) and installs the `anthropic` package into it. Your system Python is not
+changed. Output goes to `logs/smartcraft/companion.log`.
+
+You can also just write to the AI in chat. It answers there and does what you ask.
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `/smartcraft join [name]` / `leave` | Let the AI join or leave (leaving also stops the companion) |
+| `/smartcraft goal <text>` | Give the AI a goal |
+| `/smartcraft pause` / `resume` / `stop` | Pause, resume or end the current goal |
+| `/smartcraft apikey <key>` | Set the Anthropic API key |
+| `/smartcraft companion start\|stop\|status` | Control the companion process by hand |
+| `/smartcraft companion autostart on\|off` | Start the companion on `join` (default: on) |
+| `/smartcraft info` | Show all settings |
+| `/smartcraft stats on\|off` | Hearts and hunger above the bot |
+| `/smartcraft xpbar on\|off` | Token usage and cost in your XP bar |
+| `/smartcraft inventar` | Open the bot's inventory |
+| `/smartcraft tts on\|off` | Voice output on the host |
+| `/smartcraft humor light\|medium\|hard\|crazy` | How funny the AI tries to be |
+| `/smartcraft talkmode light\|medium\|hard` | How often the AI talks in chat |
+| `/smartcraft locate on\|off` | Allow the AI to look up structures (a cheat, off by default) |
+| `/smartcraft dimensionfollow on\|off` | Bot follows you through portals |
+| `/smartcraft streamer [off]` | Preset for streaming |
+
+The full list (including test helpers) is in [CLAUDE.md](CLAUDE.md).
+
+## Costs
+
+Every step of the AI is an API call and costs money. By default there is no limit; set one with the environment
+variable `SMARTCRAFT_COST_LIMIT` (in dollars per goal). `/smartcraft xpbar on` shows tokens and cost live in your
+XP bar. The model is chosen with `SMARTCRAFT_MODEL`.
+
+## Your API key
+
+`/smartcraft apikey` passes the key to the companion, which stores it in `config/smartcraft/companion/api_key.txt`
+(in a development checkout: `companion/api_key.txt`, which is git-ignored). Logs and chat only ever show `***`.
+Alternatively set the environment variable `ANTHROPIC_API_KEY`. Never commit or share the key.
+
+## Building and developing
 
 ```bash
-./gradlew build                          # Mod bauen (Jar in build/libs/)
-./gradlew runClient                      # oder: Spiel mit Mod direkt starten
-pip install -r companion/requirements.txt
-python companion/agent.py                # Begleitprozess starten
+./gradlew build          # build the mod (jar in build/libs/)
+./gradlew runClient      # start the game with the mod
+./gradlew test           # unit tests
 ```
 
-Im Spiel:
+In a development checkout the mod uses the `companion/` folder directly and the Python in which `anthropic` is
+already installed (`pip install -r companion/requirements.txt`). You can still run the companion by hand with
+`python companion/agent.py`; automated server tests are in [tests/server/](tests/server/) and start their own
+companion (`SMARTCRAFT_COMPANION=off` keeps the mod from starting one).
 
-```
-/smartcraft join                  # die KI tritt bei
-/smartcraft apikey sk-ant-...     # API-Schlüssel festlegen (wird in companion/api_key.txt gespeichert)
-/smartcraft goal Baue eine Steinspitzhacke
-```
+## Documentation
 
-Weitere Befehle: `/smartcraft pause|resume|stop`, `/smartcraft info`, `/smartcraft stats on|off`, `/smartcraft inventar`,
-`/smartcraft leave` – vollständige Liste in [CLAUDE.md](CLAUDE.md).
+- [ARCHITECTURE.md](ARCHITECTURE.md) – structure, events, commands, reflexes (German)
+- [companion/README.md](companion/README.md) – companion process, console, voice output (German)
+- [schemas/](schemas/) – JSON schemas of all events and commands
 
-## Dokumentation
+## License
 
-- [ARCHITECTURE.md](ARCHITECTURE.md) – Aufbau, Events, Befehle, Reflexe
-- [companion/README.md](companion/README.md) – Begleitprozess, Konsole, Sprachausgabe
-- [schemas/](schemas/) – JSON-Schemas aller Events und Befehle
-- [tests/server/](tests/server/) – automatische Servertests
-
-## Hinweise
-
-- Nur für Einzelspieler und lokale Testwelten gedacht, nicht für öffentliche Server.
-- API-Aufrufe kosten Geld; ein Limit lässt sich mit `SMARTCRAFT_COST_LIMIT` setzen.
-- Den API-Schlüssel nie committen (`companion/api_key.txt` steht in `.gitignore`).
-
-## Lizenz
-
-MIT, siehe [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE).

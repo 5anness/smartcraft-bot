@@ -76,7 +76,7 @@ class TestServer:
         gradlew = "gradlew.bat" if os.name == "nt" else "./gradlew"
         self._process = subprocess.Popen(
             [os.path.join(PROJECT, gradlew), "runServer", "--console=plain", f"-PaiRunDir={RUN_DIR}"],
-            cwd=PROJECT, env={**os.environ, "SMARTCRAFT_PORT": str(PORT)}, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            cwd=PROJECT, env={**os.environ, "SMARTCRAFT_PORT": str(PORT), "SMARTCRAFT_COMPANION": "off"}, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             text=True, encoding="utf-8", errors="replace", shell=(os.name == "nt"))
         threading.Thread(target=self._read_server_output, daemon=True).start()
 

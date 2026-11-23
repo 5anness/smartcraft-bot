@@ -24,6 +24,14 @@ processResources {
 	filesMatching("fabric.mod.json") {
 		expand "version": version
 	}
+	// Begleitprozess und Schemas in die Jar: Der Mod entpackt sie nach config/smartcraft/ und startet sie selbst.
+	from("companion") {
+		into "companion"
+		include "*.py", "prompts/**", "requirements.txt", "README.md"
+	}
+	from("schemas") {
+		into "schemas"
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {

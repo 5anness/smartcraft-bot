@@ -23,6 +23,8 @@ public final class AiSettings {
 	public static Talk talk = Talk.LIGHT;
 	public static boolean dimensionFollow;
 	public static boolean streamer;
+	/** Begleitprozess bei {@code /smartcraft join} selbst starten (Standard an, aus mit SMARTCRAFT_COMPANION=off). */
+	public static boolean companionAutostart = !de.hannes.smartcraft.bridge.CompanionLauncher.disabledByEnvironment();
 	/**
 	 * API-Schlüssel aus {@code /smartcraft apikey}, der noch nicht beim Begleitprozess angekommen ist (nur im Speicher, nie
 	 * gespeichert oder protokolliert). Der Mod ruft keine API auf; er reicht den Schlüssel nur weiter.

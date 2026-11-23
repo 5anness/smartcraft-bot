@@ -40,7 +40,8 @@ public final class BotCommand {
 	private final ActionRunner runner;
 
 	public BotCommand(BotManager bots, Perception perception, DebugLog debugLog, ChatMirror chatMirror,
-			EventBus events, BridgeServer bridge, ActionRunner runner) {
+			EventBus events, BridgeServer bridge, ActionRunner runner, de.hannes.smartcraft.bridge.CompanionLauncher companion) {
+		this.companion = companion;
 		this.events = events;
 		this.bridge = bridge;
 		this.runner = runner;
@@ -52,6 +53,7 @@ public final class BotCommand {
 	}
 
 	private final DimensionFollow follow;
+	private final de.hannes.smartcraft.bridge.CompanionLauncher companion;
 
 	private final Nameplate nameplate = new Nameplate();
 
@@ -85,6 +87,13 @@ public final class BotCommand {
 								.then(Commands.literal("on").executes(ctx -> tts(ctx.getSource(), true)))
 								.then(Commands.literal("off").executes(ctx -> tts(ctx.getSource(), false))))
 						.then(Commands.literal("info").executes(ctx -> info(ctx.getSource())))
+						.then(Commands.literal("companion")
+								.then(Commands.literal("start").executes(ctx -> companionStart(ctx.getSource(), true)))
+								.then(Commands.literal("stop").executes(ctx -> companionStop(ctx.getSource())))
+								.then(Commands.literal("status").executes(ctx -> companionStatus(ctx.getSource())))
+								.then(Commands.literal("autostart")
+										.then(Commands.literal("on").executes(ctx -> companionAutostart(ctx.getSource(), true)))
+										.then(Commands.literal("off").executes(ctx -> companionAutostart(ctx.getSource(), false)))))
 						.then(Commands.literal("apikey")
 								.then(Commands.argument("key", StringArgumentType.greedyString())
 										.executes(ctx -> apiKey(ctx.getSource(), StringArgumentType.getString(ctx, "key")))))
@@ -150,6 +159,37 @@ public final class BotCommand {
 
 	private String companionNote() {
 		return bridge.isClientConnected() ? "" : " (Begleitprozess nicht verbunden: gilt ab seinem Start)";
+	}
+
+	/** Startet den Begleitprozess; Meldungen kommen vom Arbeits-Thread und gehen über den Server-Thread in den Chat. */
+	private int companionStart(CommandSourceStack source, boolean manual) {
+		if (bridge.isClientConnected() && manual) {
+			return say(source, "Ein Begleitprozess ist schon verbunden.");
+		}
+		net.minecraft.server.MinecraftServer server = source.getServer();
+		companion.start(message -> server.execute(() -> say(source, "[SmartCraft] " + message)));
+		return 1;
+	}
+
+	private int companionStop(CommandSourceStack source) {
+		if (!companion.active()) {
+			return say(source, "Kein vom Mod gestarteter Begleitprozess läuft"
+					+ (bridge.isClientConnected() ? " (ein von Hand gestarteter ist verbunden)." : "."));
+		}
+		companion.stop();
+		return say(source, "Begleitprozess beendet.");
+	}
+
+	private int companionStatus(CommandSourceStack source) {
+		return say(source, "Begleitprozess: " + companion.state().name().toLowerCase(Locale.ROOT)
+				+ (companion.detail().isEmpty() ? "" : " – " + companion.detail())
+				+ (bridge.isClientConnected() ? ", verbunden" : ", nicht verbunden")
+				+ ", Autostart " + onOff(AiSettings.companionAutostart));
+	}
+
+	private int companionAutostart(CommandSourceStack source, boolean on) {
+		AiSettings.companionAutostart = on;
+		return say(source, "Begleitprozess beim Beitreten starten: " + onOff(on));
 	}
 
 	/**
@@ -266,7 +306,9 @@ public final class BotCommand {
 		say(source, "--- KI-Spieler ---");
 		say(source, "Bot: " + (bot == null ? "nicht im Spiel" : bot.getGameProfile().name() + " in "
 				+ bot.level().dimension().identifier().getPath() + ", Modus " + bot.gameMode().getName()));
-		say(source, "Begleitprozess: " + (bridge.isClientConnected() ? "verbunden" : "nicht verbunden"));
+		say(source, "Begleitprozess: " + (bridge.isClientConnected() ? "verbunden" : "nicht verbunden")
+				+ (companion.state() != de.hannes.smartcraft.bridge.CompanionLauncher.State.STOPPED ? " (vom Mod: " + companion.detail() + ")" : "")
+				+ ", Autostart " + onOff(AiSettings.companionAutostart));
 		say(source, "TTS: " + onOff(AiSettings.tts));
 		say(source, "Locate: " + onOff(CommandDispatcher.locateEnabled));
 		say(source, "Events (Chat-Anzeige): " + onOff(chatMirror.enabled()));
@@ -296,7 +338,11 @@ public final class BotCommand {
 		BotManager.Result result = bots.requestJoin(source.getServer(), name, source::sendFailure);
 		if (result == BotManager.Result.OK) {
 			UsageDisplay.set(source.getServer(), true);
-			return say(source, name + " tritt bei …");
+			say(source, name + " tritt bei …");
+			if (AiSettings.companionAutostart && !bridge.isClientConnected() && !companion.active()) {
+				companionStart(source, false);
+			}
+			return 1;
 		}
 		return fail(source, result);
 	}
@@ -304,6 +350,10 @@ public final class BotCommand {
 	private int leave(CommandSourceStack source) {
 		BotManager.Result result = bots.leave(source.getServer());
 		if (result == BotManager.Result.OK) {
+			if (companion.active()) {
+				companion.stop();
+				say(source, "Begleitprozess beendet.");
+			}
 			return say(source, "KI-Spieler hat das Spiel verlassen.");
 		}
 		return fail(source, result);

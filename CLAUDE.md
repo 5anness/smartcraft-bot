@@ -27,7 +27,7 @@ Zuschauermodus) und wird nie selbst gesteuert.
 - Der Mod ist daher primär ein **Server-Mod**; Client-Code nur für optionale Anzeigen
 - Befehle: `/smartcraft join [name]`, `/smartcraft leave`, `/smartcraft status`, `/smartcraft look`,
   für die KI `/smartcraft goal <text>`, `/smartcraft pause`, `/smartcraft resume`, `/smartcraft stop`, `/smartcraft tts on|off`, `/smartcraft locate on|off`, `/smartcraft stats on|off`, `/smartcraft xpbar on|off`, `/smartcraft info`, `/smartcraft inventar`, `/smartcraft humor light|medium|hard|crazy`,
-  `/smartcraft talkmode light|medium|hard`, `/smartcraft dimensionfollow on|off`, `/smartcraft gamemode <modus>`, `/smartcraft streamer [off]`, `/smartcraft apikey <key>`,
+  `/smartcraft talkmode light|medium|hard`, `/smartcraft dimensionfollow on|off`, `/smartcraft gamemode <modus>`, `/smartcraft streamer [off]`, `/smartcraft apikey <key>`, `/smartcraft companion start|stop|status|autostart on|off`,
   Testhilfen `/smartcraft debug punch`, `/smartcraft debug break`, `/smartcraft debug bedprobe <anzahl> <ticks> <unter_kopf>` (Messung: Betten direkt unter dem Drachenkopf) und `/smartcraft kit nether` (alles für den Nether, mit 10 Obsidian), `/smartcraft kit end` (alles fürs End, 18 Enderaugen, 16 Betten)
 - Bot-Zustand (Inventar, Position) wird wie bei echten Spielern gespeichert und beim
   nächsten Join wiederhergestellt
@@ -747,3 +747,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
 - 2026-11-23 – Statusanzeige über dem Bot: durch Blöcke sichtbar und volle Helligkeit, beim Absteigen wieder aufsitzen statt
   neu anlegen – Hannes: HP/Hunger manchmal unsichtbar (in 2 Blöcke hohen Gängen steckte sie in der Decke)
 - 2026-11-23 – Projekt heißt SmartCraft: Anzeigename, Jar, Mod-ID, Package `de.hannes.smartcraft`, Befehl `/smartcraft`, Umgebungsvariablen `SMARTCRAFT_*`, Datenordner; gemerkte Orte aus `<welt>/aiplayer/` werden beim Laden übernommen – Wunsch von Hannes (Veröffentlichung auf Git)
+- 2026-11-23 – Der Mod startet den Begleitprozess selbst (`CompanionLauncher`, bei `join` und per `/smartcraft companion`), beendet
+  ihn bei `leave` und Serverstopp, startet ihn nach Absturz bis 3-mal neu. Aus der Jar nach `config/smartcraft/` entpackt (companion
+  und schemas) mit eigener venv und nur `anthropic`; in der Entwicklung `companion/` mit dem Python, das `anthropic` hat. Servertests
+  setzen `SMARTCRAFT_COMPANION=off`, `bundled` erzwingt zum Testen die Jar-Variante – Wunsch von Hannes: Mod allein soll reichen

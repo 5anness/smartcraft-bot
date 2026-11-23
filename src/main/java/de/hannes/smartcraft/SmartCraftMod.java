@@ -6,6 +6,7 @@ import de.hannes.smartcraft.action.CommandDispatcher;
 import de.hannes.smartcraft.bot.BotCommand;
 import de.hannes.smartcraft.bot.BotManager;
 import de.hannes.smartcraft.bridge.BridgeServer;
+import de.hannes.smartcraft.bridge.CompanionLauncher;
 import de.hannes.smartcraft.debug.ChatMirror;
 import de.hannes.smartcraft.debug.DebugLog;
 import de.hannes.smartcraft.memory.FurnaceWatch;
@@ -56,7 +57,9 @@ public class SmartCraftMod implements ModInitializer {
 		new CommandDispatcher(bridge, bots, events, debugLog, runner).register();
 
 		SessionLog.register(debugLog);
-		new BotCommand(bots, perception, debugLog, chatMirror, events, bridge, runner).register();
+		CompanionLauncher companion = new CompanionLauncher(bridge.port());
+		net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPING.register(server -> companion.stop());
+		new BotCommand(bots, perception, debugLog, chatMirror, events, bridge, runner, companion).register();
 
 		LOGGER.info("AI Player geladen, Debug-Log: {}", debugLog.file());
 	}

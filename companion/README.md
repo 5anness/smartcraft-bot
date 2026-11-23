@@ -6,7 +6,12 @@ gestartete übernimmt.
 
 ## KI
 
-Einmalig einrichten:
+Normalerweise startet der Mod den Begleitprozess selbst bei `/smartcraft join` (abschalten mit
+`/smartcraft companion autostart off`, von Hand mit `/smartcraft companion start|stop|status`). Aus der Jar entpackt er
+ihn nach `config/smartcraft/` und legt dort eine eigene Python-Umgebung mit `anthropic` an; im Entwicklungsordner nimmt
+er `companion/` und das Python, in dem `anthropic` schon installiert ist. Ausgabe: `logs/smartcraft/companion.log`.
+
+Für den Start von Hand einmalig einrichten:
 
 ```
 pip install -r companion/requirements.txt
