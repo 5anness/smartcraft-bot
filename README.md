@@ -24,6 +24,10 @@ Minecraft ── Fabric mod (Java) ──socket/JSON── companion (Python) �
 - Optional voice output, live health/hunger above the bot, token cost shown in the XP bar
 - Meant for singleplayer, LAN and local test worlds only, not for public servers
 
+> **Work in progress:** SmartCraft is under active development. Expect rough edges, breaking changes and an AI
+> that still dies more often than it should. The bot has defeated the Ender Dragon in test runs, but a full
+> playthrough from a fresh world is not reliable yet. Feedback and bug reports are welcome.
+
 > **Note:** The in-game messages, the AI's system prompt and most of the developer docs are in German.
 
 ## Requirements
