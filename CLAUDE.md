@@ -27,7 +27,8 @@ Zuschauermodus) und wird nie selbst gesteuert.
 - Der Mod ist daher primär ein **Server-Mod**; Client-Code nur für optionale Anzeigen
 - Befehle: `/smartcraft join [name]`, `/smartcraft leave`, `/smartcraft status`, `/smartcraft look`,
   für die KI `/smartcraft goal <text>`, `/smartcraft pause`, `/smartcraft resume`, `/smartcraft stop`, `/smartcraft tts on|off`, `/smartcraft locate on|off`, `/smartcraft stats on|off`, `/smartcraft xpbar on|off`, `/smartcraft info`, `/smartcraft inventar`, `/smartcraft humor light|medium|hard|crazy`,
-  `/smartcraft talkmode light|medium|hard`, `/smartcraft dimensionfollow on|off`, `/smartcraft gamemode <modus>`, `/smartcraft streamer [off]`, `/smartcraft apikey <key>`, `/smartcraft companion start|stop|status|autostart on|off`,
+  `/smartcraft talkmode light|medium|hard`, `/smartcraft dimensionfollow on|off`, `/smartcraft gamemode <modus>`, `/smartcraft streamer [off]`, `/smartcraft apikey [anthropic|openai|gemini] <key>`, `/smartcraft provider anthropic|openai|gemini`,
+  `/smartcraft model [<name>|default]`, `/smartcraft companion start|stop|status|autostart on|off`,
   Testhilfen `/smartcraft debug punch`, `/smartcraft debug break`, `/smartcraft debug bedprobe <anzahl> <ticks> <unter_kopf>` (Messung: Betten direkt unter dem Drachenkopf) und `/smartcraft kit nether` (alles für den Nether, mit 10 Obsidian), `/smartcraft kit end` (alles fürs End, 18 Enderaugen, 16 Betten)
 - Bot-Zustand (Inventar, Position) wird wie bei echten Spielern gespeichert und beim
   nächsten Join wiederhergestellt
@@ -113,6 +114,7 @@ python tests/server/test_stats.py      # Servertest Leben/Hunger unter dem Namen
 python tests/server/test_tools.py      # Servertest Eimer/Obsidian, use, Behälter, Tunnel, Sprinten, Festung (ca. 4 Minuten)
 python tests/server/test_bed_cycle.py  # Messung One-Cycle: Bettschaden am Drachen, Kristalle stehen (ca. 3 Minuten)
 python tests/server/test_bed_bomb.py   # Servertest bed_bomb: Betten sprengen den hockenden Drachen (ca. 2 Minuten)
+python tests/test_providers.py         # OpenAI/Gemini-Übersetzung ohne API (braucht openai, google-genai; wenige Sekunden)
 python tests/server/test_settings.py   # Servertest Einstellungen (info, humor, talkmode, settings) und shelter nachts bei voller Ausrüstung (ca. 1 Minute)
 # Die Servertests nicht gleichzeitig mit `gradlew build` oder untereinander starten.
 # Schneller: SMARTCRAFT_TEST_TICK_RATE=60 vor den Testaufruf setzen (Spiel läuft mit 60 statt 20 Ticks, etwa halbe Dauer).
@@ -751,3 +753,10 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   ihn bei `leave` und Serverstopp, startet ihn nach Absturz bis 3-mal neu. Aus der Jar nach `config/smartcraft/` entpackt (companion
   und schemas) mit eigener venv und nur `anthropic`; in der Entwicklung `companion/` mit dem Python, das `anthropic` hat. Servertests
   setzen `SMARTCRAFT_COMPANION=off`, `bundled` erzwingt zum Testen die Jar-Variante – Wunsch von Hannes: Mod allein soll reichen
+- 2026-11-24 – Anbieter OpenAI und Gemini neben Anthropic (`companion/providers.py`): agent.py spricht intern weiter das
+  Anthropic-Format, die Schicht übersetzt Werkzeuge, Aufrufe und Ergebnisse (OpenAI Chat Completions, Gemini über `google-genai`
+  mit unveränderter Originalantwort wegen der Gedanken-Signaturen). Standardmodelle `gpt-6-luna` und `gemini-3.8-flash` (günstig,
+  wie Haiku), Preise vom 23.11.2026. `/smartcraft provider|model`, `apikey` erkennt den Anbieter am Präfix; der Starter installiert
+  das Paket des Anbieters nach. Prompt-Cache, Fallback-Modelle und `effort` nur bei Anthropic. Getestet: Übersetzung ohne API
+  (`tests/test_providers.py`, 22 Prüfungen), Befehle im Server, Wechsel samt Installation – kein echter Lauf mit GPT oder Gemini;
+  README sagt, dass nur mit Claude Haiku 5.5 getestet ist – Wunsch von Hannes

@@ -23,6 +23,17 @@
 					"medium",
 					"hard"
 				]
+			},
+			"provider": {
+				"enum": [
+					"anthropic",
+					"openai",
+					"gemini"
+				]
+			},
+			"model": {
+				"type": "string",
+				"description": "Leer heißt Standardmodell des Anbieters"
 			}
 		}
 	},
@@ -44,9 +55,16 @@
 			"streamer": {
 				"type": "boolean"
 			},
-			"api_key": {
+			"provider": {
+				"type": "string"
+			},
+			"model": {
 				"type": "string",
-				"description": "Nur wenn vor dem Verbinden /smartcraft apikey gegeben wurde (einmalig); der Begleitprozess speichert ihn in companion/api_key.txt, in Logs steht ***"
+				"description": "Leer heißt Standardmodell"
+			},
+			"api_keys": {
+				"type": "object",
+				"description": "Nur wenn vor dem Verbinden /smartcraft apikey gegeben wurde (einmalig): Anbieter -> Schlüssel; der Begleitprozess speichert sie, in Logs steht ***"
 			}
 		}
 	},

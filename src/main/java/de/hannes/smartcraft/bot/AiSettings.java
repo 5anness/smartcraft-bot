@@ -18,6 +18,29 @@ public final class AiSettings {
 	/** Wie oft der Bot von sich aus chattet; die Abstände stehen zentral im Begleitprozess (TALK_SETTINGS). */
 	public enum Talk { LIGHT, MEDIUM, HARD }
 
+	/** Wer das Modell stellt; Standardmodelle und Pakete stehen im Begleitprozess (companion/providers.py). */
+	public enum Provider {
+		ANTHROPIC, OPENAI, GEMINI;
+
+		public String id() {
+			return name().toLowerCase(Locale.ROOT);
+		}
+
+		/** Anbieter am Präfix des Schlüssels: sk-ant- (Anthropic), AIza (Google), sk- (OpenAI); sonst null. */
+		public static Provider detect(String key) {
+			if (key.startsWith("sk-ant-")) {
+				return ANTHROPIC;
+			}
+			if (key.startsWith("AIza")) {
+				return GEMINI;
+			}
+			if (key.startsWith("sk-")) {
+				return OPENAI;
+			}
+			return null;
+		}
+	}
+
 	public static boolean tts;
 	public static Humor humor = Humor.MEDIUM;
 	public static Talk talk = Talk.LIGHT;
@@ -29,7 +52,11 @@ public final class AiSettings {
 	 * API-Schlüssel aus {@code /smartcraft apikey}, der noch nicht beim Begleitprozess angekommen ist (nur im Speicher, nie
 	 * gespeichert oder protokolliert). Der Mod ruft keine API auf; er reicht den Schlüssel nur weiter.
 	 */
-	public static volatile String pendingApiKey;
+	public static final java.util.Map<Provider, String> pendingApiKeys = new java.util.concurrent.ConcurrentHashMap<>();
+	/** Anbieter des Modells (Standard Anthropic, /smartcraft provider). */
+	public static Provider provider = Provider.ANTHROPIC;
+	/** Modellname; null heißt Standardmodell des Anbieters (/smartcraft model). */
+	public static String model;
 	/** Wem der Bot bei Dimensionswechseln folgt: wer dimensionfollow oder streamer eingeschaltet hat. */
 	public static UUID followTarget;
 
@@ -43,6 +70,8 @@ public final class AiSettings {
 		json.addProperty("talkmode", talk.name().toLowerCase(Locale.ROOT));
 		json.addProperty("dimension_follow", dimensionFollow);
 		json.addProperty("streamer", streamer);
+		json.addProperty("provider", provider.id());
+		json.addProperty("model", model == null ? "" : model);
 		return json;
 	}
 
@@ -60,6 +89,13 @@ public final class AiSettings {
 		}
 		if (args.has("talkmode")) {
 			talk = Talk.valueOf(args.get("talkmode").getAsString().toUpperCase(Locale.ROOT));
+		}
+		if (args.has("provider")) {
+			provider = Provider.valueOf(args.get("provider").getAsString().toUpperCase(Locale.ROOT));
+		}
+		if (args.has("model")) {
+			String value = args.get("model").getAsString().trim();
+			model = value.isEmpty() ? null : value;
 		}
 	}
 }

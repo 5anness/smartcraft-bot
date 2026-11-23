@@ -19,8 +19,9 @@ geht zurück an das Modell, bis das Modell ohne Tool antwortet (Ziel beendet).
 - Nähert sich während einer längeren Aktion ein Gegner oder wird das Leben knapp, hält der
   Prozess die Aktion an und gibt dem Modell die Entscheidung.
 
-Der API-Schlüssel kommt aus der Umgebung (ANTHROPIC_API_KEY, sonst companion/api_key.txt, oder ein `ant auth login`-Profil) und
-wird nie ausgegeben oder protokolliert. Einstellungen: siehe companion/README.md.
+Anbieter: Anthropic (Standard), OpenAI oder Gemini (companion/providers.py, im Spiel /smartcraft provider). Die Schlüssel
+kommen aus der Umgebung (ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY), sonst aus companion/api_key.txt,
+openai_key.txt, gemini_key.txt (alle in .gitignore), und werden nie ausgegeben oder protokolliert. Einstellungen: siehe companion/README.md.
 """
 
 import datetime
@@ -37,37 +38,22 @@ from collections import deque
 
 import anthropic
 
+import providers
 from speech import Speaker
 
-# Schlüssel aus einer Datei, wenn die Umgebungsvariable fehlt. Die Datei steht in .gitignore; ihr Inhalt
-# wird nie ausgegeben oder protokolliert.
-KEY_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "api_key.txt")
-
-
-def load_key_file():
-    if os.environ.get("ANTHROPIC_API_KEY") or not os.path.exists(KEY_FILE):
-        return
-    with open(KEY_FILE, encoding="utf-8") as file:
-        key = next((line.strip() for line in file if line.strip() and not line.startswith("#")), "")
-    if key:
-        os.environ["ANTHROPIC_API_KEY"] = key
-
-
-load_key_file()
-
-
-def save_key(key):
-    """Neuer Schlüssel aus /smartcraft apikey: in api_key.txt speichern (steht in .gitignore) und sofort benutzen."""
-    with open(KEY_FILE, "w", encoding="utf-8") as file:
-        file.write("# Anthropic-API-Schlüssel, gesetzt mit /smartcraft apikey. Nie committen.\n" + key.strip() + "\n")
-    os.environ["ANTHROPIC_API_KEY"] = key.strip()
+# Schlüssel aus den Dateien, wenn die Umgebungsvariable fehlt (Dateien in .gitignore, Inhalt nie ausgegeben).
+providers.load_key_files()
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROJECT = os.path.dirname(HERE)
 HOST = "127.0.0.1"
 PORT = int(os.environ.get("SMARTCRAFT_PORT", "25599"))
 
-MODEL = os.environ.get("SMARTCRAFT_MODEL", "claude-haiku-5-5")
+# Anbieter und Modell: Startwert aus der Umgebung, danach gilt, was der Mod sagt (/smartcraft provider|model).
+PROVIDER = os.environ.get("SMARTCRAFT_PROVIDER", "anthropic").lower()
+if PROVIDER not in providers.PROVIDERS:
+    PROVIDER = "anthropic"
+MODEL = os.environ.get("SMARTCRAFT_MODEL") or providers.PROVIDERS[PROVIDER]["model"]
 EFFORT = os.environ.get("SMARTCRAFT_EFFORT", "medium")
 # Kostenlimit pro Ziel in Dollar; 0 heißt kein Limit.
 COST_LIMIT = float(os.environ.get("SMARTCRAFT_COST_LIMIT", "0"))
@@ -86,6 +72,12 @@ PRICES = {
     "claude-haiku-5-5": (0.1, 0.5),
     "claude-haiku-4-5": (1.0, 5.0),
     "claude-fable-5-1": (10.0, 50.0),
+    # OpenAI und Gemini (Stand 23.11.2026, Preisseiten der Anbieter; Gemini 3.8 Flash: Einführungspreis bis 31.12.2026,
+    # danach 1,50 / 7,50). Gecachte Eingabe rechnet mit 10 % wie bei Claude.
+    "gpt-6-luna": (0.1, 0.5),
+    "gpt-6-sol": (2.0, 10.0),
+    "gpt-6-astra": (10.0, 50.0),
+    "gemini-3.8-flash": (0.75, 3.75),
 }
 DEFAULT_PRICE = (10.0, 50.0)
 # Cache-Lesen als Anteil des Eingabepreises (Stand der API-Referenz 10/2026): sonst 0,1.
@@ -406,12 +398,12 @@ class Agent:
         self.bridge = bridge
         # Kurzes Timeout mit Wiederholung: Festungslauf 16 und Perlen-Lauf 21 hingen nach einem Ergebnis minutenlang
         # ohne Modellschritt (Standard des SDK: 10 Minuten pro Aufruf), der Wächter brach beide ab.
-        self.client = anthropic.Anthropic(timeout=90.0, max_retries=4)
+        self.client = self.make_client()
         self.tools = load_tools()
         with open(os.path.join(HERE, "prompts", "system.md"), encoding="utf-8") as file:
             self.system = file.read() + CHAT_NOTES.get(CHAT_MODE, "")
-        self.use_fallbacks = USE_FALLBACKS
-        self.use_effort = bool(EFFORT)
+        self.use_fallbacks = USE_FALLBACKS and PROVIDER == "anthropic"
+        self.use_effort = bool(EFFORT) and PROVIDER == "anthropic"
         self.paused = False
         self.pending_goal = None
         # Wer das wartende Ziel in den Chat geschrieben hat; None bei /smartcraft goal.
@@ -521,7 +513,8 @@ class Agent:
             elif action == "settings":
                 self.apply_settings(data)
             elif action == "apikey" and data.get("api_key"):
-                self.set_api_key(data["api_key"])
+                self.set_api_key(data.get("provider") or providers.detect_provider(data["api_key"]) or "anthropic",
+                                 data["api_key"])
             elif action in ("tts_on", "tts_off"):
                 SPEAKER.set_enabled(action == "tts_on")
                 print(f"  [Sprachausgabe {'an' if action == 'tts_on' else 'aus'}]", flush=True)
@@ -531,15 +524,42 @@ class Agent:
                 return True
         return False
 
-    def set_api_key(self, key):
-        save_key(key)
-        self.client = anthropic.Anthropic(api_key=key.strip(), timeout=90.0, max_retries=4)
-        print("  [API-Schlüssel übernommen und in companion/api_key.txt gespeichert]", flush=True)
+    def make_client(self):
+        """Client des gewählten Anbieters. Fehlt dessen Paket, None: das Ziel scheitert dann mit klarer Meldung."""
+        if PROVIDER == "anthropic":
+            return anthropic.Anthropic(timeout=90.0, max_retries=4)
+        try:
+            return providers.make_client(PROVIDER)
+        except providers.MissingPackage as error:
+            print(f"  [{error}: /smartcraft companion stop und start installiert es]", flush=True)
+            return None
+
+    def set_api_key(self, provider, key):
+        providers.save_key(provider, key)
+        if provider == PROVIDER:
+            self.client = self.make_client()
+        print(f"  [API-Schlüssel für {provider} übernommen und in companion/{providers.PROVIDERS[provider]['file']} "
+              "gespeichert]", flush=True)
+
+    def set_provider(self, provider, model):
+        global PROVIDER, MODEL
+        if provider not in providers.PROVIDERS:
+            return
+        model = model or providers.PROVIDERS[provider]["model"]
+        if (provider, model) == (PROVIDER, MODEL):
+            return
+        PROVIDER, MODEL = provider, model
+        self.use_fallbacks = USE_FALLBACKS and provider == "anthropic"
+        self.use_effort = bool(EFFORT) and provider == "anthropic"
+        self.client = self.make_client()
+        print(f"  [Anbieter {PROVIDER}, Modell {MODEL}]", flush=True)
 
     def apply_settings(self, data):
         """Einstellungen aus dem Mod übernehmen (/smartcraft tts|humor|talkmode|streamer); sofort wirksam."""
         if "tts" in data:
             SPEAKER.set_enabled(bool(data["tts"]))
+        if "provider" in data:
+            self.set_provider(data["provider"], data.get("model") or None)
         humor = data.get("humor", self.humor)
         talk = data.get("talkmode", self.talkmode)
         if humor in HUMOR_NOTES and talk in TALK_SETTINGS and (humor, talk) != (self.humor, self.talkmode):
@@ -560,13 +580,18 @@ class Agent:
             args["tts"] = os.environ["SMARTCRAFT_TTS"] == "1"
         if "SMARTCRAFT_CHAT" in os.environ:
             args["talkmode"] = START_TALKMODE
+        if "SMARTCRAFT_PROVIDER" in os.environ:
+            args["provider"] = PROVIDER
+        if "SMARTCRAFT_MODEL" in os.environ:
+            args["model"] = MODEL
         try:
             result, _ = self.command("settings", args, [], timeout=10, may_interrupt=False)
         except (TimeoutError, OSError):
             return
         if result.get("status") == "ok":
-            if result.get("data", {}).get("api_key"):
-                self.set_api_key(result["data"]["api_key"])
+            for provider, key in (result.get("data", {}).get("api_keys") or {}).items():
+                if provider in providers.PROVIDERS and key:
+                    self.set_api_key(provider, key)
             self.apply_settings(result.get("data", {}))
             self.settings_note = None  # die Eröffnung jedes Ziels nennt sie ohnehin
 
@@ -873,6 +898,9 @@ class Agent:
             if took > 20:
                 print(f"  [Modellaufruf dauerte {took:.0f} s]", flush=True)
             return response
+        except providers.ProviderError as error:
+            print(f"  [Modellaufruf scheiterte nach {time.time() - started:.0f} s: {type(error).__name__}]", flush=True)
+            raise
         except anthropic.APIError as error:
             print(f"  [Modellaufruf scheiterte nach {time.time() - started:.0f} s: {type(error).__name__}]", flush=True)
             # Manche Modelle (z. B. Haiku) kennen den Parameter `effort` nicht: einmal ohne wiederholen.
@@ -883,6 +911,11 @@ class Agent:
             return self.send_request(messages)
 
     def send_request(self, messages):
+        if PROVIDER != "anthropic":
+            if self.client is None:
+                raise providers.MissingPackage(f"Paket {providers.PROVIDERS[PROVIDER]['package']} fehlt")
+            return self.client.create(system=self.system, tools=self.tools, messages=messages,
+                                      max_tokens=MAX_TOKENS, model=MODEL)
         # Eigener Cache-Haltepunkt hinter Tools und Systemprompt: Ändert sich der Verlauf (Kürzen), bleiben diese
         # rund 33 Tsd. Tokens im Cache, nur der Verlauf wird neu geschrieben.
         system = [{"type": "text", "text": self.system, "cache_control": {"type": "ephemeral"}}]
@@ -957,11 +990,11 @@ class Agent:
         self.paused = False
         self.reset_goal_state()
         with open(os.path.join(LOG_DIR, f"{stamp}.jsonl"), "w", encoding="utf-8") as self.log:
-            self.write_log("goal", {"text": goal, "model": MODEL, "effort": EFFORT, "cost_limit": COST_LIMIT,
+            self.write_log("goal", {"text": goal, "provider": PROVIDER, "model": MODEL, "effort": EFFORT, "cost_limit": COST_LIMIT,
                                     **({"chat_from": chat_from} if chat_from else {})})
             limit = f"Limit {COST_LIMIT:.2f} $" if COST_LIMIT > 0 else "kein Kostenlimit"
             title = f"Chat von {chat_from}" if chat_from else "Ziel"
-            print(f"\n=== {title}: {goal}  (Modell {MODEL}, {limit}) ===", flush=True)
+            print(f"\n=== {title}: {goal}  ({PROVIDER} {MODEL}, {limit}) ===", flush=True)
             try:
                 outcome = self.goal_loop(goal, chat_from)
             except GoalEnded as ended:
@@ -979,6 +1012,17 @@ class Agent:
                 outcome = f"API-Fehler {error.status_code}: {error.message}"
             except anthropic.APIConnectionError:
                 outcome = "API nicht erreichbar (Netzwerk?)"
+            except providers.MissingPackage as error:
+                outcome = f"{error}: /smartcraft companion stop und danach start installiert es"
+            except providers.AuthError:
+                outcome = (f"API-Schlüssel für {PROVIDER} fehlt oder ist ungültig (/smartcraft apikey {PROVIDER} <key> "
+                           f"im Spiel oder {providers.PROVIDERS[PROVIDER]['env']} setzen)")
+            except providers.RateLimitError:
+                outcome = "Ratenlimit der API erreicht, später noch einmal versuchen"
+            except providers.ConnectionError_:
+                outcome = "API nicht erreichbar (Netzwerk?)"
+            except providers.ProviderError as error:
+                outcome = f"API-Fehler ({PROVIDER}): {str(error)[:300]}"
             self.write_log("end", {"outcome": outcome, "cost": round(self.cost, 4)})
             print(f"=== Ende: {outcome}  (Kosten {self.cost:.2f} $) ===\n", flush=True)
         self.log = None

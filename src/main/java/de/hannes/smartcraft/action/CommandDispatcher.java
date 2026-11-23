@@ -199,11 +199,13 @@ public final class CommandDispatcher {
 				return;
 			}
 			JsonObject settings = de.hannes.smartcraft.bot.AiSettings.toJson();
-			String key = de.hannes.smartcraft.bot.AiSettings.pendingApiKey;
-			if (key != null) {
-				// Vor dem Verbinden gesetzt (/smartcraft apikey): einmal mitgeben; das Log maskiert ihn (EventBus).
-				settings.addProperty("api_key", key);
-				de.hannes.smartcraft.bot.AiSettings.pendingApiKey = null;
+			var pending = de.hannes.smartcraft.bot.AiSettings.pendingApiKeys;
+			if (!pending.isEmpty()) {
+				// Vor dem Verbinden gesetzt (/smartcraft apikey): einmal mitgeben; das Log maskiert sie (EventBus).
+				JsonObject keys = new JsonObject();
+				pending.forEach((provider, key) -> keys.addProperty(provider.id(), key));
+				settings.add("api_keys", keys);
+				pending.clear();
 			}
 			bus.emitResult(command, tick, Status.OK, null, settings);
 			return;

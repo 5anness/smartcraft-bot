@@ -50,13 +50,34 @@ public final class EventBus {
 				Priority.NORMAL, data, command.id(), status, reason));
 	}
 
-	/** Kopie fürs Log ohne API-Schlüssel ({@code data.api_key}); der Schlüssel wird nie protokolliert. */
+	/** Kopie fürs Log ohne API-Schlüssel ({@code data.api_key}, {@code data.api_keys}); nie protokolliert. */
 	private static JsonObject masked(JsonObject json) {
-		if (!(json.get("data") instanceof JsonObject data) || !data.has("api_key")) {
+		if (!(json.get("data") instanceof JsonObject data)) {
+			return json;
+		}
+		JsonObject masked = maskKeys(data);
+		if (masked == data) {
 			return json;
 		}
 		JsonObject copy = json.deepCopy();
-		copy.getAsJsonObject("data").addProperty("api_key", "***");
+		copy.add("data", masked);
+		return copy;
+	}
+
+	/** {@code data} ohne Schlüssel (gleiches Objekt, wenn keiner darin ist); auch für die Chat-Anzeige. */
+	public static JsonObject maskKeys(JsonObject data) {
+		if (data == null || (!data.has("api_key") && !data.has("api_keys"))) {
+			return data;
+		}
+		JsonObject copy = data.deepCopy();
+		if (copy.has("api_key")) {
+			copy.addProperty("api_key", "***");
+		}
+		if (copy.get("api_keys") instanceof JsonObject keys) {
+			for (String name : keys.keySet()) {
+				keys.addProperty(name, "***");
+			}
+		}
 		return copy;
 	}
 
