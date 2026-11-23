@@ -108,10 +108,8 @@ public final class BotCommand {
 								.then(Commands.literal("on").executes(ctx -> dimensionFollow(ctx.getSource(), true)))
 								.then(Commands.literal("off").executes(ctx -> dimensionFollow(ctx.getSource(), false))))
 						.then(levels("gamemode", GameType.values(), (source, mode) -> gamemode(source, GameType.valueOf(mode))))
-						.then(Commands.literal("streamer")
-								.executes(ctx -> streamer(ctx.getSource(), true))
-								.then(Commands.literal("on").executes(ctx -> streamer(ctx.getSource(), true)))
-								.then(Commands.literal("off").executes(ctx -> streamer(ctx.getSource(), false))))
+						.then(streamerNode("streamermode"))
+						.then(streamerNode("streamer"))
 						.then(Commands.literal("locate")
 								.then(Commands.literal("on").executes(ctx -> locate(ctx.getSource(), true)))
 								.then(Commands.literal("off").executes(ctx -> locate(ctx.getSource(), false))))
@@ -318,16 +316,67 @@ public final class BotCommand {
 	}
 
 	/** Streamer-Preset; „off“ schaltet nur den Streamer-Modus aus und lässt die Einzelwerte, wie sie sind. */
+	/** {@code streamermode on|off}; {@code streamer} bleibt als alter Name (ohne Zusatz: an). */
+	private com.mojang.brigadier.builder.LiteralArgumentBuilder<CommandSourceStack> streamerNode(String name) {
+		return Commands.literal(name)
+				.executes(ctx -> streamer(ctx.getSource(), true))
+				.then(Commands.literal("on").executes(ctx -> streamer(ctx.getSource(), true)))
+				.then(Commands.literal("off").executes(ctx -> streamer(ctx.getSource(), false)));
+	}
+
+	/** Alles, was der Streamer-Modus umstellt, wie es vorher war; {@code off} stellt es genau so wieder her. */
+	private record StreamerBefore(boolean tts, AiSettings.Humor humor, AiSettings.Talk talk, boolean dimensionFollow,
+			java.util.UUID followTarget, boolean locate, boolean events, boolean stats, boolean xpbar,
+			java.util.UUID player, GameType gameMode) {
+	}
+
+	private StreamerBefore streamerBefore;
+
+	/**
+	 * Streamer-Modus: TTS an, Humor CRAZY, Talkmode HARD, Statusanzeige und XP-Leiste an, Event-Anzeige im Chat aus, Locate
+	 * an, Dimension Follow an, der Streamer als Zuschauer. {@code off} stellt alle diese Einstellungen wieder her, wie sie
+	 * vor dem Einschalten waren (Wunsch von Hannes, 24.11.2026; vorher blieb alles stehen).
+	 */
 	private int streamer(CommandSourceStack source, boolean on) {
 		if (!on) {
+			if (!AiSettings.streamer) {
+				return say(source, "Streamer-Modus ist schon aus.");
+			}
+			StreamerBefore before = streamerBefore;
+			streamerBefore = null;
 			AiSettings.streamer = false;
+			if (before == null) {
+				pushSettings(source);
+				return say(source, "Streamer-Modus aus (keine gemerkten Einstellungen zum Zurücksetzen).");
+			}
+			AiSettings.tts = before.tts();
+			AiSettings.humor = before.humor();
+			AiSettings.talk = before.talk();
+			AiSettings.dimensionFollow = before.dimensionFollow();
+			AiSettings.followTarget = before.followTarget();
+			CommandDispatcher.locateEnabled = before.locate();
+			chatMirror.setEnabled(before.events());
+			nameplate.set(source.getServer(), before.stats());
+			UsageDisplay.set(source.getServer(), before.xpbar());
+			ServerPlayer streamer = source.getServer().getPlayerList().getPlayer(before.player());
+			if (streamer != null && streamer.gameMode() != before.gameMode()) {
+				streamer.setGameMode(before.gameMode());
+			}
 			pushSettings(source);
-			return say(source, "Streamer-Modus aus. Die Einzeleinstellungen bleiben, wie sie sind (siehe /smartcraft info).");
+			return say(source, "Streamer-Modus aus: Einstellungen wie vorher (TTS " + onOff(before.tts()) + ", Humor "
+					+ before.humor().name() + ", Talkmode " + before.talk().name() + ", Statusanzeige " + onOff(before.stats())
+					+ ", Events " + onOff(before.events()) + ", Spielmodus " + before.gameMode().getName() + ").");
 		}
 		ServerPlayer player = source.getPlayer();
 		if (player == null || player == bots.bot()) {
 			source.sendFailure(Component.literal("Der Streamer-Modus braucht einen Spieler (Zuschauermodus, Dimension Follow): im Spiel eingeben."));
 			return 0;
+		}
+		if (!AiSettings.streamer || streamerBefore == null) {
+			// Nur beim ersten Einschalten merken; ein zweites "on" überschreibt den Ausgangszustand nicht.
+			streamerBefore = new StreamerBefore(AiSettings.tts, AiSettings.humor, AiSettings.talk, AiSettings.dimensionFollow,
+					AiSettings.followTarget, CommandDispatcher.locateEnabled, chatMirror.enabled(), nameplate.enabled(),
+					UsageDisplay.enabled(), player.getUUID(), player.gameMode());
 		}
 		AiSettings.tts = true;
 		AiSettings.humor = AiSettings.Humor.CRAZY;
@@ -337,10 +386,13 @@ public final class BotCommand {
 		AiSettings.streamer = true;
 		CommandDispatcher.locateEnabled = true;
 		chatMirror.setEnabled(false);
+		nameplate.set(source.getServer(), true);
+		UsageDisplay.set(source.getServer(), true);
 		boolean spectator = player.setGameMode(GameType.SPECTATOR) || player.gameMode() == GameType.SPECTATOR;
 		pushSettings(source);
-		say(source, "Streamer-Modus an: TTS an, Humor CRAZY, Talkmode HARD, Locate an, Events aus, Dimension Follow an"
-				+ (spectator ? ", du bist Zuschauer." : "."));
+		say(source, "Streamer-Modus an: TTS an, Humor CRAZY, Talkmode HARD, Statusanzeige und XP-Leiste an, Events aus, "
+				+ "Locate an, Dimension Follow an" + (spectator ? ", du bist Zuschauer." : ".")
+				+ " Mit /smartcraft streamermode off ist alles wieder wie vorher.");
 		if (!spectator) {
 			source.sendFailure(Component.literal("Zuschauermodus konnte nicht gesetzt werden."));
 		}
