@@ -1,4 +1,4 @@
-# Architektur – KI-Minecraft-Spieler
+# Architektur – SmartCraft
 
 Dieses Dokument beschreibt den Zielaufbau. Was davon schon existiert, steht in `CLAUDE.md`
 unter „Aktueller Stand“ und hier in der Spalte „Ab Etappe“.

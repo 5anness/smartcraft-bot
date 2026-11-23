@@ -1,4 +1,4 @@
-# KI-Minecraft-Spieler (Fabric-Mod)
+# SmartCraft – KI-Minecraft-Spieler (Fabric-Mod)
 
 Ein Fabric-Mod für Minecraft Java Edition 26.2, über den Claude (Anthropic API) eine eigene, zweite Spielfigur steuert –
 mit dem langfristigen Ziel, selbstständig bis zum Enderdrachen zu kommen.

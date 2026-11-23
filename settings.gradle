@@ -9,5 +9,5 @@ pluginManagement {
 	}
 }
 
-// Should match your modid
-rootProject.name = 'aiplayer'
+// Projektname SmartCraft (Mod-ID bleibt aiplayer)
+rootProject.name = 'smartcraft'

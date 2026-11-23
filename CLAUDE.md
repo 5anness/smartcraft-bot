@@ -1,4 +1,4 @@
-# CLAUDE.md – KI-Minecraft-Spieler (Fabric-Mod)
+# CLAUDE.md – SmartCraft, KI-Minecraft-Spieler (Fabric-Mod)
 
 ## Projektziel
 Ein Fabric-Mod, über den ein Sprachmodell (Claude via Anthropic API) eine Spielfigur
@@ -746,3 +746,4 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   `EventBus` und `console.py` maskieren `api_key` – Wunsch von Hannes (Veröffentlichung auf Git), Kernprinzip 6 bleibt
 - 2026-11-23 – Statusanzeige über dem Bot: durch Blöcke sichtbar und volle Helligkeit, beim Absteigen wieder aufsitzen statt
   neu anlegen – Hannes: HP/Hunger manchmal unsichtbar (in 2 Blöcke hohen Gängen steckte sie in der Decke)
+- 2026-11-23 – Projekt heißt SmartCraft (Anzeigename, Jar-Name); Mod-ID, Package und Befehl `/aiplayer` bleiben – Wunsch von Hannes, Umbenennung der IDs hätte Welten, Tests und Begleitprozess gebrochen

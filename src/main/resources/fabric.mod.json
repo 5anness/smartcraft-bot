@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "aiplayer",
 	"version": "${version}",
-	"name": "AI Player",
+	"name": "SmartCraft",
 	"description": "Ein Sprachmodell spielt als eigener, zweiter Spieler mit. Nur für Einzelspieler, LAN und lokale Server.",
 	"authors": [
 		"Hannes"
