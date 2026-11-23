@@ -27,7 +27,7 @@ Zuschauermodus) und wird nie selbst gesteuert.
 - Der Mod ist daher primär ein **Server-Mod**; Client-Code nur für optionale Anzeigen
 - Befehle: `/smartcraft join [name]`, `/smartcraft leave`, `/smartcraft status`, `/smartcraft look`,
   für die KI `/smartcraft goal <text>`, `/smartcraft pause`, `/smartcraft resume`, `/smartcraft stop`, `/smartcraft tts on|off`, `/smartcraft locate on|off`, `/smartcraft stats on|off`, `/smartcraft xpbar on|off`, `/smartcraft info`, `/smartcraft inventar`, `/smartcraft humor light|medium|hard|crazy`,
-  `/smartcraft talkmode light|medium|hard`, `/smartcraft dimensionfollow on|off`, `/smartcraft gamemode <modus>`, `/smartcraft streamer [off]`, `/smartcraft apikey [anthropic|openai|gemini] <key>`, `/smartcraft provider anthropic|openai|gemini`,
+  `/smartcraft talkmode light|medium|hard`, `/smartcraft dimensionfollow on|off`, `/smartcraft gamemode <modus>`, `/smartcraft streamermode on|off` (alter Name `streamer`), `/smartcraft apikey [anthropic|openai|gemini] <key>`, `/smartcraft provider anthropic|openai|gemini`,
   `/smartcraft model [<name>|default]`, `/smartcraft companion start|stop|status|autostart on|off`,
   Testhilfen `/smartcraft debug punch`, `/smartcraft debug break`, `/smartcraft debug bedprobe <anzahl> <ticks> <unter_kopf>` (Messung: Betten direkt unter dem Drachenkopf) und `/smartcraft kit nether` (alles für den Nether, mit 10 Obsidian), `/smartcraft kit end` (alles fürs End, 18 Enderaugen, 16 Betten)
 - Bot-Zustand (Inventar, Position) wird wie bei echten Spielern gespeichert und beim
@@ -116,6 +116,7 @@ python tests/server/test_bed_cycle.py  # Messung One-Cycle: Bettschaden am Drach
 python tests/server/test_bed_bomb.py   # Servertest bed_bomb: Betten sprengen den hockenden Drachen (ca. 2 Minuten)
 python tests/test_speech.py [--download]  # Sprachausgabe: Systemsprache, Stimmenwahl; mit --download echt laden und erzeugen (ca. 1 Minute)
 python tests/test_providers.py         # OpenAI/Gemini-Übersetzung ohne API (braucht openai, google-genai; wenige Sekunden)
+python tests/server/test_streamer.py   # Streamer-Modus mit Zuschauer-Fenster als zweitem Spieler: on/off stellt alles her (ca. 3 Minuten)
 python tests/server/test_settings.py   # Servertest Einstellungen (info, humor, talkmode, settings) und shelter nachts bei voller Ausrüstung (ca. 1 Minute)
 # Die Servertests nicht gleichzeitig mit `gradlew build` oder untereinander starten.
 # Schneller: SMARTCRAFT_TEST_TICK_RATE=60 vor den Testaufruf setzen (Spiel läuft mit 60 statt 20 Ticks, etwa halbe Dauer).
@@ -768,3 +769,6 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
 - 2026-11-24 – Der Bot chattet in der Systemsprache (gleiche Erkennung wie die Sprachausgabe): Hinweis im `[Einstellung]`-Text der
   Eröffnung statt im Systemprompt (Cache bleibt), bei Deutsch kein Hinweis; Antworten an Spieler in deren Sprache – Wunsch von Hannes,
   sonst las eine englische Stimme deutschen Text. Nur ohne API geprüft
+- 2026-11-24 – `/smartcraft streamermode on|off` (alter Name `streamer` bleibt): schaltet zusätzlich Statusanzeige und XP-Leiste an;
+  `off` stellt alle umgestellten Einstellungen samt Spielmodus des Streamers wieder her, wie sie vor dem Einschalten waren (ersetzt die
+  Entscheidung vom 28.10., nichts zurückzusetzen) – Wunsch von Hannes; `test_streamer` 11 von 11

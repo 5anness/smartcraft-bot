@@ -85,7 +85,7 @@ You can also just write to the AI in chat. It answers there and does what you as
 | `/smartcraft talkmode light\|medium\|hard` | How often the AI talks in chat |
 | `/smartcraft locate on\|off` | Allow the AI to look up structures (a cheat, off by default) |
 | `/smartcraft dimensionfollow on\|off` | Bot follows you through portals |
-| `/smartcraft streamer [off]` | Preset for streaming |
+| `/smartcraft streamermode on\|off` | Streaming preset: voice on, humor CRAZY, talks more, hearts/hunger above the bot and cost in the XP bar, event log hidden, locate on, bot follows you through portals, you become a spectator. `off` restores every setting as it was before |
 
 The full list (including test helpers) is in [CLAUDE.md](CLAUDE.md).
 
