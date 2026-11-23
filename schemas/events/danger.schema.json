@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/danger.schema.json",
+	"$id": "smartcraft/events/danger.schema.json",
 	"title": "data von danger: Gefahren im direkten Umfeld. Nur bei Änderung, höchstens zweimal pro Sekunde. Priorität high; eine leere Liste (Gefahr vorbei) hat normal",
 	"type": "object",
 	"required": [

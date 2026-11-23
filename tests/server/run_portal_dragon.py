@@ -3,7 +3,7 @@
 Aufruf:  python tests/server/run_portal_dragon.py <Laufnummer> [Stunden, Standard 2] [--mit-locate]
 
 - Neue normale Welt `ai_portal_<n>`, Start an der Oberfläche bei 0 0, ohne `locate` (nur mit --mit-locate).
-- Ausrüstung: `/aiplayer kit end` – Diamant (Goldstiefel), Schild, Bogen, 128 Pfeile, 18 Enderaugen (Wunsch von Hannes: mindestens 18,
+- Ausrüstung: `/smartcraft kit end` – Diamant (Goldstiefel), Schild, Bogen, 128 Pfeile, 18 Enderaugen (Wunsch von Hannes: mindestens 18,
   ein Portal braucht bis zu 12, Würfe gehen verloren), 12 Betten, 192 Bausteine, Essen, Goldäpfel – also `end_ready`.
 - Er sucht die Festung, setzt die Augen ein, geht ins End und tötet den Drachen.
 - Erfolg: Drache tot (Fortschritt end/kill_dragon oder `dragon_dead` aus bed_cycle/fight_dragon). Tode beenden den
@@ -51,7 +51,7 @@ def main():
         with open(log_path, "a", encoding="utf-8") as file:
             file.write(text + "\n")
 
-    shutil.rmtree(os.path.join(PROJECT, os.environ.get("AIPLAYER_TEST_RUNDIR", "run"), world), ignore_errors=True)
+    shutil.rmtree(os.path.join(PROJECT, os.environ.get("SMARTCRAFT_TEST_RUNDIR", "run"), world), ignore_errors=True)
     outcome = "abgebrochen"
     start = time.time()
     deaths = 0
@@ -59,15 +59,15 @@ def main():
     agent = None
     try:
         server.console("difficulty normal")
-        server.console(f"aiplayer join {BOT}", wait=6)
+        server.console(f"smartcraft join {BOT}", wait=6)
         for _ in range(30):
             answer, _ = server.run("inventory", timeout=10)
             if answer and answer.get("status") == "ok":
                 break
             time.sleep(2)
-        server.console("aiplayer locate on" if locate else "aiplayer locate off")
+        server.console("smartcraft locate on" if locate else "smartcraft locate off")
         server.console(f"clear {BOT}")
-        server.console("aiplayer kit end", wait=1.0)
+        server.console("smartcraft kit end", wait=1.0)
         server.drain(1.0)
         answer, _ = server.run("inventory", timeout=10)
         have = str(answer.get("data", {}))
@@ -82,7 +82,7 @@ def main():
         server.console(f"execute in minecraft:overworld run spreadplayers 0 0 0 16 false {BOT}", wait=4)
         log(f"Lauf {run}: Welt {world} (Seed {seed}), Start: {where(server)}")
 
-        env = {**os.environ, "AIPLAYER_PORT": str(PORT), "AIPLAYER_TTS": "0", "AIPLAYER_MAX_STEPS": "3000",
+        env = {**os.environ, "SMARTCRAFT_PORT": str(PORT), "SMARTCRAFT_TTS": "0", "SMARTCRAFT_MAX_STEPS": "3000",
                "PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1"}
         agent_out = open(agent_log, "w", encoding="utf-8")
         agent = subprocess.Popen([sys.executable, os.path.join(PROJECT, "companion", "agent.py"), GOAL],
@@ -103,7 +103,7 @@ def main():
                     outcome = f"Modell gab 6-mal auf ({where(server)})"
                     break
                 log(f"Modell beendete das Ziel ({goal_ends}. Mal), Ziel neu gesetzt")
-                server.console(f"aiplayer goal {GOAL} Du hattest aufgehört, das Ziel ist aber nicht erreicht: mach weiter.")
+                server.console(f"smartcraft goal {GOAL} Du hattest aufgehört, das Ziel ist aber nicht erreicht: mach weiter.")
             if agent.poll() is not None:
                 outcome = f"Begleitprozess beendet (Code {agent.returncode})"
                 break

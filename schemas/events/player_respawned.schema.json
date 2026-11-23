@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/player_respawned.schema.json",
+	"$id": "smartcraft/events/player_respawned.schema.json",
 	"title": "data von player_respawned: Der Bot ist nach dem Tod wieder im Spiel",
 	"type": "object",
 	"required": [

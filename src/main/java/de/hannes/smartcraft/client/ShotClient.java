@@ -18,7 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 
 /**
- * Zuschauer-Kamera für die Servertests, nur wenn {@code AIPLAYER_SHOT_PORT} gesetzt ist.
+ * Zuschauer-Kamera für die Servertests, nur wenn {@code SMARTCRAFT_SHOT_PORT} gesetzt ist.
  * Das Testskript schickt eine Zeile pro Bild (der Dateiname ohne Endung); der Client speichert
  * das aktuelle Bild nach {@code screenshots/<name>.png} und antwortet mit {@code ok <name>}.
  * Ein normal gestartetes Spiel merkt davon nichts.
@@ -31,11 +31,11 @@ public final class ShotClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		String port = System.getenv("AIPLAYER_SHOT_PORT");
+		String port = System.getenv("SMARTCRAFT_SHOT_PORT");
 		if (port == null || port.isBlank()) {
 			return;
 		}
-		Thread listener = new Thread(() -> listen(Integer.parseInt(port.trim())), "aiplayer-shot-listener");
+		Thread listener = new Thread(() -> listen(Integer.parseInt(port.trim())), "smartcraft-shot-listener");
 		listener.setDaemon(true);
 		listener.start();
 
@@ -63,12 +63,12 @@ public final class ShotClient implements ClientModInitializer {
 		try (ServerSocket server = new ServerSocket(port, 4, InetAddress.getLoopbackAddress())) {
 			while (true) {
 				Socket socket = server.accept();
-				Thread connection = new Thread(() -> serve(socket), "aiplayer-shot-connection");
+				Thread connection = new Thread(() -> serve(socket), "smartcraft-shot-connection");
 				connection.setDaemon(true);
 				connection.start();
 			}
 		} catch (IOException error) {
-			System.err.println("[aiplayer] Screenshot-Port " + port + " nicht verfügbar: " + error);
+			System.err.println("[smartcraft] Screenshot-Port " + port + " nicht verfügbar: " + error);
 		}
 	}
 

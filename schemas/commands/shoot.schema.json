@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/shoot.schema.json",
+	"$id": "smartcraft/commands/shoot.schema.json",
 	"title": "shoot: schießt mit dem Bogen auf ein Ziel bis 64 Blöcke weit, voll gespannt und mit Vorhalt für Bewegung und Pfeilfall. Für Ziele, die du nicht erreichst: Lohen, Ghasts, Endkristalle (end_crystal), der Enderdrache (zielt auf den Kopf), Skelette über Abgründen. Braucht Bogen und Pfeile, freie Sicht. Endet, wenn das Ziel tot oder zerstört ist oder die Schüsse verbraucht sind. Nach 3 Fehlschüssen in Folge auf ein Lebewesen bis 14 Blöcke wechselt er zum Schwert",
 	"args": {
 		"type": "object",

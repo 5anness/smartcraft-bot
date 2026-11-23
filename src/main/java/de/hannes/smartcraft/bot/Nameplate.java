@@ -23,12 +23,12 @@ import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import java.util.Locale;
 
 /**
- * Leben und Hunger des Bots über seinem Namen ({@code /aiplayer stats on|off}), zwei Zeilen untereinander in einer
+ * Leben und Hunger des Bots über seinem Namen ({@code /smartcraft stats on|off}), zwei Zeilen untereinander in einer
  * Vanilla-Textanzeige, die als Mitfahrer auf ihm sitzt: Clients ohne Mod sehen es auch. Wunsch von Hannes.
  */
 final class Nameplate {
-	private static final String OBJECTIVE = "aiplayer_stats";
-	private static final String TAG = "aiplayer_stats";
+	private static final String OBJECTIVE = "smartcraft_stats";
+	private static final String TAG = "smartcraft_stats";
 	private static final int INTERVAL = 10;
 	private static final net.minecraft.resources.Identifier GUI_ATLAS = net.minecraft.resources.Identifier.withDefaultNamespace("gui");
 	/** Über dem Namensschild: zwei Zeilen (Herzen oben, Hunger darunter). */
@@ -92,7 +92,7 @@ final class Nameplate {
 			return;
 		}
 		lastText = text;
-		((TextDisplayAccessor) display).aiplayer$setText(text);
+		((TextDisplayAccessor) display).smartcraft$setText(text);
 	}
 
 	/** Textanzeige über dem Bot, auch für Clients ohne Mod. */
@@ -103,8 +103,8 @@ final class Nameplate {
 		}
 		created.addTag(TAG);
 		created.setPos(bot.getX(), bot.getY() + bot.getBbHeight(), bot.getZ());
-		((DisplayAccessor) created).aiplayer$setBillboardConstraints(Display.BillboardConstraints.CENTER);
-		((DisplayAccessor) created).aiplayer$setTransformation(new Transformation(new Vector3f(0, HEIGHT, 0), null, null, null));
+		((DisplayAccessor) created).smartcraft$setBillboardConstraints(Display.BillboardConstraints.CENTER);
+		((DisplayAccessor) created).smartcraft$setTransformation(new Transformation(new Vector3f(0, HEIGHT, 0), null, null, null));
 		// Durch Blöcke sichtbar: in 2 Blöcke hohen Gängen steckt die Anzeige in der Decke und war sonst verdeckt.
 		created.setFlags((byte) (created.getFlags() | Display.TextDisplay.FLAG_SEE_THROUGH));
 		// Volle Helligkeit: in Höhlen und nachts war sie sonst fast schwarz.

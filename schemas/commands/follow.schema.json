@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/follow.schema.json",
+	"$id": "smartcraft/commands/follow.schema.json",
 	"title": "follow: bleibt in der Nähe eines Spielers oder Wesens, bis die Zeit um ist (ok) oder ein anderer Befehl kommt (cancelled)",
 	"args": {
 		"type": "object",

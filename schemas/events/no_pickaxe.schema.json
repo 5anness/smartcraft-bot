@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/no_pickaxe.schema.json",
+	"$id": "smartcraft/events/no_pickaxe.schema.json",
 	"title": "data von no_pickaxe: Die letzte Spitzhacke ist weg (zerbrochen, weggeworfen, nach dem Tod verloren). Kommt einmal je Verlust, Priorität high",
 	"type": "object",
 	"required": [

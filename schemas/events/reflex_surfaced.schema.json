@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/reflex_surfaced.schema.json",
+	"$id": "smartcraft/events/reflex_surfaced.schema.json",
 	"title": "data von reflex_surfaced: Reflex des Mods: Unter Wasser war die halbe Luft verbraucht (150 von 300 Ticks), der Bot ist zum nächsten Ort mit Luft geschwommen. Eine laufende Aktion hat so lange gewartet",
 	"type": "object",
 	"required": [

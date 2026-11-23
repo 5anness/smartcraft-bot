@@ -15,12 +15,12 @@ FLOOR = STAND - 1
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-obsidian.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-obsidian.log")
     server = TestServer(log)
     report = Report()
     try:
         server.console("gamerule spawn_mobs false")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console(f"smartcraft join {BOT}", wait=5)
 
         # --- Ohne Diamantspitzhacke: wrong_tool.
         x, z = 1300, 520

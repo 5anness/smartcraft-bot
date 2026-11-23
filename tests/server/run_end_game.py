@@ -67,7 +67,7 @@ def main():
     agent = None
     try:
         server.console("difficulty normal")
-        server.console(f"aiplayer join {BOT}", wait=6)
+        server.console(f"smartcraft join {BOT}", wait=6)
         if viewer:
             server.console(f"op {viewer}")
         if not keep:
@@ -79,7 +79,7 @@ def main():
             server.run("equip", {"item": "diamond_sword"}, timeout=20)
         log(f"Welt {WORLD} (Seed {SEED}), {'Inventar behalten' if keep else 'Ausrüstung gegeben'}, starte den Begleitprozess")
 
-        env = {**os.environ, "AIPLAYER_PORT": str(PORT), "AIPLAYER_TTS": "0", "AIPLAYER_MAX_STEPS": "3000",
+        env = {**os.environ, "SMARTCRAFT_PORT": str(PORT), "SMARTCRAFT_TTS": "0", "SMARTCRAFT_MAX_STEPS": "3000",
                "PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1"}
         agent_out = open(os.path.join(PROJECT, "run", "logs", "end_game_agent.log"), "w", encoding="utf-8")
         agent = subprocess.Popen([sys.executable, os.path.join(PROJECT, "companion", "agent.py"), GOAL],

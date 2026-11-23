@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/ping.schema.json",
+	"$id": "smartcraft/commands/ping.schema.json",
 	"title": "ping: prüft die Verbindung. Braucht keinen Bot",
 	"args": {
 		"type": "object",

@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/chat_received.schema.json",
+	"$id": "smartcraft/events/chat_received.schema.json",
 	"title": "data von chat_received: Jemand anderes als der Bot hat in den Chat geschrieben (als Spieler oder mit /say, auch von der Serverkonsole). Priorität normal",
 	"type": "object",
 	"required": [

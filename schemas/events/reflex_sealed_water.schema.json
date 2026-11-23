@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/reflex_sealed_water.schema.json",
+	"$id": "smartcraft/events/reflex_sealed_water.schema.json",
 	"title": "data von reflex_sealed_water: In eine Lücke, die der Bot gerade abgebaut hat, lief Wasser; er hat sofort einen Block hineingesetzt (oder es versucht). Priorität normal",
 	"type": "object",
 	"required": [

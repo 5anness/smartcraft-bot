@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/usage.schema.json",
-	"title": "usage: nur für den Begleitprozess, nicht für das Modell. Meldet den Gesamtverbrauch seit seinem Start; der Mod zeigt ihn menschlichen Spielern in der XP-Leiste (Level = Cent) und darüber als Text (/aiplayer xpbar on|off, Standard an beim Join). Echte XP bleiben unverändert",
+	"$id": "smartcraft/commands/usage.schema.json",
+	"title": "usage: nur für den Begleitprozess, nicht für das Modell. Meldet den Gesamtverbrauch seit seinem Start; der Mod zeigt ihn menschlichen Spielern in der XP-Leiste (Level = Cent) und darüber als Text (/smartcraft xpbar on|off, Standard an beim Join). Echte XP bleiben unverändert",
 	"args": {
 		"type": "object",
 		"additionalProperties": false,

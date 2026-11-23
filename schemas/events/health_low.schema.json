@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/health_low.schema.json",
+	"$id": "smartcraft/events/health_low.schema.json",
 	"title": "data von health_low: Das Leben ist auf 6 oder weniger gefallen. Kommt einmal, bis das Leben wieder über 8 war",
 	"type": "object",
 	"required": [

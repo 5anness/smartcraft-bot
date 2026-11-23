@@ -51,14 +51,14 @@ def wait_event(server, mark, name, seconds):
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-fixes.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-fixes.log")
     server = TestServer(log)
     report = Report()
     try:
         server.console("gamerule spawn_mobs false")
         daylight(server, False)
         server.console("difficulty normal")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console(f"smartcraft join {BOT}", wait=5)
         snapshot(server, report)
         shelter(server, report)
         collect(server, report)

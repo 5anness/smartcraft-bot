@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/craft.schema.json",
+	"$id": "smartcraft/commands/craft.schema.json",
 	"title": "craft: stellt ein Item nach den Rezepten des Spiels her. Kleine Rezepte (2×2) im eigenen Inventar, größere an einer Werkbank in der Nähe (läuft selbst hin, auch zu einer gemerkten). Fehlende Zwischenprodukte (Bretter für Stöcke, Stöcke für Fackeln, bis 3 Stufen) craftet er vorher selbst, Schmelzen nicht. Stellt keine Werkbank auf: dafür place_utility. Teilerfolg ist ok mit crafted kleiner als requested und stopped_because",
 	"args": {
 		"type": "object",

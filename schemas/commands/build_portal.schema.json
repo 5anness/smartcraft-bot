@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/build_portal.schema.json",
+	"$id": "smartcraft/commands/build_portal.schema.json",
 	"title": "build_portal: baut ein Netherportal auf dem nächsten freien Platz (4 breit, 5 hoch, fester Boden, bis 8 Blöcke weit; im Fels gräbt er den Platz frei) und zündet es an. Braucht 10 Obsidian, ein Feuerzeug (oder eine Feuerkugel) und 4 Bausteine für die Ecken. Lehnt ab, wenn ein Spawner bis 20 Blöcke nah ist (near_spawner: erst weggehen). In der Oberwelt erst, wenn alles für den Nether da ist (sonst not_prepared mit missing: Diamantrüstung plus Goldteil, Diamantschwert, 2 Spitzhacken, Bogen, 32 Pfeile, Schild, 16 gegartes Essen, 192 Bausteine (3 Stacks), Feuerzeug); force baut trotzdem. Ein Befehl statt vieler place. Ergebnis: portal_pos (ein Feld im Portal), portal_open. Danach enter_portal",
 	"args": {
 		"type": "object",

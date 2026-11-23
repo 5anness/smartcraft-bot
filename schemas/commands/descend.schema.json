@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/descend.schema.json",
+	"$id": "smartcraft/commands/descend.schema.json",
 	"title": "descend: gräbt senkrecht nach unten bis zur Höhe to_y (ein Befehl statt eines mine pro Block). Prüft vor jedem Block: keine Lava, kein Wasser unter oder neben dem Schacht, kein tiefer Hohlraum darunter, kein loser Kies oder Sand über dem Kopf. Hält vorher an und meldet, was im Weg ist. Hebt die Beute unterwegs auf. Für Erz, Diamanten (y -50 bis 16) und Lava-Seen (meist unter y 0)",
 	"args": {
 		"type": "object",

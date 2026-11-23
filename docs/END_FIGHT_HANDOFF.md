@@ -19,7 +19,7 @@ starten, erst fragen.
 Aus dem Projektordner, über das Bash-Tool. Das erste Argument ist die **Laufnummer**, nicht die Anzahl der Läufe:
 
 ```bash
-AIPLAYER_TEST_RUNDIR=run/inst1 AIPLAYER_TEST_PORT=25601 AIPLAYER_TEST_GAMEPORT=25571 \
+SMARTCRAFT_TEST_RUNDIR=run/inst1 SMARTCRAFT_TEST_PORT=25601 SMARTCRAFT_TEST_GAMEPORT=25571 \
   nohup python tests/server/run_end_fight.py <nr> 1.0 > /dev/null 2>&1 &
 ```
 
@@ -144,5 +144,5 @@ danach höchstens 3 Gesamtläufe (siehe Memory `end-testplan`). ARCHITECTURE.md 
 - Messlauf `test_bed_cycle_bot.py combo 36`: Drache 200 → 103, Bot lebt (wie die Serie 30–35: Test endet nach 5 Landungen)
 
 Start nächste Session (5 parallel, Instanzen 1–5):
-`for k in 1 2 3 4 5; do AIPLAYER_TEST_RUNDIR=run/inst$k AIPLAYER_TEST_PORT=$((25600+k)) AIPLAYER_TEST_GAMEPORT=$((25570+k)) python tests/server/run_end_fight.py $((105+k)) 1.0 & sleep 20; done`
+`for k in 1 2 3 4 5; do SMARTCRAFT_TEST_RUNDIR=run/inst$k SMARTCRAFT_TEST_PORT=$((25600+k)) SMARTCRAFT_TEST_GAMEPORT=$((25570+k)) python tests/server/run_end_fight.py $((105+k)) 1.0 & sleep 20; done`
 Ergebnisse in `run/logs/end_fight_results.log`. Bleibt der Atemtod, Käfigabstand mit `test_bed_cycle_bot.py` gegen 8,3 vergleichen.

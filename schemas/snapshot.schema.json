@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/snapshot.schema.json",
-	"title": "Snapshot: kompakter Zustand des Bots auf Abruf (/aiplayer look), Protokollversion 1",
+	"$id": "smartcraft/snapshot.schema.json",
+	"title": "Snapshot: kompakter Zustand des Bots auf Abruf (/smartcraft look), Protokollversion 1",
 	"type": "object",
 	"required": [
 		"v",

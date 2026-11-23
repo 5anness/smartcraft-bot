@@ -256,7 +256,7 @@ public final class BedBombAction extends Action {
 			}
 		}
 		bot.swing(InteractionHand.MAIN_HAND, true);
-		de.hannes.smartcraft.AiPlayerMod.LOGGER.info("bed_bomb boom beds=" + armed.size() + " dragon " + before + " -> " + dragon.getHealth());
+		de.hannes.smartcraft.SmartCraftMod.LOGGER.info("bed_bomb boom beds=" + armed.size() + " dragon " + before + " -> " + dragon.getHealth());
 		armed.clear();
 		failed.clear();
 		// Die Krater nehmen den Plätzen den Halt: neu suchen.

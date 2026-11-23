@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/reflex_left_dragon_breath.schema.json",
+	"$id": "smartcraft/events/reflex_left_dragon_breath.schema.json",
 	"title": "data von reflex_left_dragon_breath: Reflex des Mods: Der Bot stand in einer Säurewolke des Enderdrachen und ist hinausgelaufen. Eine laufende Aktion hat so lange gewartet. Nicht dorthin zurückgehen",
 	"type": "object",
 	"required": [

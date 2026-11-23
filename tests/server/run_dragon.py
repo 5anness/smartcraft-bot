@@ -3,7 +3,7 @@
 Aufruf:  python tests/server/run_dragon.py <Laufnummer> [Stunden, Standard 2]
 
 - Jeder Lauf eine neue normale Welt `ai_dragon_<n>` mit eigenem Seed, Testserver auf Port 25598.
-- Ausrüstung: `/aiplayer kit nether` (volle Netherausrüstung mit 10 Obsidian), keine Tränke; Start im Nether, `/aiplayer locate on`.
+- Ausrüstung: `/smartcraft kit nether` (volle Netherausrüstung mit 10 Obsidian), keine Tränke; Start im Nether, `/smartcraft locate on`.
 - Ergebnis als eine Zeile in run/logs/dragon_results.log.
 - Endet, wenn der Bot den Drachen getötet hat (Fortschritt end/kill_dragon) oder die Zeit um ist.
 - Fortschritt: run/logs/dragon_<n>.log (alle 60 s Dimension), Begleitprozess: run/logs/dragon_<n>_agent.log
@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from harness import PORT, PROJECT, TestServer  # noqa: E402
 from run_end_game import BOT, ITEMS, where  # noqa: E402
 
-WATCHER = os.environ.get("AIPLAYER_WATCHER", "ichbinderhanness")
+WATCHER = os.environ.get("SMARTCRAFT_WATCHER", "ichbinderhanness")
 GOAL = "Töte den Enderdrachen und spiel das Spiel durch. Du startest im Nether mit voller Ausrüstung."
 EXTRA = ["cobblestone 64", "cobblestone 64", "cobblestone 64", "obsidian 10",
          "golden_apple 8", "ender_pearl 12"]
@@ -40,22 +40,22 @@ def main():
             file.write(text + "\n")
 
     import shutil
-    shutil.rmtree(os.path.join(PROJECT, os.environ.get("AIPLAYER_TEST_RUNDIR", "run"), world), ignore_errors=True)
+    shutil.rmtree(os.path.join(PROJECT, os.environ.get("SMARTCRAFT_TEST_RUNDIR", "run"), world), ignore_errors=True)
     outcome = "abgebrochen"
     server = TestServer(os.path.join(PROJECT, "run", "logs", f"dragon_{run}_server.log"), world=world, seed=seed)
     agent = None
     try:
         server.console("difficulty normal")
-        server.console(f"aiplayer join {BOT}", wait=6)
+        server.console(f"smartcraft join {BOT}", wait=6)
         # Lauf 12: In einer neuen Welt dauerte der Join länger, die ersten give gingen ins Leere („No player was found“).
         for _ in range(30):
             result, _ = server.run("inventory", timeout=10)
             if result and result.get("status") == "ok":
                 break
             time.sleep(2)
-        server.console("aiplayer locate on")
+        server.console("smartcraft locate on")
         server.console(f"clear {BOT}")
-        server.console("aiplayer kit nether", wait=1.0)
+        server.console("smartcraft kit nether", wait=1.0)
         server.drain(1.0)
         result, _ = server.run("inventory", timeout=10)
         have = str(result.get("data", {}))
@@ -76,7 +76,7 @@ def main():
             return 1
         log(f"Lauf {run}: Welt {world} (Seed {seed}), Start im Nether: {where(server)}")
 
-        env = {**os.environ, "AIPLAYER_PORT": str(PORT), "AIPLAYER_TTS": "0", "AIPLAYER_MAX_STEPS": "3000",
+        env = {**os.environ, "SMARTCRAFT_PORT": str(PORT), "SMARTCRAFT_TTS": "0", "SMARTCRAFT_MAX_STEPS": "3000",
                "PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1"}
         agent_out = open(os.path.join(PROJECT, "run", "logs", f"dragon_{run}_agent.log"), "w", encoding="utf-8")
         agent = subprocess.Popen([sys.executable, os.path.join(PROJECT, "companion", "agent.py"), GOAL],
@@ -99,7 +99,7 @@ def main():
                     outcome = f"Modell gab 6-mal auf ({where(server)})"
                     break
                 log(f"Modell beendete das Ziel ({goal_ends}. Mal), Ziel neu gesetzt")
-                server.console(f"aiplayer goal {GOAL} Du hattest aufgehört, das Ziel ist aber nicht erreicht: mach weiter.")
+                server.console(f"smartcraft goal {GOAL} Du hattest aufgehört, das Ziel ist aber nicht erreicht: mach weiter.")
             if agent.poll() is not None:
                 log(f"Begleitprozess beendet (Code {agent.returncode})")
                 outcome = f"Begleitprozess beendet (Code {agent.returncode})"

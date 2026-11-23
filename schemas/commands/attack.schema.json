@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/attack.schema.json",
+	"$id": "smartcraft/commands/attack.schema.json",
 	"title": "attack: bekämpft ein Wesen, bis es tot ist. Nimmt die beste Waffe, verfolgt das Ziel, wartet volle Schläge ab und trifft wenn möglich im Fallen (kritisch). Creeper: zuschlagen und zurückweichen, solange er zischt. Skelette und andere Schützen: Annäherung im Zickzack. Mit Schild in der Zweithand blockt er Explosion und Pfeile, wenn er gerade nicht zuschlägt. Schaden bricht den Kampf nicht ab, nur min_health",
 	"args": {
 		"type": "object",

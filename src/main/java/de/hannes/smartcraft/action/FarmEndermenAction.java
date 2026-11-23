@@ -1,6 +1,6 @@
 package de.hannes.smartcraft.action;
 
-import de.hannes.smartcraft.AiPlayerMod;
+import de.hannes.smartcraft.SmartCraftMod;
 
 import com.google.gson.JsonObject;
 import de.hannes.smartcraft.protocol.Event.Status;
@@ -235,7 +235,7 @@ public final class FarmEndermenAction extends Action {
 		}
 		if (attack != null) {
 			if (fightTicks + 1 > FIGHT_TICKS && attackTarget != null) {
-				AiPlayerMod.LOGGER.info("farm_endermen fight_timeout bot=" + bot.blockPosition().toShortString() + " target="
+				SmartCraftMod.LOGGER.info("farm_endermen fight_timeout bot=" + bot.blockPosition().toShortString() + " target="
 						+ attackTarget.blockPosition().toShortString() + " dist=" + String.format("%.1f", attackTarget.distanceTo(bot)));
 			}
 			// Weggeteleportierte Endermen nicht verfolgen. Drachenlauf 38: Kämpfe liefen 60 s gegen Endermen 27–29 Blöcke weit weg

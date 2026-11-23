@@ -25,11 +25,11 @@ def dragon_health(server):
 
 def main():
     report = Report()
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-bed-bomb.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-bed-bomb.log")
     server = TestServer(log, world=f"ai_test_bed_{int(time.time())}", seed=20261029)
     try:
-        server.console("aiplayer events off")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console("smartcraft events off")
+        server.console(f"smartcraft join {BOT}", wait=5)
         for item in ["diamond_helmet", "diamond_chestplate", "diamond_leggings", "diamond_boots", "diamond_sword",
                      "cobblestone 64", "white_bed 12", "golden_apple 8"]:
             server.console(f"give {BOT} {item}", wait=0.1)

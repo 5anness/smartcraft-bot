@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/place.schema.json",
+	"$id": "smartcraft/commands/place.schema.json",
 	"title": "place: setzt einen Block aus dem Inventar an eine Position. Wählt den Block selbst aus dem Inventar, läuft vorher in Reichweite und prüft, dass ein Nachbarblock zum Ansetzen da ist",
 	"args": {
 		"type": "object",

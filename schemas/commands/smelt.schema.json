@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/smelt.schema.json",
+	"$id": "smartcraft/commands/smelt.schema.json",
 	"title": "smelt: geht zu einem Ofen in der Nähe (auch zu einem gemerkten), legt Rohstoff und Brennstoff ein und ist dann fertig. Der Ofen arbeitet allein weiter, der Bot kann anderes tun. Das Event smelting_done meldet das Ende, smelt_collect holt das Ergebnis. Liegt im Ofen schon etwas Fertiges, nimmt er es mit. Stellt keinen Ofen auf: dafür place_utility",
 	"args": {
 		"type": "object",

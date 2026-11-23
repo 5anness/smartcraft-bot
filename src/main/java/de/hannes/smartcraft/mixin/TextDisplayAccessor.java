@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Display.TextDisplay.class)
 public interface TextDisplayAccessor {
 	@Invoker("setText")
-	void aiplayer$setText(Component text);
+	void smartcraft$setText(Component text);
 
 	@Invoker("setBackgroundColor")
-	void aiplayer$setBackgroundColor(int color);
+	void smartcraft$setBackgroundColor(int color);
 }

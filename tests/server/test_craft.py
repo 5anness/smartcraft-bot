@@ -17,13 +17,13 @@ from test_movement import BOT, STAND, arena  # noqa: E402
 
 def main():
     runs = int(sys.argv[1]) if len(sys.argv) > 1 else 3
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-craft.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-craft.log")
     server = TestServer(log)
     report = Report()
     try:
         server.console("gamerule spawn_mobs false")
-        server.console("aiplayer events off")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console("smartcraft events off")
+        server.console(f"smartcraft join {BOT}", wait=5)
         details(server, report)
         passed = sum(course(server, report, number) for number in range(runs))
         print(f"Parcours bis zur Eisenspitzhacke: {passed} von {runs} Durchläufen")

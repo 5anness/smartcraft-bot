@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/look.schema.json",
+	"$id": "smartcraft/commands/look.schema.json",
 	"title": "look: liefert den Snapshot des Bots (snapshot.schema.json)",
 	"args": {
 		"type": "object",

@@ -8,7 +8,7 @@ import java.util.UUID;
 /**
  * Einstellungen des KI-Spielers an einer Stelle: Der Mod ist die einzige Quelle der Wahrheit, der Begleitprozess bekommt
  * jede Änderung als {@code control_requested} mit {@code action: settings} und holt sie beim Verbinden mit dem Befehl
- * {@code settings}. Gilt bis zum Neustart des Servers. Wunsch von Hannes (28.10.2026): /aiplayer info, humor, talkmode,
+ * {@code settings}. Gilt bis zum Neustart des Servers. Wunsch von Hannes (28.10.2026): /smartcraft info, humor, talkmode,
  * dimensionfollow, streamer.
  */
 public final class AiSettings {
@@ -24,7 +24,7 @@ public final class AiSettings {
 	public static boolean dimensionFollow;
 	public static boolean streamer;
 	/**
-	 * API-Schlüssel aus {@code /aiplayer apikey}, der noch nicht beim Begleitprozess angekommen ist (nur im Speicher, nie
+	 * API-Schlüssel aus {@code /smartcraft apikey}, der noch nicht beim Begleitprozess angekommen ist (nur im Speicher, nie
 	 * gespeichert oder protokolliert). Der Mod ruft keine API auf; er reicht den Schlüssel nur weiter.
 	 */
 	public static volatile String pendingApiKey;
@@ -45,7 +45,7 @@ public final class AiSettings {
 	}
 
 	/**
-	 * Werte aus dem Befehl {@code settings} des Begleitprozesses (Startwerte aus seiner Umgebung, z. B. AIPLAYER_TTS).
+	 * Werte aus dem Befehl {@code settings} des Begleitprozesses (Startwerte aus seiner Umgebung, z. B. SMARTCRAFT_TTS).
 	 *
 	 * @throws IllegalArgumentException bei unbekannter Stufe
 	 */

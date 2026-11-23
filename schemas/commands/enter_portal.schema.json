@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/enter_portal.schema.json",
+	"$id": "smartcraft/commands/enter_portal.schema.json",
 	"title": "enter_portal: geht zum nächsten Nether- oder Endportal (bis 16 Blöcke) und hinein, bis der Bot in der anderen Dimension ist. Ergebnis: dim (die neue Dimension), portal Von der Oberwelt in den Nether nur mit der ganzen Nether-Ausrüstung wie bei build_portal (Diamantrüstung und ein Goldteil, Diamantschwert, 2 Spitzhacken, Bogen, 32 Pfeile, Schild, 16 gegartes Essen, 192 Bausteine (3 Stacks), Feuerzeug); die Rüstung zieht die Figur vor dem Durchgehen selbst an, sonst not_prepared mit missing. Ins End ebenso nur mit allem aus end_missing (Betten, Enderaugen, Bogen, Pfeile, Bausteine, Essen), sonst not_prepared; force geht trotzdem.",
 	"args": {
 		"type": "object",

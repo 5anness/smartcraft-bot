@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Display.class)
 public interface DisplayAccessor {
 	@Invoker("setBillboardConstraints")
-	void aiplayer$setBillboardConstraints(Display.BillboardConstraints constraints);
+	void smartcraft$setBillboardConstraints(Display.BillboardConstraints constraints);
 
 	@Invoker("setTransformation")
-	void aiplayer$setTransformation(Transformation transformation);
+	void smartcraft$setTransformation(Transformation transformation);
 }

@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/reflex_dug_out.schema.json",
+	"$id": "smartcraft/events/reflex_dug_out.schema.json",
 	"title": "data von reflex_dug_out: Reflex des Mods: Der Bot steckte in einem Block (Erstickungsschaden, z. B. nach einer Enderperle) und hat ihn abgebaut. Eine laufende Aktion hat so lange gewartet. ok false: Der Block ließ sich nicht abbauen (reason wie bei mine)",
 	"type": "object",
 	"required": [

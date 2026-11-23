@@ -24,9 +24,9 @@ import java.util.Locale;
 import java.util.function.Predicate;
 
 /**
- * {@code /aiplayer join [name] | leave | status | info | look | events on|off}, die Steuerung der KI
+ * {@code /smartcraft join [name] | leave | status | info | look | events on|off}, die Steuerung der KI
  * ({@code goal <text> | pause | resume | stop | tts on|off | humor <stufe> | talkmode <stufe>}),
- * {@code /aiplayer dimensionfollow on|off}, {@code /aiplayer gamemode <modus>}, {@code /aiplayer streamer [off]}, {@code /aiplayer locate on|off}, {@code /aiplayer stats on|off}, {@code /aiplayer xpbar on|off}, {@code /aiplayer kit nether|end} sowie Testhilfen unter {@code /aiplayer debug}.
+ * {@code /smartcraft dimensionfollow on|off}, {@code /smartcraft gamemode <modus>}, {@code /smartcraft streamer [off]}, {@code /smartcraft locate on|off}, {@code /smartcraft stats on|off}, {@code /smartcraft xpbar on|off}, {@code /smartcraft kit nether|end} sowie Testhilfen unter {@code /smartcraft debug}.
  */
 public final class BotCommand {
 	private static final Predicate<CommandSourceStack> IS_OPERATOR = Commands.hasPermission(Commands.LEVEL_GAMEMASTERS);
@@ -63,7 +63,7 @@ public final class BotCommand {
 					follow.tick(server, bots.bot());
 				});
 		CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, selection) -> dispatcher.register(
-				Commands.literal("aiplayer")
+				Commands.literal("smartcraft")
 						.requires(BotCommand::mayUse)
 						.then(Commands.literal("join")
 								.executes(ctx -> join(ctx.getSource(), BotManager.DEFAULT_NAME))
@@ -227,7 +227,7 @@ public final class BotCommand {
 		if (!on) {
 			AiSettings.streamer = false;
 			pushSettings(source);
-			return say(source, "Streamer-Modus aus. Die Einzeleinstellungen bleiben, wie sie sind (siehe /aiplayer info).");
+			return say(source, "Streamer-Modus aus. Die Einzeleinstellungen bleiben, wie sie sind (siehe /smartcraft info).");
 		}
 		ServerPlayer player = source.getPlayer();
 		if (player == null || player == bots.bot()) {
@@ -418,7 +418,7 @@ public final class BotCommand {
 			runner.stop(bot, tick);
 		}
 		return say(source, switch (action) {
-			case "pause" -> "KI pausiert. Weiter mit /aiplayer resume.";
+			case "pause" -> "KI pausiert. Weiter mit /smartcraft resume.";
 			case "resume" -> "KI macht weiter.";
 			case "tts_on" -> "Sprachausgabe an.";
 			case "tts_off" -> "Sprachausgabe aus.";

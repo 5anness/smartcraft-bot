@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/destroy_crystals.schema.json",
+	"$id": "smartcraft/commands/destroy_crystals.schema.json",
 	"title": "destroy_crystals: nur im End. Zerstört alle Endkristalle der Hauptinsel nacheinander mit EINEM Befehl: freie vom Standplatz am Boden mit dem Bogen; Kristalle im Käfig oder ohne Platz am Boden von einem eigenen Turm 13 Blöcke daneben (baut ihn selbst, im End mit Geländer), bei Käfigen erst die Gitter in der Schusslinie abbauen; danach wieder zum Boden. Braucht Bogen, Pfeile und Bausteine. Ergebnis: destroyed, left, skipped (pos, reason). Danach den Drachen",
 	"args": {
 		"type": "object",

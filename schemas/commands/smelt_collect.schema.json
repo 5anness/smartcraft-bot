@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/smelt_collect.schema.json",
+	"$id": "smartcraft/commands/smelt_collect.schema.json",
 	"title": "smelt_collect: holt das Ergebnis aus dem Ofen, den der Bot zuletzt befüllt hat (sonst aus dem nächsten bekannten). Läuft selbst hin",
 	"args": {
 		"type": "object",

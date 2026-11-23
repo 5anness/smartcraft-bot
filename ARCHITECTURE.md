@@ -34,13 +34,13 @@ Minecraft-Interna, nur Events und Befehle.
 | Transport | TCP auf `127.0.0.1:25599`, eine JSON-Nachricht pro Zeile (UTF-8) | Braucht im Mod keine Zusatzbibliothek, lässt sich mit jedem Werkzeug mitlesen |
 | Wer lauscht? | Der Mod lauscht, der Begleitprozess verbindet sich. Höchstens einer; ein neuer verdrängt den alten | Begleitprozess kann neu gestartet werden, ohne das Spiel zu beenden |
 | Begleitprozess | Python 3.11 mit offiziellem `anthropic`-SDK | Ist installiert, kurzer Code, gutes SDK |
-| Modell | Umgebungsvariable `AIPLAYER_MODEL`, Standard ein Sonnet-Modell | Laut Vorgabe |
+| Modell | Umgebungsvariable `SMARTCRAFT_MODEL`, Standard ein Sonnet-Modell | Laut Vorgabe |
 
 ## Der KI-Spieler (Etappe 1b)
 
 Der Bot ist ein normaler `ServerPlayer`, den der Server für einen verbundenen Spieler hält.
 
-- **Beitritt:** `/aiplayer join [name]` startet die Spawn-Vorbereitung des Spiels
+- **Beitritt:** `/smartcraft join [name]` startet die Spawn-Vorbereitung des Spiels
   (`PrepareSpawnTask`: gespeicherten Spielstand lesen, Spawn-Chunks laden) und ruft danach
   den normalen Join des Servers auf (`PlayerList.placeNewPlayer`). Daher kommen Join-Nachricht,
   Tab-Liste, Sichtbarkeit und Spielstand ohne eigenen Code.
@@ -52,7 +52,7 @@ Der Bot ist ein normaler `ServerPlayer`, den der Server für einen verbundenen S
   macht das `BotManager` am Ende jedes Server-Ticks.
 - **Bewegung:** Normalerweise rechnet der Client eines Spielers dessen Bewegung. `PlayerMixin`
   schaltet das für den Bot um, damit der Server Schwerkraft und Bewegung selbst berechnet.
-- **Austritt:** `/aiplayer leave` geht denselben Weg wie ein echtes Verbindungsende
+- **Austritt:** `/smartcraft leave` geht denselben Weg wie ein echtes Verbindungsende
   (Leave-Nachricht, Speichern). Beim Stoppen des Servers wird der Bot wie jeder Spieler gespeichert.
 - **Berechtigung:** Die Befehle dürfen Operatoren, die Konsole und der Host einer
   Einzelspieler-/LAN-Welt nutzen (auch ohne aktivierte Cheats).
@@ -63,7 +63,7 @@ Der Bot ist ein normaler `ServerPlayer`, den der Server für einen verbundenen S
 - **Tod und Respawn:** 20 Ticks nach dem Tod löst `BotManager` dasselbe aus wie der Klick auf
   „Respawn“ (Bett oder Weltspawn wählt das Spiel) und schreibt „<Name> ist wieder da“ in den
   Chat. Todesursache, Ort und verlorene Items stehen im Event `player_died` und in
-  `/aiplayer status`.
+  `/smartcraft status`.
 
 ### Bekannte Client-Abhängigkeiten
 
@@ -112,8 +112,8 @@ laufende Nummer, schreibt ins Debug-Log und reicht ab Etappe 3 an die Bridge wei
 | `reflex_dropped_junk` | Reflex (`JunkDropper`): Höchstens 1 Platz frei → wirft allen Abraum weg (Granit, Diorit, Andesit, Tuff, Kies, Sand, Basalt …), danach Bausteine bis auf 192; Erze, Werkzeug, Essen bleiben. Weggeworfenes und `drop` sind 60 s für den Bot gesperrt. Geht nicht ans Modell |
 | `reflex_lava_stuck` | Reflex: 15 s in Lava ohne Ausweg (nur mit Feuerresistenz). Der Lava-Reflex schwimmt weiter Richtung `nearest_shore` (grobe Suche bis 48 Blöcke), gibt aber die Aktion frei; die KI soll eine Enderperle werfen. Vorher sperrte der Reflex jede Aktion, auch ihr Zeitlimit (Nether-Lauf 26) |
 | `smelting_done` | Ein vom Bot befüllter Ofen ist fertig oder ohne Brennstoff | normal | Einmal je Befüllung |
-| `goal_requested` | Ein Mensch hat `/aiplayer goal <text>` gegeben (`text`, `by`) | normal | Bei jedem Befehl |
-| `control_requested` | Ein Mensch hat `/aiplayer pause`, `resume` oder `stop` gegeben (`action`, `by`); bei `pause` und `stop` hält der Mod danach die laufende Aktion an. `action: settings` trägt alle Einstellungen (`tts`, `humor`, `talkmode`, `dimension_follow`, `streamer`) nach `/aiplayer tts|humor|talkmode|dimensionfollow|streamer` | normal | Bei jedem Befehl |
+| `goal_requested` | Ein Mensch hat `/smartcraft goal <text>` gegeben (`text`, `by`) | normal | Bei jedem Befehl |
+| `control_requested` | Ein Mensch hat `/smartcraft pause`, `resume` oder `stop` gegeben (`action`, `by`); bei `pause` und `stop` hält der Mod danach die laufende Aktion an. `action: settings` trägt alle Einstellungen (`tts`, `humor`, `talkmode`, `dimension_follow`, `streamer`) nach `/smartcraft tts|humor|talkmode|dimensionfollow|streamer` | normal | Bei jedem Befehl |
 | `dimension_followed` | Dimension Follow: Der verfolgte Spieler hat die Dimension gewechselt, der Mod hat den Bot nach 3 s Ladezeit auf einen sicheren Platz neben ihn teleportiert und die Aktion angehalten (`DimensionFollow`; nur der Wechsel des Spielers löst aus, höchstens 5 Versuche je Wechsel). `from`, `to`, `pos`, `player` | hoch | Einmal je Wechsel |
 | `chat_received` | Jemand anderes als der Bot schreibt in den Chat, als Spieler oder mit `/say`, auch von der Konsole (`from`, `text`, `direct`). `direct` ist wahr, wenn der Name des Bots fällt oder außer ihm höchstens ein Spieler im Spiel ist | normal | Bei jeder Nachricht |
 | `tool_low_durability` | Werkzeug in der Hand hat höchstens 10 % Haltbarkeit | normal | Einmal je Werkzeug |
@@ -125,17 +125,17 @@ laufende Nummer, schreibt ins Debug-Log und reicht ab Etappe 3 an die Bridge wei
 `block_placed` kommt aus `BlockItemMixin`, weil Fabric API dafür kein Event hat. Blockänderungen
 ohne Spieler (Explosion, Feuer, Wasser) erzeugen kein Event.
 
-**Snapshot:** `/aiplayer look` gibt den kompakten Zustand aus (`schemas/snapshot.schema.json`):
+**Snapshot:** `/smartcraft look` gibt den kompakten Zustand aus (`schemas/snapshot.schema.json`):
 Position, Blick, Dimension, Leben, Hunger, Tageszeit, Item in der Hand, die 3x3 Bodenblöcke und
 interessante Blöcke im Umkreis (8 horizontal, 5 vertikal) mit Anzahl und den drei nächsten
 Positionen relativ zum Bot. Gemessen: 120 bis 200 Tokens (Schätzung, Zeichen ÷ 3,5).
 
 **Kosten:** Auf dem Testserver im Schnitt rund 75 µs pro Tick in den ersten 40 Sekunden
 (0,15 % eines Ticks, Tendenz fallend), einmalig 12 ms beim allerersten Scan. Ein Snapshot
-kostet 2 bis 15 ms und läuft nur auf Abruf. `/aiplayer status` zeigt die laufenden Werte.
+kostet 2 bis 15 ms und läuft nur auf Abruf. `/smartcraft status` zeigt die laufenden Werte.
 
-**Testhilfen:** `/aiplayer debug punch` (Schlag von Osten über den Code eines echten
-Spielerschlags) und `/aiplayer debug break` (Bot baut den Block unter sich ab).
+**Testhilfen:** `/smartcraft debug punch` (Schlag von Osten über den Code eines echten
+Spielerschlags) und `/smartcraft debug break` (Bot baut den Block unter sich ab).
 
 ## Aktionen (Etappe 4)
 
@@ -175,7 +175,7 @@ und `cancelled: stopped`, `superseded`, `danger`, `damage` (Ausnahmen siehe oben
 | `bed_cycle` | `mode` (`combo` Standard, `cage`, `climb`) | Nur im End, braucht Betten und Bausteine (drachenfeste wie Obsidian/Endstein zuerst). Kristalle bleiben stehen. `cage`/`combo`: Käfig auf dem Endstein 10,3 Blöcke vom Brunnen (bis 01.11. 8,3: lag im Atem), Bot mittig, Ring auf Fuß- und Kopfhöhe, Dach; hockt der Drache und ist der Kopf 3,5 bis 14 Blöcke entfernt, geht er bis 2,5 Blöcke vor den Kopf (`approach`). Betten im Nether/End sind von `flammable_near_fire` ausgenommen. `climb`: offene Säule bis Fußhöhe 67, baut beim Abheben mit hoch. Jeden Tick: Liegt ein Platz 0 bis 3 Blöcke unter dem Kopf (bis 2,2 seitlich) in Reichweite, setzt er eine Brücke (bis 3 Blöcke) als Halt, das Bett und zündet es; nur wenn der geschätzte Eigenschaden (Spielformel `getSeenPercent`) unter der Grenze liegt (`cage` 4, `combo` 10, immer Leben − 7). Danach 10 Ticks Pause (Unverwundbarkeit des Drachen). Ergebnis `hits`, `beds_used` | `not_in_end`, `no_beds`, `no_blocks`, `health_low` (cancelled) |
 | `destroy_crystals` | `ground_only` (bool) | Nur im End: alle Endkristalle nacheinander. Mit `ground_only` nur freie vom Boden, alles andere `skipped` (kein Turm, kein Käfig; so nutzt es der Prompt vor `bed_cycle`). Freie vom Standplatz am Boden (`shoot_from`) mit dem Bogen; Käfige und Kristalle ohne Platz am Boden von einem eigenen Turm 13 Blöcke daneben auf Kristallhöhe (`goto` mit Bauen, Geländer im End), bei Käfigen vorher bis 5 Blöcke heran und die Gitter in der Schusslinie abbauen, dann zurück auf den Turm und schießen; danach zum Boden (`goto` mit Graben). Je Kristall 2 Versuche. Schaden und Gefahr brechen nicht ab, `health_low` unter 6 Leben | `not_in_end`, `crystals_left` (`skipped`), `stuck_on_tower` |
 | `chat` | `text` (1–256 Zeichen) | Schreibt eine Nachricht in den Chat, für alle sichtbar wie von einem echten Spieler (`<Claude> …`). Steuerzeichen werden zu Leerzeichen. Bricht keine laufende Aktion ab | – |
-| `usage` | `tokens`, `cost` | Nur vom Begleitprozess nach jedem Modellaufruf (kein Tool für das Modell): Gesamtverbrauch seit seinem Start. Der Mod zeigt ihn menschlichen Spielern als XP-Leiste (Level = Cent, Balken = Bruchteil) und darüber in der Aktionsleiste (Tokens, $), alle 20 Ticks als Pakete an die Clients; echte XP bleiben. Standard an bei jedem Join, `/aiplayer xpbar on\|off` | – |
+| `usage` | `tokens`, `cost` | Nur vom Begleitprozess nach jedem Modellaufruf (kein Tool für das Modell): Gesamtverbrauch seit seinem Start. Der Mod zeigt ihn menschlichen Spielern als XP-Leiste (Level = Cent, Balken = Bruchteil) und darüber in der Aktionsleiste (Tokens, $), alle 20 Ticks als Pakete an die Clients; echte XP bleiben. Standard an bei jedem Join, `/smartcraft xpbar on\|off` | – |
 | `goto` | `pos` [x,y,z], `tolerance` (0–16, Standard 1), `allow_dig`, `allow_place` (Standard aus) | Läuft zur Position. Springt 1 Block hoch, umgeht Hindernisse, schwimmt, klettert Leitern, geht über Platten und Treppen, fällt höchstens 3 Blöcke (ins Wasser bis 12), meidet Lava und Feuer. Mit `allow_dig` baut er Blöcke im Weg ab, mit `allow_place` überbrückt er Lücken und baut sich hoch | `no_path` mit `hint` (`goal_not_standable`, `enclosed`, `search_stalled`, `search_limit`, `no_start`) und `closest` (nächstes erreichbares Feld). `stuck` mit `hint` (`no_progress`, `blocked_drop_ahead`, `blocked_path_changed`, `pushed_off_path`, `dig_failed_…`, `place_failed_…`). `no_blocks` (nichts zum Bauen im Inventar) |
 | `goto_entity` | `target` (Spielername oder Typ wie `cow`), `distance` (1–16, Standard 2) | Läuft zum Spieler oder zum nächsten Wesen dieses Typs im Umkreis von 48 Blöcken, folgt ihm dabei | `entity_not_found`, `target_lost`, `no_path`, `stuck` |
 | `follow` | `target`, `distance` (Standard 3), `seconds` (1–600, Standard 120) | Bleibt in der Nähe, bis die Zeit um ist (`ok`) | wie `goto_entity` |
@@ -191,7 +191,7 @@ und `cancelled: stopped`, `superseded`, `danger`, `damage` (Ausnahmen siehe oben
 | `drop` | `item`, `count` (Standard alle) | Wirft Items auf den Boden | `missing_item` |
 | `craft` | `item`, `count` (1–256, Standard 1: so viele Stück mindestens) | Stellt das Item nach den Rezepten des Spiels her: kleine Rezepte im eigenen 2×2-Raster, größere an einer Werkbank in der Nähe (läuft hin, auch zu einer gemerkten). Bei `ok` kann `crafted` kleiner als `requested` sein; dann nennt `stopped_because` den Grund und `missing`, was fehlt | `unknown_item`, `no_recipe` (`hint`, falls es aus dem Ofen kommt), `missing_ingredients` (mit `missing`: was und wie viel, und `needs`: Bedarf und Bestand), `no_crafting_table` (mit `has_crafting_table_item`, `can_craft_crafting_table`), `inventory_full`, `craft_failed` |
 | `recipe` | `item` | Antwortet sofort: bis zu zwei Rezepte (`makes`, `needs_crafting_table`, `ingredients` mit `have`, `missing`, `can_craft_now`) und die Ofen-Wege (`smelt`: `from`, `have`, `ticks`). Stellt nichts her | `unknown_item`, `no_recipe` |
-| `locate` | `structure` (`fortress`, `blaze_spawner`: Mitte des Lohenspawner-Raums der nächsten Festung, `bastion`, `stronghold`, `end_portal`: Mitte des Portalraums der nächsten Festung der Oberwelt, `end_city`) | Antwortet sofort. Nur nach `/aiplayer locate on` (bis zum Neustart des Servers, Standard aus): sucht wie `/locate` über die Platzierungsregeln der Welt die nächste Struktur bis 100 Chunks (1.600 Blöcke) und nennt den nächsten Teil davon (`approx_pos`; bei `fortress` und `stronghold` mit der Höhe des Teils, sonst die des Bots), `distance`, `direction`. Braucht keine Operator-Rechte | `locate_disabled`, `wrong_dimension` (`hint`: wo sie liegt), `not_found` |
+| `locate` | `structure` (`fortress`, `blaze_spawner`: Mitte des Lohenspawner-Raums der nächsten Festung, `bastion`, `stronghold`, `end_portal`: Mitte des Portalraums der nächsten Festung der Oberwelt, `end_city`) | Antwortet sofort. Nur nach `/smartcraft locate on` (bis zum Neustart des Servers, Standard aus): sucht wie `/locate` über die Platzierungsregeln der Welt die nächste Struktur bis 100 Chunks (1.600 Blöcke) und nennt den nächsten Teil davon (`approx_pos`; bei `fortress` und `stronghold` mit der Höhe des Teils, sonst die des Bots), `distance`, `direction`. Braucht keine Operator-Rechte | `locate_disabled`, `wrong_dimension` (`hint`: wo sie liegt), `not_found` |
 | `locate` (Biome) | `structure`: `crimson_forest`, `nether_wastes`, `warped_forest` | Nur im Nether: nächster Punkt des Bioms bis 800 Blöcke (`findClosestBiome3d`), Höhe des Bots; Piglins zum Tauschen, Endermen | `locate_disabled`, `wrong_dimension`, `not_found` |
 | `smelt` | `item` (Rohstoff), `count` (1–64, Standard 1), `fuel` | Geht zu einem Ofen in der Nähe (auch einem gemerkten), nimmt Fertiges mit, legt Rohstoff und Brennstoff ein und ist dann fertig (`loaded`, `fuel`, `ready_in_ticks`). Der Ofen läuft allein weiter. Teilerfolg mit `stopped_because` (`not_enough_items`, `not_enough_fuel`, `furnace_full`) | `unknown_item`, `not_smeltable`, `missing_item`, `no_fuel`, `no_furnace` (mit `has_furnace_item`, `can_craft_furnace`), `furnace_busy` (anderer Rohstoff liegt drin), `load_failed` |
 | `smelt_collect` | – | Holt das Ergebnis aus dem zuletzt befüllten Ofen (sonst dem nächsten bekannten); `still_cooking` nennt, was noch drin liegt | `no_furnace`, `nothing_ready`, `inventory_full` |
@@ -282,7 +282,7 @@ kommt einmal das Event `tool_low_durability`.
   längsten Brenndauer. Eingelegt wird nur, was die Menge braucht (eine Kohle für
   bis zu 8 Stück); was schon im Ofen liegt, zählt mit.
 - **Ortsgedächtnis** (`Places`): Werkbänke, Öfen und Truhen, die irgendein Spieler setzt oder die
-  der Bot bei einer Suche sieht, stehen mit Position und Dimension in `aiplayer/places.json` im
+  der Bot bei einer Suche sieht, stehen mit Position und Dimension in `smartcraft/places.json` im
   Weltordner und überstehen Neustarts. Ausgetragen wird, wenn ein Spieler den Block abbaut oder
   der Bot beim Hinlaufen feststellt, dass er fehlt (Explosion, Kolben, Befehl).
 - **Grenzen:** Nur der normale Ofen (kein Schmelzofen, kein Räucherofen), nur einfache Truhen
@@ -391,11 +391,11 @@ laufendes Spiel keine Testbefehle bekommt.
 | `test_movement.py` | Flache Welt: Mauer, Stufen, Abstieg, Turm, Lavagraben, Wassergraben, Leiter, Platten, Treppe, unerreichbare Ziele, Stopp, Verdrängen, Unterbrechung durch Schaden, `goto_entity`, `follow` | 22 von 22 |
 | `test_blocks.py` | Flache Welt: `inventory`, `equip`, `drop`, `pickup_items`, `place`, `mine` mit Werkzeugwahl und Sicherheitsnetz, `tool_low_durability`, `collect`, hoher Baum, `goto` mit `allow_dig` und `allow_place` | 34 von 34 (mit `collect` und `allow_dig`) |
 | `test_craft.py` | Flache Welt: `recipe`, `craft` mit Fehlergründen und Teilerfolg, `place_utility`, `smelt` mit Brennstoffwahl, `smelting_done`, `smelt_collect`, `store`, `take`, Ortsgedächtnis; dazu dreimal der Parcours vom leeren Inventar zur Eisenspitzhacke | 32 von 32, Parcours 3 von 3 |
-| `test_agent.py` | KI-Schleife ohne API (ein Platzhalter spielt das Modell): Tools aus den Schemas, `chat`, `remember`, `wait`, Fehler mit `is_error`, Kostenrechnung und Kostenlimit, `/aiplayer goal` und `/aiplayer stop`, Chat im Leerlauf und während einer Aktion | 16 Prüfungen (dazu Herzschlag am Ende und im Leerlauf) |
+| `test_agent.py` | KI-Schleife ohne API (ein Platzhalter spielt das Modell): Tools aus den Schemas, `chat`, `remember`, `wait`, Fehler mit `is_error`, Kostenrechnung und Kostenlimit, `/smartcraft goal` und `/smartcraft stop`, Chat im Leerlauf und während einer Aktion | 16 Prüfungen (dazu Herzschlag am Ende und im Leerlauf) |
 | `test_magma.py` | Flache Welt: `goto` aus einem Magmafeld, `flee` von einem Magmablock, Lava-Reflex (`reflex_left_lava`) aus einem Becken | 3 von 3 |
 | `test_portal.py` | Flache Welt: `build_portal` ohne Obsidian (`missing_obsidian`), mit allem (Portal brennt), im Fels (gräbt frei); `farm_spawner` mit vollem Inventar wirft Netherrack weg | 4 von 4 |
 | `test_farm.py` | Flache Welt: `farm_spawner` ohne Spawner, gegen 3 Zombies (alle tot, bleibt am Spawner), schwebende Lohe mit dem Bogen, Lohe in Reichweite mit dem Schwert, Feuer löschen, `enough` bei vollem Bestand | 6 von 6 |
-| `test_fortress.py` | Nether: `tunnel` hält vor Netherziegeln (`fortress_reached`), `goto` mit `allow_dig` lässt eine Ziegelwand heil, `locate` erst nach `/aiplayer locate on`, `look` meldet `in_fortress` in einer echten Festung | 5 von 5 |
+| `test_fortress.py` | Nether: `tunnel` hält vor Netherziegeln (`fortress_reached`), `goto` mit `allow_dig` lässt eine Ziegelwand heil, `locate` erst nach `/smartcraft locate on`, `look` meldet `in_fortress` in einer echten Festung | 5 von 5 |
 | `test_tools.py` | Flache Welt: Obsidian aus Wasser und Lava (Wasser zurück, abbauen), Lava schöpfen und sicher ausgießen, Netherportal anzünden, Feuer neben sich, Tür, Kuh melken, Fass mit `store`/`take`/`use`, Bretter neben Lava, Zombie-Piglin, `tunnel` (Erz, Lava), Sprinten, `fortress_in_sight` im Nether | 26 von 26 |
 | `test_equip.py` | `equip` und `tool_low_durability`, eingegeben wie in der Konsole | 7 Prüfungen |
 | `test_survival.py` | Flache Welt: `eat` mit Auswahl und Fehlergründen, `hunger_low`, `health_low`, Notfall-Reflex, `cook`, `equip_best_armor`, `shield` gegen Pfeile, `attack` auf Kuh, Zombie, Creeper (viermal), Skelett, per id, Abbruch bei wenig Leben, `flee`, `defend` gegen drei Gegner, Blickschutz vor dem Enderman, `night_falling`, `sleep`, `shelter` als Hütte und eingegraben, `light` | 51 von 51 |
@@ -407,7 +407,7 @@ laufendes Spiel keine Testbefehle bekommt.
 
 Die KI läuft im Begleitprozess `companion/agent.py`; im Mod gibt es weiterhin keinen API-Aufruf und
 keinen Schlüssel. Der Mod trägt nur vier Dinge bei: den Befehl `chat`, das Event `chat_received`,
-die Spielbefehle `/aiplayer goal <text> | pause | resume | stop` und die Events `goal_requested`
+die Spielbefehle `/smartcraft goal <text> | pause | resume | stop` und die Events `goal_requested`
 und `control_requested`, mit denen er sie weiterreicht. Ist kein Begleitprozess verbunden, sagt der
 Spielbefehl das, statt das Ziel zu verschlucken.
 
@@ -431,9 +431,9 @@ Spielbefehl das, statt das Ziel zu verschlucken.
   Bot eingebaut zwischen Mobs nie voran. Der Mod selbst hat dafür weiterhin keinen Reflex.
 - **Kosten:** aus den gemeldeten Tokens je Antwort berechnet (Preistabelle im Skript, Cache-Lesen
   10 %, Cache-Schreiben 125 % der Eingabe). Ein Kostenlimit gibt es standardmäßig nicht. Ist
-  `AIPLAYER_COST_LIMIT` gesetzt, wird es vor jedem Aufruf geprüft; überschritten wird es also
+  `SMARTCRAFT_COST_LIMIT` gesetzt, wird es vor jedem Aufruf geprüft; überschritten wird es also
   höchstens um einen Aufruf. Unabhängig davon gilt eine Obergrenze von 200 Schritten. Systemprompt und Tools stehen vorn und ändern sich nicht, damit der Prompt-Cache greift.
-- **Herzschlag:** Alle 15 Schritte (`AIPLAYER_HEARTBEAT_STEPS`) hängt am Ergebnis ein Text, der an
+- **Herzschlag:** Alle 15 Schritte (`SMARTCRAFT_HEARTBEAT_STEPS`) hängt am Ergebnis ein Text, der an
   das Ziel erinnert. Nach 4 Schritten nur `wait`/`look`/`inventory` kommt ein Anstoß (Warten heilt nur
   ab Hunger 18; `chat` und `remember` zählen dabei nicht als Arbeit). Will das Modell ein Ziel
   beenden, fragt der Prozess bis zu dreimal nach, ob es wirklich erreicht ist. Stirbt der Bot und will
@@ -447,9 +447,9 @@ Spielbefehl das, statt das Ziel zu verschlucken.
 - **Protokoll:** `companion/logs/<zeit>.jsonl` mit jedem Modellaufruf (Tokens, Kosten), jedem Tool
   samt Ergebnis und dem Ausgang. Der Schlüssel steht nirgends.
 - **Geschenke:** `items_received` beginnt im Leerlauf ein Gespräch wie eine Chatnachricht; während eines Ziels steht es bei den Events, und der Begleitprozess stößt das Modell an, sich zu bedanken.
-- **Sprachausgabe:** `companion/speech.py` liest jede `chat`-Nachricht vor (Piper, sonst Windows-Stimme). `/aiplayer tts on|off` schickt `control_requested` mit `action: settings`.
-- **Einstellungen (`AiSettings`):** Der Mod hält TTS, Humor, Talkmode, Dimension Follow und Streamer-Modus; `/aiplayer info` zeigt sie samt Locate, Events, Spielmodus und XP-Leiste. Der Begleitprozess holt sie beim Verbinden mit dem Befehl `settings` (kein Tool) und bekommt jede Änderung als `control_requested`. Humor und Talkmode gehen als `[Einstellung]`-Hinweis in den Verlauf, nicht in den Systemprompt (Prompt-Cache). Die Talkmode-Abstände stehen zentral in `TALK_SETTINGS` (`companion/agent.py`): Anstoß nach stillen Schritten, Mindestabstand zwischen eigenen Nachrichten (`chat` scheitert sonst mit `too_soon`; Antworten auf Nachrichten an den Bot gehen immer). `/aiplayer streamer` setzt TTS an, Humor crazy, Talkmode hard, Locate an, Events aus, den eigenen Spielmodus auf Zuschauer und Dimension Follow an; `streamer off` schaltet nur den Streamer-Modus aus.
-- **API-Schlüssel (`/aiplayer apikey <key>`):** Der Mod speichert und benutzt ihn nicht. Mit verbundenem Begleitprozess geht er sofort als `control_requested` (`action: apikey`, Feld `api_key`) hinaus, sonst einmalig im Ergebnis des nächsten `settings`. Der Begleitprozess schreibt ihn in `companion/api_key.txt` und legt den API-Client neu an. `EventBus` schreibt `api_key` als `***` ins Debug-Log und Server-Log, `console.py` zeigt ihn ebenfalls maskiert.
+- **Sprachausgabe:** `companion/speech.py` liest jede `chat`-Nachricht vor (Piper, sonst Windows-Stimme). `/smartcraft tts on|off` schickt `control_requested` mit `action: settings`.
+- **Einstellungen (`AiSettings`):** Der Mod hält TTS, Humor, Talkmode, Dimension Follow und Streamer-Modus; `/smartcraft info` zeigt sie samt Locate, Events, Spielmodus und XP-Leiste. Der Begleitprozess holt sie beim Verbinden mit dem Befehl `settings` (kein Tool) und bekommt jede Änderung als `control_requested`. Humor und Talkmode gehen als `[Einstellung]`-Hinweis in den Verlauf, nicht in den Systemprompt (Prompt-Cache). Die Talkmode-Abstände stehen zentral in `TALK_SETTINGS` (`companion/agent.py`): Anstoß nach stillen Schritten, Mindestabstand zwischen eigenen Nachrichten (`chat` scheitert sonst mit `too_soon`; Antworten auf Nachrichten an den Bot gehen immer). `/smartcraft streamer` setzt TTS an, Humor crazy, Talkmode hard, Locate an, Events aus, den eigenen Spielmodus auf Zuschauer und Dimension Follow an; `streamer off` schaltet nur den Streamer-Modus aus.
+- **API-Schlüssel (`/smartcraft apikey <key>`):** Der Mod speichert und benutzt ihn nicht. Mit verbundenem Begleitprozess geht er sofort als `control_requested` (`action: apikey`, Feld `api_key`) hinaus, sonst einmalig im Ergebnis des nächsten `settings`. Der Begleitprozess schreibt ihn in `companion/api_key.txt` und legt den API-Client neu an. `EventBus` schreibt `api_key` als `***` ins Debug-Log und Server-Log, `console.py` zeigt ihn ebenfalls maskiert.
 - **Chat:** Der Mod meldet jede fremde Chatzeile als `chat_received`. Im Leerlauf beginnt eine
   Nachricht mit `direct` ein Gespräch (dieselbe Schleife wie ein Ziel, die erste Zeile nennt Absender
   und Text). Während eines Ziels hängt die Nachricht am nächsten Ergebnis; mit `direct` hält der
@@ -464,10 +464,10 @@ Spielbefehl das, statt das Ziel zu verschlucken.
 
 | Paket | Aufgabe | Ab Etappe |
 |---|---|---|
-| (Wurzel) | Einstiegspunkt `AiPlayerMod` | 1 |
-| `bot` | `BotManager` (Join, Tick, Respawn), `FakeConnection`, Befehl `/aiplayer` | 1b |
+| (Wurzel) | Einstiegspunkt `SmartCraftMod` | 1 |
+| `bot` | `BotManager` (Join, Tick, Respawn), `FakeConnection`, Befehl `/smartcraft` | 1b |
 | `mixin` | `PlayerMixin` (serverseitige Bewegung des Bots), `BlockItemMixin` (Block gesetzt) | 1b, 2 |
-| `debug` | Debug-Log nach `logs/aiplayer/`, eine JSON-Zeile pro Eintrag | 1b |
+| `debug` | Debug-Log nach `logs/smartcraft/`, eine JSON-Zeile pro Eintrag | 1b |
 | `perception` | `Perception` (Hooks → Events), `SurroundingsScanner` (Mobs, Gefahren), `Snapshot`, `EventCoalescer`, `EventBus` | 2 |
 | `protocol` | `Event` (auch Ergebnis eines Befehls), `Command` mit Prüfung, `Priority`, Protokollversion | 2, 3 |
 | `bridge` | `BridgeServer`: Socket auf eigenen Threads, Event-Queue raus, Befehls-Queue rein | 3 |
@@ -541,7 +541,7 @@ Regel: erst Schema ändern, dann Code.
 
 ## Debug-Log
 
-`run/logs/aiplayer/<Startzeit>.jsonl`, eine Zeile pro Vorgang: Zeitstempel, Tick, Art
+`run/logs/smartcraft/<Startzeit>.jsonl`, eine Zeile pro Vorgang: Zeitstempel, Tick, Art
 (`session`, `perception`, `command_in`, `result`, `safety`) und die
 Nachricht selbst. Dort stehen Beitritt und Austritt des Bots, der Seed beim Welteintritt eines
 Spielers, jedes Event und jeder Snapshot.

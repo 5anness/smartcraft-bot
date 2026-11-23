@@ -9,7 +9,7 @@ import net.minecraft.server.MinecraftServer;
 
 /**
  * Zeigt jedes Event zusätzlich im Chat, damit man beim Testen im Spiel sieht, was der Bot
- * wahrnimmt. Umschaltbar mit {@code /aiplayer events on|off}.
+ * wahrnimmt. Umschaltbar mit {@code /smartcraft events on|off}.
  */
 public final class ChatMirror {
 	private MinecraftServer server;
@@ -40,7 +40,13 @@ public final class ChatMirror {
 		if (event.reason() != null) {
 			text.append(" (").append(event.reason()).append(')');
 		}
-		Component line = Component.literal(text.append(' ').append(event.data()).toString())
+		com.google.gson.JsonObject data = event.data();
+		if (data != null && data.has("api_key")) {
+			// Den API-Schlüssel nie im Chat zeigen (alle Spieler sehen diese Zeilen).
+			data = data.deepCopy();
+			data.addProperty("api_key", "***");
+		}
+		Component line = Component.literal(text.append(' ').append(data).toString())
 				.withStyle(event.prio() == Priority.HIGH ? ChatFormatting.RED : ChatFormatting.GRAY);
 		server.getPlayerList().broadcastSystemMessage(line, false);
 	}

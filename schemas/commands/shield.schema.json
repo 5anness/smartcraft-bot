@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/shield.schema.json",
+	"$id": "smartcraft/commands/shield.schema.json",
 	"title": "shield: hebt den Schild (on true, Standard) oder senkt ihn (on false). Liegt der Schild im Inventar, kommt er in die Zweithand. Er bleibt oben, auch während anderer Aktionen, bis shield mit on false kommt; zum Zuschlagen und Essen senkt der Bot ihn kurz. Mit gehobenem Schild läuft der Bot langsam wie ein Spieler. Antwort kommt sofort",
 	"args": {
 		"type": "object",

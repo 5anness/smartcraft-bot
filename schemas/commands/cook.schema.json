@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/cook.schema.json",
+	"$id": "smartcraft/commands/cook.schema.json",
 	"title": "cook: gart rohes Essen im Ofen. Verhält sich wie smelt (Ofen in der Nähe, Brennstoff automatisch, endet nach dem Befüllen, smelting_done meldet das Ende, smelt_collect holt ab), nimmt aber nur Items an, die gegart etwas Essbares ergeben",
 	"args": {
 		"type": "object",

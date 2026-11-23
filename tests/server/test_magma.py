@@ -13,12 +13,12 @@ from test_movement import BOT, FLOOR, STAND, arena  # noqa: E402
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-magma.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-magma.log")
     server = TestServer(log)
     report = Report()
     try:
         server.console("gamerule spawn_mobs false")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console(f"smartcraft join {BOT}", wait=5)
 
         # --- Magmafeld 5 x 5, Bot in der Mitte: goto zum Rand.
         x, z = 700, 520

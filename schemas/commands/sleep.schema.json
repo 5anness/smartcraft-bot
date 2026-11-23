@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/sleep.schema.json",
+	"$id": "smartcraft/commands/sleep.schema.json",
 	"title": "sleep: geht zu einem Bett im Umkreis von 24 Blöcken und schläft. ok, sobald der Morgen da ist. Setzt wie im Spiel den Spawnpunkt. Die Nacht wird nur übersprungen, wenn kein anderer Spieler wach ist (Zuschauer zählen nicht)",
 	"args": {
 		"type": "object",

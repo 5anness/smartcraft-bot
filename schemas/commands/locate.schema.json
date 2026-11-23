@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/locate.schema.json",
-	"title": "locate: nennt die nächste Struktur der Art bis 1600 Blöcke weit (approx_pos: nächster Teil der Struktur, distance, direction). Geht nur, wenn der Mensch es mit /aiplayer locate on freigeschaltet hat; sonst locate_disabled, dann such wie gewohnt. fortress, blaze_spawner (Mitte des Raums mit dem Lohenspawner in der nächsten Festung, mit Höhe) und bastion im Nether, stronghold in der Oberwelt, end_portal (Mitte des Portalraums der nächsten Festung, mit Höhe; damit direkt hingraben, keine Augen werfen), end_city im End. Antwort kommt sofort Auch Nether-Biome: crimson_forest und nether_wastes (Piglins zum Tauschen), warped_forest (Endermen).",
+	"$id": "smartcraft/commands/locate.schema.json",
+	"title": "locate: nennt die nächste Struktur der Art bis 1600 Blöcke weit (approx_pos: nächster Teil der Struktur, distance, direction). Geht nur, wenn der Mensch es mit /smartcraft locate on freigeschaltet hat; sonst locate_disabled, dann such wie gewohnt. fortress, blaze_spawner (Mitte des Raums mit dem Lohenspawner in der nächsten Festung, mit Höhe) und bastion im Nether, stronghold in der Oberwelt, end_portal (Mitte des Portalraums der nächsten Festung, mit Höhe; damit direkt hingraben, keine Augen werfen), end_city im End. Antwort kommt sofort Auch Nether-Biome: crimson_forest und nether_wastes (Piglins zum Tauschen), warped_forest (Endermen).",
 	"args": {
 		"type": "object",
 		"required": [

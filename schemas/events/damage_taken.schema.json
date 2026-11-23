@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/damage_taken.schema.json",
+	"$id": "smartcraft/events/damage_taken.schema.json",
 	"title": "data von damage_taken: Der Bot hat Schaden genommen und lebt noch. Priorität high",
 	"type": "object",
 	"required": [

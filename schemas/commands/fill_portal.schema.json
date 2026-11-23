@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/fill_portal.schema.json",
+	"$id": "smartcraft/commands/fill_portal.schema.json",
 	"title": "fill_portal: setzt in jeden leeren Endportalrahmen im Umkreis von 16 Blöcken ein Enderauge, den nächsten zuerst, und läuft dafür hin. portal_open meldet, ob das Endportal offen ist (alle 12 Rahmen gefüllt)",
 	"args": {
 		"type": "object",

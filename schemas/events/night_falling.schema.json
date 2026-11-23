@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/night_falling.schema.json",
+	"$id": "smartcraft/events/night_falling.schema.json",
 	"title": "data von night_falling: Die Sonne geht unter; in monsters_in_ticks Ticks können an der Oberfläche Monster erscheinen. Kommt einmal je Abend, nur in der Oberwelt",
 	"type": "object",
 	"required": [

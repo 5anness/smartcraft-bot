@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/entity_nearby.schema.json",
+	"$id": "smartcraft/events/entity_nearby.schema.json",
 	"title": "data von entity_nearby: Feindliche Mobs im Umkreis von 16 Blöcken. Nur bei Änderung (Mob kommt/geht oder wechselt die Entfernungszone 0-5/6-10/11-16), höchstens einmal pro Sekunde. Priorität high, wenn einer näher als 6 Blöcke ist, bei Creepern schon ab 12 (eigene Zone unter 4, wird noch einmal gemeldet)",
 	"type": "object",
 	"required": [

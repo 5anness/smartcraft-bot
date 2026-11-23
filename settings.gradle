@@ -9,5 +9,5 @@ pluginManagement {
 	}
 }
 
-// Projektname SmartCraft (Mod-ID bleibt aiplayer)
+// Projektname SmartCraft (Mod-ID bleibt smartcraft)
 rootProject.name = 'smartcraft'

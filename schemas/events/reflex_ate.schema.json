@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/reflex_ate.schema.json",
+	"$id": "smartcraft/events/reflex_ate.schema.json",
 	"title": "data von reflex_ate: Notfall-Reflex des Mods: Bei Leben 4 oder weniger hat der Bot von selbst gegessen. Eine laufende Aktion hat so lange gewartet. Frühestens alle 10 Sekunden",
 	"type": "object",
 	"required": [

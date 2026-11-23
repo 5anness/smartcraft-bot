@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/hunger_low.schema.json",
+	"$id": "smartcraft/events/hunger_low.schema.json",
 	"title": "data von hunger_low: Der Hunger ist auf 6 oder weniger gefallen (ab 6 kein Sprinten, bei 0 Schaden). Kommt einmal, bis der Hunger wieder über 6 war",
 	"type": "object",
 	"required": [

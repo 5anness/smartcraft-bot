@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/seal_water.schema.json",
+	"$id": "smartcraft/commands/seal_water.schema.json",
 	"title": "seal_water: baut das Wasser um dich mit Blöcken aus dem Inventar zu (Bruchstein, Erde), Quellen zuerst. Danach ist es trocken: Abbauen geht wieder schnell (im Wasser dauert es ein Vielfaches), und aus einer Wassertasche kommst du heraus, indem du danach gräbst. Steht er danach selbst noch in einer Quelle, gräbt er sich einen Schritt zur Seite und baut die alte Stelle zu",
 	"args": {
 		"type": "object",

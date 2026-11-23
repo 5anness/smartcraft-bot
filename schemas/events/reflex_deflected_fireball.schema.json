@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/reflex_deflected_fireball.schema.json",
+	"$id": "smartcraft/events/reflex_deflected_fireball.schema.json",
 	"title": "data von reflex_deflected_fireball: Reflex des Mods: Ein Ghast-Feuerball flog auf den Bot zu, er hat ihn in Reichweite zurückgeschlagen (wie ein Spieler). Geht nicht an das Modell",
 	"type": "object",
 	"required": [

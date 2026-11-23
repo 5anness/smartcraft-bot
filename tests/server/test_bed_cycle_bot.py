@@ -20,12 +20,12 @@ def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else "combo"
     run = sys.argv[2] if len(sys.argv) > 2 else "0"
     report = Report()
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-bed-cycle-bot.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-bed-cycle-bot.log")
     server = TestServer(log, world=f"ai_test_bedcyclebot_{int(time.time())}", seed=20261029)
     deaths = 0
     try:
-        server.console("aiplayer events off")
-        server.console(f"aiplayer join {BOT}", wait=1)
+        server.console("smartcraft events off")
+        server.console(f"smartcraft join {BOT}", wait=1)
         for _ in range(30):
             if server.find_in_output("bot_joined"):
                 break

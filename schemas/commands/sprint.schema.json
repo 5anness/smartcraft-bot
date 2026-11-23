@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/sprint.schema.json",
+	"$id": "smartcraft/commands/sprint.schema.json",
 	"title": "sprint: schaltet Sprinten ein (on true, Standard) oder aus (on false). Gilt für alle Wege (goto, collect, flee …), bis sprint erneut kommt. An: schneller, kostet mehr Hunger. Aus: z. B. an Kanten, auf Brücken oder bei wenig Essen. Antwort kommt sofort",
 	"args": {
 		"type": "object",

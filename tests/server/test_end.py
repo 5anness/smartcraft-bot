@@ -30,13 +30,13 @@ def lane(server, x0, *items):
 
 def main():
     report = Report()
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-end.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-end.log")
     server = TestServer(log)
     try:
         flat_part(server, report)
     finally:
         server.close()
-    log_eye = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-end-eye.log")
+    log_eye = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-end-eye.log")
     server = TestServer(log_eye, world="ai_test_eye", seed=20261014)
     try:
         eye_part(server, report)
@@ -48,8 +48,8 @@ def main():
 
 def flat_part(server, report):
     server.console("gamerule spawn_mobs false")
-    server.console("aiplayer events off")
-    server.console(f"aiplayer join {BOT}", wait=5)
+    server.console("smartcraft events off")
+    server.console(f"smartcraft join {BOT}", wait=5)
 
     # --- Türen und Zauntore: eine Wand quer über die Bahn, nur durch die Tür passierbar
     x = 2000
@@ -171,8 +171,8 @@ def bearing_error(result, stronghold):
 
 def eye_part(server, report):
     server.console("gamerule spawn_mobs false")
-    server.console("aiplayer events off")
-    server.console(f"aiplayer join {BOT}", wait=8)
+    server.console("smartcraft events off")
+    server.console(f"smartcraft join {BOT}", wait=8)
     # Die Augenwelt bleibt bestehen: immer vom selben Startplatz an der Oberfläche werfen.
     server.console(f"effect give {BOT} slow_falling 60 1")
     server.console(f"effect give {BOT} resistance 60 4")
@@ -207,7 +207,7 @@ def eye_part(server, report):
         print(f"    (Schätzung nicht geprüft: Würfe zeigten auf verschiedene Festungen {target_one} / {target_two})")
 
     # --- Festungsläufe 7–12: locate end_portal nennt den Portalraum; throw_eye lehnt mit locate ab.
-    server.console("aiplayer locate on", wait=0.3)
+    server.console("smartcraft locate on", wait=0.3)
     result, _ = server.run("throw_eye", timeout=30)
     report.check("throw_eye mit locate: use_locate", result["status"] == "failed" and result.get("reason") == "use_locate",
                  summary(result))
@@ -228,7 +228,7 @@ def eye_part(server, report):
         found_frames = server.find_in_output("Successfully filled", mark) or ""
         report.check("locate end_portal: Endportalrahmen bis 8 Blöcke um approx_pos", bool(found_frames),
                      found_frames.strip())
-    server.console("aiplayer locate off")
+    server.console("smartcraft locate off")
 
 
 if __name__ == "__main__":

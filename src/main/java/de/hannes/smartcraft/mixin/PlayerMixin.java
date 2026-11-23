@@ -14,7 +14,7 @@ public abstract class PlayerMixin {
 	 * Der KI-Spieler hat keinen Client, also muss der Server Schwerkraft und Bewegung selbst berechnen.
 	 */
 	@Inject(method = "isClientAuthoritative", at = @At("HEAD"), cancellable = true)
-	private void aiplayer$serverSimulatesBot(CallbackInfoReturnable<Boolean> cir) {
+	private void smartcraft$serverSimulatesBot(CallbackInfoReturnable<Boolean> cir) {
 		if (BotManager.isBot((Player) (Object) this)) {
 			cir.setReturnValue(false);
 		}

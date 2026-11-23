@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/items_received.schema.json",
+	"$id": "smartcraft/events/items_received.schema.json",
 	"title": "data von items_received: Ein anderer Spieler hat dem Bot Items zugeworfen, und der Bot hat sie aufgehoben. Mehrere Würfe innerhalb einer Sekunde kommen als ein Event. Priorität normal",
 	"type": "object",
 	"required": [

@@ -13,7 +13,7 @@ mit eigenem Namen, Inventar, Leben und Position. Der menschliche Spieler schaut 
 Zuschauermodus) und wird nie selbst gesteuert.
 - Umsetzung serverseitig als „Fake Player“: eine echte `ServerPlayerEntity` ohne echten
   Client, mit simulierter Netzwerkverbindung (Prinzip wie beim Carpet-Mod `/player`)
-- **Ziel-Erlebnis: Welt öffnen → „Im LAN öffnen“ → `/aiplayer join` → die KI tritt bei.**
+- **Ziel-Erlebnis: Welt öffnen → „Im LAN öffnen“ → `/smartcraft join` → die KI tritt bei.**
   Für alle Spieler muss es wie ein echter Join aussehen:
   - Join-/Leave-Nachricht im Chat („Claude ist dem Spiel beigetreten“)
   - Eintrag in der Tab-Liste, Name über dem Kopf, Skin
@@ -25,20 +25,20 @@ Zuschauermodus) und wird nie selbst gesteuert.
   (keine eigenen Blöcke/Items/Pakete, die Clients kennen müssten)
 - Funktioniert im Einzelspieler (mit oder ohne LAN) und auf einem lokalen Dedicated Server
 - Der Mod ist daher primär ein **Server-Mod**; Client-Code nur für optionale Anzeigen
-- Befehle: `/aiplayer join [name]`, `/aiplayer leave`, `/aiplayer status`, `/aiplayer look`,
-  für die KI `/aiplayer goal <text>`, `/aiplayer pause`, `/aiplayer resume`, `/aiplayer stop`, `/aiplayer tts on|off`, `/aiplayer locate on|off`, `/aiplayer stats on|off`, `/aiplayer xpbar on|off`, `/aiplayer info`, `/aiplayer inventar`, `/aiplayer humor light|medium|hard|crazy`,
-  `/aiplayer talkmode light|medium|hard`, `/aiplayer dimensionfollow on|off`, `/aiplayer gamemode <modus>`, `/aiplayer streamer [off]`, `/aiplayer apikey <key>`,
-  Testhilfen `/aiplayer debug punch`, `/aiplayer debug break`, `/aiplayer debug bedprobe <anzahl> <ticks> <unter_kopf>` (Messung: Betten direkt unter dem Drachenkopf) und `/aiplayer kit nether` (alles für den Nether, mit 10 Obsidian), `/aiplayer kit end` (alles fürs End, 18 Enderaugen, 16 Betten)
+- Befehle: `/smartcraft join [name]`, `/smartcraft leave`, `/smartcraft status`, `/smartcraft look`,
+  für die KI `/smartcraft goal <text>`, `/smartcraft pause`, `/smartcraft resume`, `/smartcraft stop`, `/smartcraft tts on|off`, `/smartcraft locate on|off`, `/smartcraft stats on|off`, `/smartcraft xpbar on|off`, `/smartcraft info`, `/smartcraft inventar`, `/smartcraft humor light|medium|hard|crazy`,
+  `/smartcraft talkmode light|medium|hard`, `/smartcraft dimensionfollow on|off`, `/smartcraft gamemode <modus>`, `/smartcraft streamer [off]`, `/smartcraft apikey <key>`,
+  Testhilfen `/smartcraft debug punch`, `/smartcraft debug break`, `/smartcraft debug bedprobe <anzahl> <ticks> <unter_kopf>` (Messung: Betten direkt unter dem Drachenkopf) und `/smartcraft kit nether` (alles für den Nether, mit 10 Obsidian), `/smartcraft kit end` (alles fürs End, 18 Enderaugen, 16 Betten)
 - Bot-Zustand (Inventar, Position) wird wie bei echten Spielern gespeichert und beim
   nächsten Join wiederhergestellt
 
 ## Aktueller Stand
 <!-- Nach jeder abgeschlossenen Etappe aktualisieren -->
 - [x] Etappe 1: Fundament (leerer Mod, `runClient` läuft)
-- [x] Etappe 1b: KI-Spieler joint per `/aiplayer join` (Chat-Nachricht, Tab-Liste, sichtbar,
+- [x] Etappe 1b: KI-Spieler joint per `/smartcraft join` (Chat-Nachricht, Tab-Liste, sichtbar,
       auch für einen zweiten LAN-Spieler ohne Mod)
 - [x] Etappe 2: Wahrnehmung und erste Events (Blöcke, Schaden, Tod, Mobs, Gefahren, Snapshot
-      per `/aiplayer look`), dazu Rückstoß-Fix und automatischer Respawn
+      per `/smartcraft look`), dazu Rückstoß-Fix und automatischer Respawn
 - [x] Etappe 3: Brücke zum Begleitprozess in beide Richtungen (Events raus, Befehle rein,
       Konsole `companion/console.py`)
 - [ ] Etappe 4: Aktionsbibliothek, alles per Befehl ohne KI. Nach jeder Unteretappe auf Okay warten.
@@ -57,8 +57,8 @@ Zuschauermodus) und wird nie selbst gesteuert.
   - [x] 4e Testparcours: in 4d aufgegangen (`tests/server/test_course.py`, Auftrag von Hannes)
 - [ ] Etappe 5: KI-Anbindung – gebaut (13.10.2026 vorgezogen auf Wunsch von Hannes, Etappe 4d ist im
       Spiel noch nicht abgenommen): `companion/agent.py` mit Tool Use, jedes Schema ein Tool, Systemprompt
-      in `companion/prompts/system.md`, Notizblock `remember`, `wait`, kein Kostenlimit (optional über `AIPLAYER_COST_LIMIT`),
-      `/aiplayer goal|pause|resume|stop`, Befehl `chat`, Event `chat_received` (die KI liest den Chat,
+      in `companion/prompts/system.md`, Notizblock `remember`, `wait`, kein Kostenlimit (optional über `SMARTCRAFT_COST_LIMIT`),
+      `/smartcraft goal|pause|resume|stop`, Befehl `chat`, Event `chat_received` (die KI liest den Chat,
       antwortet und sagt ihre Pläne mit Humor an). Servertest ohne API: siehe ARCHITECTURE.md. Erster echter Lauf
       am 14.10.2026 (Haiku, 2 h, volle Eisenrüstung, kein Tod), Fehler daraus behoben, siehe Offene Punkte
 - [ ] Etappe 6: Gedächtnis für wichtige Orte gebaut (10.11.2026: Portale, Lavaseen, Spawner, Festungen, Dörfer,
@@ -115,7 +115,7 @@ python tests/server/test_bed_cycle.py  # Messung One-Cycle: Bettschaden am Drach
 python tests/server/test_bed_bomb.py   # Servertest bed_bomb: Betten sprengen den hockenden Drachen (ca. 2 Minuten)
 python tests/server/test_settings.py   # Servertest Einstellungen (info, humor, talkmode, settings) und shelter nachts bei voller Ausrüstung (ca. 1 Minute)
 # Die Servertests nicht gleichzeitig mit `gradlew build` oder untereinander starten.
-# Schneller: AIPLAYER_TEST_TICK_RATE=60 vor den Testaufruf setzen (Spiel läuft mit 60 statt 20 Ticks, etwa halbe Dauer).
+# Schneller: SMARTCRAFT_TEST_TICK_RATE=60 vor den Testaufruf setzen (Spiel läuft mit 60 statt 20 Ticks, etwa halbe Dauer).
 ```
 Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r companion/requirements.txt` und
 `ANTHROPIC_API_KEY`) oder `python companion/console.py` (Konsole zum Testen), siehe `companion/README.md`.
@@ -134,7 +134,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
 6. **Mod und KI getrennt.** Keine API-Aufrufe und keine Schlüssel im Mod.
 
 ## Konventionen
-- Package-Root: `de.hannes.smartcraft`, Mod-ID `smartcraft`, Befehl `/aiplayer`; Datenordner (`logs/aiplayer/`, `<welt>/aiplayer/places.json`) heißen weiter `aiplayer`
+- Package-Root: `de.hannes.smartcraft`, Mod-ID `smartcraft`, Befehl `/smartcraft`, Umgebungsvariablen `SMARTCRAFT_*`, Datenordner `logs/smartcraft/` und `<welt>/smartcraft/places.json`
 - Events und Befehle sind versioniertes JSON (`"v": 1`). Schema zuerst ändern, dann Code.
 - Event-Namen: `snake_case`, Vergangenheitsform für Fakten (`block_broken`,
   `damage_taken`), Ergebnis-Events als `<befehl>_result`
@@ -145,12 +145,12 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   auf dem Spiel-Thread blockierend
 
 ## Debugging
-- Debug-Log unter `run/logs/aiplayer/` protokolliert jede Wahrnehmung, Entscheidung
+- Debug-Log unter `run/logs/smartcraft/` protokolliert jede Wahrnehmung, Entscheidung
   und jedes Ergebnis mit Zeitstempel und Tick. Bei Fehlern zuerst dort nachsehen.
 - Fehler reproduzierbar machen: Weltseed und Startposition im Log festhalten.
 
 ## Sicherheit
-- `ANTHROPIC_API_KEY` als Umgebungsvariable, per `/aiplayer apikey <key>` (der Mod reicht ihn nur weiter, Logs zeigen `***`) oder in `companion/api_key.txt` (in .gitignore, liest nur der
+- `ANTHROPIC_API_KEY` als Umgebungsvariable, per `/smartcraft apikey <key>` (der Mod reicht ihn nur weiter, Logs zeigen `***`) oder in `companion/api_key.txt` (in .gitignore, liest nur der
   Begleitprozess, nie der Mod), nie committen, nie loggen
 - Socket nur auf `127.0.0.1` binden
 - Nur für Einzelspieler/lokale Testwelten, nicht für öffentliche Server
@@ -209,7 +209,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
 - Nether-Läufe (16.10.2026, `tests/server/run_nether.py`, Ziel 10 Lohenruten und lebend zurück): bisher 11 Erfolge in
   22 Läufen (Läufe 6 bis 28), Ergebnisse in `run/logs/nether_results.log`. Behoben (16.10., nach Lauf 28, nur im
   Servertest geprüft, kein echter Lauf mehr): vom Festungsdach in den Spawnerraum (senkrecht graben, Fallhöhe 5 für
-  `farm_spawner`, Spalte vor einem Sprung freiräumen). `test_tools` läuft mit normaler Tickrate durch (37 von 37, 17.10.); mit `AIPLAYER_TEST_TICK_RATE=60` scheitern Wasser-Reflex und `fortress_in_sight` (Zeitabhängigkeit). Lohenruten fallen manchmal unerreichbar (Läufe 5, 17). Der Trank-Test in `test_magma.py` wackelt
+  `farm_spawner`, Spalte vor einem Sprung freiräumen). `test_tools` läuft mit normaler Tickrate durch (37 von 37, 17.10.); mit `SMARTCRAFT_TEST_TICK_RATE=60` scheitern Wasser-Reflex und `fortress_in_sight` (Zeitabhängigkeit). Lohenruten fallen manchmal unerreichbar (Läufe 5, 17). Der Trank-Test in `test_magma.py` wackelt
 - Respawn-Zeit, Fahrzeuge und der Abspann nach dem Endportal sind ungetestet (siehe ARCHITECTURE.md).
 - Drachenläufe (15.10.2026, `tests/server/run_dragon.py`, 10 Läufe, Start ausgerüstet im Nether): Kein Lauf erreichte das End.
   Bestes Ergebnis: Festung und Lohenspawner über `locate`, 7 Lohenruten mit `farm_spawner` in 2 bis 3 Minuten (Läufe 5, 6, 9).
@@ -282,7 +282,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
 - 2026-10-13 – `smelt` nimmt den Brennstoff, der für die ganze Menge reicht, statt stur den besten – im
   Dauerlauf legte der Bot mit einer Kohle neben 41 Brettern nur 8 von 21 Roheisen ein
 - 2026-10-13 – Zuschauer-Kamera für Servertests als Client-Teil des Mods (`ShotClient`), aktiv nur mit
-  `AIPLAYER_SHOT_PORT` – Bilder vom Bot ohne Eingriff ins normale Spiel; der Test stellt dafür
+  `SMARTCRAFT_SHOT_PORT` – Bilder vom Bot ohne Eingriff ins normale Spiel; der Test stellt dafür
   `online-mode` vorübergehend aus
 - 2026-10-13 – KI-Schleife von Hand statt mit dem Tool-Runner des SDK – Kostenlimit, Pause/Stopp und das
   Anhalten bei Gefahr greifen zwischen und während der Tool-Aufrufe ein
@@ -292,7 +292,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
 - 2026-10-13 – `pause` und `stop` halten die Aktion im Mod selbst an, das Event geht vorher hinaus – wirkt
   auch, wenn die KI gerade auf die API wartet, und die KI kennt den Grund des Abbruchs
 - 2026-10-13 – Kein Kostenlimit mehr als Standard (vorher 2 $ pro Ziel), nur noch auf Wunsch über
-  `AIPLAYER_COST_LIMIT` – Wunsch von Hannes; die Obergrenze von 200 Schritten pro Ziel bleibt
+  `SMARTCRAFT_COST_LIMIT` – Wunsch von Hannes; die Obergrenze von 200 Schritten pro Ziel bleibt
 - 2026-10-13 – Die KI liest den Chat über das Event `chat_received`; eine Nachricht an den Bot
   (`direct`) beginnt im Leerlauf ein Gespräch und hält während eines Ziels die laufende Aktion an –
   Hannes will mit ihm schreiben, und eine Antwort erst nach einem langen `collect` wäre kein Gespräch
@@ -326,7 +326,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   Ufer (8 Blöcke) – der Bot ertrank in einer Hütte im Wasser und kam danach 8 Minuten nicht aus einem Teich
 - 2026-10-14 – Prompt: Der Bot ist auf sich gestellt (keine Bitte um Hilfe), Kosten sind kein Grund aufzuhören –
   er wartete auf Hilfe vom Menschen und wollte wegen „teurer“ Schritte aufgeben
-- 2026-10-14 – Servertests optional mit höherer Tickrate (`AIPLAYER_TEST_TICK_RATE`, `/tick rate`) – `test_survival`
+- 2026-10-14 – Servertests optional mit höherer Tickrate (`SMARTCRAFT_TEST_TICK_RATE`, `/tick rate`) – `test_survival`
   in 3 statt 6 Minuten, gleiche Ergebnisse; für KI-Läufe nicht gedacht (dort bremst die API, nicht das Spiel)
 - 2026-10-14 – `descend` hält an, wenn bis 3 Blöcke über dem Kopf loser Kies oder Sand ohne festen Block dazwischen
   hängt (`falling_block_above`) – Wunsch von Hannes; schwebender Kies aus der Weltgenerierung kann nachrutschen
@@ -348,7 +348,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
 - 2026-10-14 – Eimer gießt direkt an der geprüften Stelle aus (`BucketItem.emptyContents`) statt über den Blickstrahl –
   im Test landete Lava sonst an einer Kante davor; Wasser auf Lava geht über oder neben die Quelle, nicht hinein
 - 2026-10-14 – Neuer Befehl `tunnel`, Event `items_received` (Mixin auf `ItemEntity.playerTouch`), Sprinten in der
-  Wegfindung auf geraden Stücken, `/aiplayer tts on|off`, kein Feuer direkt neben dem Bot, Brennbares nicht neben Lava/Feuer
+  Wegfindung auf geraden Stücken, `/smartcraft tts on|off`, kein Feuer direkt neben dem Bot, Brennbares nicht neben Lava/Feuer
 - 2026-10-14 – `look` meldet im Nether `fortress_in_sight` (Festung bis 100 Blöcke, über die Strukturdaten des Spiels) –
   der Bot fand keine Festung; ein Spieler sieht sie über die offenen Flächen, der Block-Umkreis von 8 reicht dafür nicht
 - 2026-10-14 – Systemprompt neu gegliedert (Rangfolge, Fahrplan bis zum Drachen, ohne Dopplungen, 12,7 statt 18,4 Tsd.
@@ -366,20 +366,20 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
 - 2026-10-14 – `fluid_spotted` nennt `size`; bei Lava die größte Fläche im Umkreis statt der nächsten, ungeladene Chunks
   überspringt der Scan; Prompt: Lava ab `size` 10 für Obsidian, mit 10 Obsidian sofort das Portal bauen – der Bot lief zu
   einzelnen Lavablöcken (1 Obsidian), und der Scan erzwang beim Dimensionswechsel Chunk-Laden (81 ms in einem Tick)
-- 2026-10-14 – Sprachausgabe standardmäßig aus (`AIPLAYER_TTS=1` oder `/aiplayer tts on`); `fluid_spotted` meldet auch
+- 2026-10-14 – Sprachausgabe standardmäßig aus (`SMARTCRAFT_TTS=1` oder `/smartcraft tts on`); `fluid_spotted` meldet auch
   Spawner und Lohen, im Nether im Umkreis 32; `search_for` kann `blaze` und `spawner` – im End-Lauf griff der Bot in
   der Festung zehnmal blind `attack blaze` an (`entity_not_found`)
-- 2026-10-14 – Chat des Bots vorübergehend aus (`AIPLAYER_CHAT=1` schaltet ihn ein): kein `chat`-Tool, keine
+- 2026-10-14 – Chat des Bots vorübergehend aus (`SMARTCRAFT_CHAT=1` schaltet ihn ein): kein `chat`-Tool, keine
   `[Publikum]`-Anstöße – Wunsch von Hannes, Tokens sparen; im End-Lauf war etwa jeder dritte Schritt ein Chat
 - 2026-10-14 – Chat-Modus `plans` als Standard (nur kurze Ansagen, was der Bot vorhat), `full` und `off` über
-  `AIPLAYER_CHAT`; `tunnel` bis 200 Blöcke, im Nether mindestens 200 Blöcke je Richtung – Wunsch von Hannes (Tokens)
+  `SMARTCRAFT_CHAT`; `tunnel` bis 200 Blöcke, im Nether mindestens 200 Blöcke je Richtung – Wunsch von Hannes (Tokens)
 - 2026-10-14 – Der Test-Harness sichert `server.properties` in `server.properties.vor-test` und holt sie beim nächsten
   Start zurück – ein abgebrochener End-Lauf ließ die Datei auf der End-Welt, und die Servertests liefen dort
 - 2026-10-14 – Weg ins End: Holztüren/Zauntore öffnen in der Wegfindung, `shoot` (Bogen mit Vorhalt, auch Endkristall
   und Drache), `throw_eye` (Flugrichtung, Schnittpunkt zweier Würfe als `estimated_stronghold`), `fill_portal`,
   `enter_portal`, Rundum-Blick meldet Endportalrahmen, Prompt-Abschnitt „End“ – Projektanalyse: ab der
   Netherfestung fehlten alle Bausteine bis zum Drachen
-- 2026-10-15 – Nach einem Gespräch nimmt der Begleitprozess das letzte Ziel wieder auf (bis `/aiplayer stop`); im Nether
+- 2026-10-15 – Nach einem Gespräch nimmt der Begleitprozess das letzte Ziel wieder auf (bis `/smartcraft stop`); im Nether
   bricht Gefahr nur noch direkt daneben ab; Prompt: Ersatz-Spitzhacke und Steinspitzhacke für Tunnel, Bogen craften,
   `~` heißt eigene Höhe, lange Nether-Wege mit `allow_dig` oder `tunnel` – Auswertung von Hannes' Lauf am 15.10.:
   21 Gefahrenabbrüche, 14-mal `no_path`, Diamantspitzhacke in 14 Minuten Tunnel verbraucht, nach Hilfe im Chat
@@ -395,7 +395,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   Nähe einmal abgelehnt (`enemies_near`); Prompt: nach jedem Kampf Beute aufheben und zurück zum Ziel – bei den Lohen
   stand der Bot nach Treffern still und heilte nicht, nach dem ersten Witherskelett wusste er nicht weiter
 - 2026-10-15 – Befehl `locate` (Festung, Bastion, Festung der Oberwelt, Endsiedlung bis 1.600 Blöcke über die Weltdaten),
-  nur nach `/aiplayer locate on`, Standard aus – Wunsch von Hannes: die Festungssuche im Nether kostete die meiste Zeit;
+  nur nach `/smartcraft locate on`, Standard aus – Wunsch von Hannes: die Festungssuche im Nether kostete die meiste Zeit;
   schummeln soll der Bot nur, wenn der Mensch es erlaubt
 - 2026-10-15 – Steht der Bot auf Magma, plant die Wegfindung über Magma als Boden, und `hot_floor` bricht keine Aktion
   mehr ab (wie Ertrinken) – im KI-Lauf stand er 28 s auf einem Magmablock: `flee`/`attack` scheiterten mit
@@ -495,8 +495,8 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
 - 2026-10-16 – `farm_endermen`: Kampf gräbt sich zum Enderman durch (bauen nur mit Bausteinen im Inventar), Anlocken nur bei freier
   Sicht, Ergebnis nennt `fights` (Ausgänge je Kampf) – Perlen-Lauf 14: 6 Minuten im Warped-Wald ohne Kill; Nachstellung: 10 von 13
   Kämpfen `no_blocks`, danach 3 Perlen in einer Minute
-- 2026-10-16 – Mehrere Testserver gleichzeitig: `-PaiRunDir` in `build.gradle`, Harness mit `AIPLAYER_TEST_RUNDIR`,
-  `AIPLAYER_TEST_PORT`, `AIPLAYER_TEST_GAMEPORT` (Instanz k: `run/inst<k>`, Ports 25600+k und 25570+k) – Wunsch von Hannes,
+- 2026-10-16 – Mehrere Testserver gleichzeitig: `-PaiRunDir` in `build.gradle`, Harness mit `SMARTCRAFT_TEST_RUNDIR`,
+  `SMARTCRAFT_TEST_PORT`, `SMARTCRAFT_TEST_GAMEPORT` (Instanz k: `run/inst<k>`, Ports 25600+k und 25570+k) – Wunsch von Hannes,
   drei Perlen-Läufe parallel
 - 2026-10-16 – Neuer Testlauf `tests/server/run_stronghold.py` (Start Oberwelt mit 12 Perlen und 8 Lohenruten, Ziel: ins End;
   `--ohne-locate` zwingt `throw_eye`) – nächster Abschnitt nach den Perlen, Plan mit Hannes
@@ -557,7 +557,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   Huhn, Kaninchen, Pilzkuh) und hebt die Beute auf, Ergebnis `animals_killed`; nicht bei Erz, nicht unter 10 Leben – Wunsch von Hannes
 - 2026-10-17 – Ortsgedächtnis merkt sich Baumstellen (`trees`, ein Eintrag je 32 Blöcke, beim Fällen mit `collect`); `look` nennt die
   zwei nächsten (`known_trees`, nur Oberwelt), `collect` bei Holz nennt bei `none_found` bis zu 3 – Wunsch von Hannes
-- 2026-10-17 – Keine Schrittgrenze mehr pro Ziel (`AIPLAYER_MAX_STEPS` Standard 0 = unbegrenzt, vorher 200) – Wunsch von Hannes: sein
+- 2026-10-17 – Keine Schrittgrenze mehr pro Ziel (`SMARTCRAFT_MAX_STEPS` Standard 0 = unbegrenzt, vorher 200) – Wunsch von Hannes: sein
   Lauf endete nach 200 Schritten (0,23 $) mitten im Ziel
 - 2026-10-17 – `JunkDropper` wirft auch Ersetztes weg (schwächeres Werkzeug oder Doppel derselben Art, Rüstung schlechter als die
   getragene, Goldteile bleiben), Kies und Feuerstein bleiben; Prompt: Stämme, Kies, Feuerstein nie wegwerfen – Hannes' Lauf: die KI warf
@@ -570,7 +570,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   Nether unter 16 nicht brennbaren Bausteinen ab (`few_blocks`); Prompt: Netherrack/Schwarzstein nicht wegwerfen, Bretter brennen,
   an der Festung nicht auf `search_for` warten – Hannes' Lauf: 10 Lohenruten in 11 Minuten, dann im Warped-Wald mit den letzten
   Brettern über einen Abgrund und in einen Lavasee, 10 s ohne Ausweg, tot
-- 2026-10-17 – `/aiplayer stats on|off`: Herzen und Hunger unter dem Namen des Bots über die Vanilla-Anzeigetafel (below_name,
+- 2026-10-17 – `/smartcraft stats on|off`: Herzen und Hunger unter dem Namen des Bots über die Vanilla-Anzeigetafel (below_name,
   Text per FixedFormat, andere Spieler leer), alle 10 Ticks – Wunsch von Hannes; geht ohne Mod beim Client
 - 2026-10-18 – Cache: eigener Haltepunkt hinter Tools und Systemprompt, Kürzen alter Ergebnisse nur alle 30 Schritte, bei über
   60 Schritten Schnitt auf 30; `wait` lehnt bei fehlendem Leben und Hunger unter 18 einmal ab (`no_regen_hunger`); der
@@ -599,14 +599,14 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   hoch – End-Läufe 4 und 6 bauten sich für die Sicht 12 bis 41 Blöcke hoch und wurden heruntergestoßen; in Hannes' Lauf stieß ein
   Enderman den Bot von seiner 1×1-Säule
 - 2026-10-28 – Verbrauch der KI in der XP-Leiste der Menschen (Level = Cent, Balken = Bruchteil), darüber in der Aktionsleiste
-  Tokens und $; Standard an bei jedem Join, `/aiplayer xpbar on|off`. Nur als Pakete an die Clients, echte XP bleiben; die Zahlen
+  Tokens und $; Standard an bei jedem Join, `/smartcraft xpbar on|off`. Nur als Pakete an die Clients, echte XP bleiben; die Zahlen
   schickt der Begleitprozess mit dem Befehl `usage` (kein Tool für das Modell) – Wunsch von Hannes
 - 2026-10-28 – Kostenrechnung im Begleitprozess genau nach Preisliste: Modell der Antwort (Fallback), Cache-Schreiben 5 min 1,25× /
   1 h 2×, Cache-Lesen je Modell (Opus 5.5 0,05×, Fable 5.1 0,025×, sonst 0,1×), Haiku 5.5 über 100.000 Tokens fünffach – Wunsch
   von Hannes: XP-Leiste soll Tokens und Kosten 1:1 zeigen; vorher überall 0,1× für Cache-Lesen und keine Haiku-Staffel
-- 2026-10-28 – Einstellungen zentral im Mod (`AiSettings`), `/aiplayer info|humor|talkmode|dimensionfollow|gamemode|streamer`;
+- 2026-10-28 – Einstellungen zentral im Mod (`AiSettings`), `/smartcraft info|humor|talkmode|dimensionfollow|gamemode|streamer`;
   Begleitprozess holt sie mit `settings` und bekommt Änderungen als `control_requested` (`action: settings`). Humor und Talkmode
-  als `[Einstellung]`-Hinweis im Verlauf statt im Systemprompt (Cache bleibt); Talkmode ersetzt `AIPLAYER_CHAT`-Stufen (Startwert),
+  als `[Einstellung]`-Hinweis im Verlauf statt im Systemprompt (Cache bleibt); Talkmode ersetzt `SMARTCRAFT_CHAT`-Stufen (Startwert),
   Abstände in `TALK_SETTINGS`, Spam-Schutz `too_soon`. `events off` blendet nur die Chat-Anzeige aus (die KI braucht die Events).
   Dimension Follow teleportiert den Bot nach einem Dimensionswechsel des Spielers auf einen sicheren Platz neben ihn (nur der
   Wechsel des Spielers löst aus, keine Schleife); `gamemode` gilt für den, der ihn eingibt; `streamer off` setzt nichts zurück –
@@ -649,7 +649,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
 - 2026-10-31 – `bed_cycle` als Hauptweg im End: Betten im Nether/End trotz Feuer setzbar (`BlockPlacer`), Bot mittig im Käfig, Käfig ohne Anhebung, Annäherung an den Kopf beim Hocken; `destroy_crystals` mit `ground_only` (keine Türme) vor `bed_cycle`; `bed_bomb` nicht mehr als Tool; Atem-Reflex bricht eingeschlossen die Käfigwand auf; `run_end_fight.py` erkennt Bett-Siege (im End, kein Tod, `dragon_dead`) – End-Läufe 94–105: 5 Siege (94, 96, 97, 102, 104), Tode im Atem (98, 100, 105), `bed_bomb` (99), Sturz (103). Serie am 01.11. gestoppt
 - 2026-11-01 – Käfig 10,3 statt 8,3 Blöcke vom Brunnen, Atem-Reflex greift auch nach frischem Atemtreffer knapp außerhalb der Wolke, Prompt: nach `no_beds` nur vom Boden, `run_end_fight.py` löscht eine alte Welt gleichen Namens – Läufe 101 (Welt ohne Drachen), 103, 105. Nur ein Messlauf (`test_bed_cycle_bot combo 36`: Drache 200 → 103, Bot lebt), kein echter Lauf; nächste Session: 5 parallele `run_end_fight.py` (106–110)
 - 2026-11-01 – `shoot`/`destroy_crystals` schießen Kristalle auf hohen Türmen im hohen Bogen (`lobClear`, Bahn gegen Blöcke geprüft); `bed_cycle` geht nie in Atemwolken zum Kopf – Läufe 107–109: 4–5 Kristalle `no_ground_spot`, der Drache heilte zwischen den Vorbeiflügen zurück (12 Betten reichten nicht), 108 lief beim Hocken in den Atem. Danach 7 statt 3–4 Kristalle, Läufe 112–116: 5 Siege in Folge
-- 2026-11-01 – Drachenläufe aus dem Nether (`run_dragon.py`, `/aiplayer kit nether`, keine Tränke): `end_missing`/`end_ready` in `look`/`inventory`
+- 2026-11-01 – Drachenläufe aus dem Nether (`run_dragon.py`, `/smartcraft kit nether`, keine Tränke): `end_missing`/`end_ready` in `look`/`inventory`
   (12 Betten, 12 Enderaugen, Bogen, 64 Pfeile, 128 Bausteine, 16 Essen; Wolle, Fäden, Perlen, Lohenstaub zählen mit) – Wunsch von Hannes.
   Fixes aus den Läufen 11–15: `farm_endermen` prüft Angreifer und `min_health` vor dem Perlensammeln (11: beim Sammeln erschlagen),
   `JunkDropper` behält die zweite Spitzhacke, `farm_spawner` bricht nach 90 s ohne Fortschritt ab (`stalled`, 12: 10 min ohne Kampf),
@@ -687,16 +687,16 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   Skeletten an (Lauf 45); `look`/`fluid_spotted` melden Dörfer (`village_in_sight`, nur Oberwelt, solange Betten fehlen) und der
   Prompt sagt: Betten im Dorf abbauen, geschorene Herde nach 60 s nachscheren – Wunsch von Hannes (Lauf 40: 75 min für 4 Betten Wolle)
 - 2026-11-02 – `farm_endermen` nur noch im Nether (`not_in_nether`), Prompt ohne Endermen-Jagd in der Oberwelt; nimmt Creeper bis 7 Blöcke zuerst als Ziel – Entscheidung von Hannes nach Drachenlauf 44 (1 Perle in einer Stunde, Creeper-Tod)
-- 2026-11-03 – `/aiplayer stats` zeigt Leben und Hunger als 10 Herzen und 10 Keulen mit den Sprites des Spiels (Textkomponente `object`,
+- 2026-11-03 – `/smartcraft stats` zeigt Leben und Hunger als 10 Herzen und 10 Keulen mit den Sprites des Spiels (Textkomponente `object`,
   GUI-Atlas `hud/heart/*`, `hud/food_*`; Hunger füllt wie im Spiel von rechts) statt als Zahlen – Wunsch von Hannes
 - 2026-11-03 – `fight_dragon` darf auf allen Wegen graben (Warteplatz, Kopf, Ausweichen vor dem Atem); eine direkte Chatnachricht hält
   auch lange Befehle ohne Gefahrenabbruch an (`CHAT_INTERRUPTIBLE`: farm_*, make_obsidian, destroy_crystals, fight_dragon, bed_*,
   barter) – Hannes' Lauf (josef): nach `bed_cycle` (Drache 9,4 Leben) stand er im eigenen Käfig, `fight_dragon` fand ohne Graben
   keinen Weg hinaus, und „Was machst du?“ blieb unbeantwortet
-- 2026-11-03 – `/aiplayer inventar` öffnet das Inventar des Bots als Vanilla-Doppelkiste, live verbunden (Reihe 1 Rüstung und zweite
+- 2026-11-03 – `/smartcraft inventar` öffnet das Inventar des Bots als Vanilla-Doppelkiste, live verbunden (Reihe 1 Rüstung und zweite
   Hand, Reihe 2 graue Glasscheiben, Reihen 3–6 die 36 Plätze, darunter das eigene Inventar; Rüstungsplätze nur mit passender
   Rüstung) – Wunsch von Hannes; geht ohne Mod beim Client
-- 2026-11-03 – `/aiplayer stats`: Herzen und Hunger untereinander über dem Namen, als Vanilla-Textanzeige (Tag `aiplayer_stats`, jeden
+- 2026-11-03 – `/smartcraft stats`: Herzen und Hunger untereinander über dem Namen, als Vanilla-Textanzeige (Tag `smartcraft_stats`, jeden
   Tick an den Bot gesetzt, kein Mitfahrer wegen Portalen) statt in der einzeiligen Anzeige unter dem Namen – Wunsch von Hannes
 - 2026-11-03 – `JunkDropper` räumt auf dem Weg ins End (Oberwelt mit `end_ready`, oder im End) sofort Unnötiges weg (leere Eimer, Äxte,
   Schaufeln, Hacken, Ofen, Werkbank, Kohle, Stöcke, Fackeln, Rohmetall u. a.) und bei mehreren Essenssorten die schwächste (Nährwert
@@ -718,7 +718,7 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   `bed_cycle` gegen voll geheilten Drachen. Jetzt: Wege mit Graben und Bauen, `failed: none_destroyed`, wenn keiner fiel. Chat hält
   Drachenbefehle nicht mehr an (fünf Abbrüche durch Chatzeilen, Drache heilte 127 → 200). `throw_eye` nennt `pickup_at` (Boden unter
   dem Endpunkt), goto zu `ended_at` baute einen Turm in die Luft
-- 2026-11-04 – Endportal-Läufe (`tests/server/run_portal_dragon.py`, Start Oberwelt mit `/aiplayer kit end`, ohne `locate`, Ziel
+- 2026-11-04 – Endportal-Läufe (`tests/server/run_portal_dragon.py`, Start Oberwelt mit `/smartcraft kit end`, ohne `locate`, Ziel
   Drache): 18 Enderaugen Pflicht (`END_EYES`), nach dem ersten Wurf reichen 12; `throw_eye` zählt verlorene Augen (`eyes_lost`,
   ab 4 `eye_budget`), Prompt: einmal werfen, 200–300 Blöcke gehen, liegende Augen immer aufheben; `eye_in_fluid` statt
   hinterhertauchen; Ersticken (`in_wall`) bricht keine Aktion mehr ab – Wunsch von Hannes; Läufe 31–69: 6 Siege, Lauf 31 warf
@@ -741,9 +741,9 @@ Begleitprozess: `python companion/agent.py` (KI, braucht `pip install -r compani
   `unsafe_spot`, 111-mal `stalled`); `flee` baut sich ohne Fluchtweg ein wie `shelter` (`outcome: sheltered`; 50 von 162 Toden
   während `flee`, Median 7 s von `health_low` bis zum Tod); neues Event `no_pickaxe` mit passendem Rezept (31 von 169 Läufen mit
   `wrong_tool` ohne Spitzhacke). Geprüft: Build, Unit-Tests, `test_movement` 22 von 22; kein echter KI-Lauf
-- 2026-11-23 – `/aiplayer apikey <key>`: Der Mod reicht den Schlüssel per `control_requested` (`action: apikey`) oder, falls
+- 2026-11-23 – `/smartcraft apikey <key>`: Der Mod reicht den Schlüssel per `control_requested` (`action: apikey`) oder, falls
   noch nicht verbunden, einmalig im Ergebnis von `settings` an den Begleitprozess, der ihn in `companion/api_key.txt` speichert;
   `EventBus` und `console.py` maskieren `api_key` – Wunsch von Hannes (Veröffentlichung auf Git), Kernprinzip 6 bleibt
 - 2026-11-23 – Statusanzeige über dem Bot: durch Blöcke sichtbar und volle Helligkeit, beim Absteigen wieder aufsitzen statt
   neu anlegen – Hannes: HP/Hunger manchmal unsichtbar (in 2 Blöcke hohen Gängen steckte sie in der Decke)
-- 2026-11-23 – Projekt heißt SmartCraft: Anzeigename, Jar, Mod-ID `smartcraft`, Package `de.hannes.smartcraft`; Befehl `/aiplayer` und die Datenordner `aiplayer` bleiben (bestehende Welten, Logs und Auswerteskripte) – Wunsch von Hannes
+- 2026-11-23 – Projekt heißt SmartCraft: Anzeigename, Jar, Mod-ID, Package `de.hannes.smartcraft`, Befehl `/smartcraft`, Umgebungsvariablen `SMARTCRAFT_*`, Datenordner; gemerkte Orte aus `<welt>/aiplayer/` werden beim Laden übernommen – Wunsch von Hannes (Veröffentlichung auf Git)

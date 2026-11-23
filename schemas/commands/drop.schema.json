@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/drop.schema.json",
+	"$id": "smartcraft/commands/drop.schema.json",
 	"title": "drop: wirft Items aus dem Inventar auf den Boden",
 	"args": {
 		"type": "object",

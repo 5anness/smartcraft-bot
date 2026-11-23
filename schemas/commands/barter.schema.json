@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/barter.schema.json",
+	"$id": "smartcraft/commands/barter.schema.json",
 	"title": "barter: tauscht Goldbarren mit Piglins in der Nähe (bis 16 Blöcke), ein Befehl für den ganzen Tausch. Wirft jedem freien erwachsenen Piglin einen Barren zu (nur er kann ihn aufheben), wartet, sammelt die Ware ein und macht weiter, bis count Barren getauscht sind. Brutes, Babys und Zombie-Piglins bekommen nichts. Etwa jeder 46. Barren bringt 2 bis 4 Enderperlen. Ergebnis: gold_given, gold_left, ender_pearls, gained",
 	"args": {
 		"type": "object",

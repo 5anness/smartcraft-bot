@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/tunnel.schema.json",
+	"$id": "smartcraft/commands/tunnel.schema.json",
 	"title": "tunnel: gräbt einen Gang (1 breit, 2 hoch) geradeaus in eine Himmelsrichtung, ein Befehl für den ganzen Gang. Zum Erkunden im Fels und im Nether und zum Erzsuchen (Strip-Mining auf y -58 für Diamanten). Hält vor Lava und Wasser im nächsten Abschnitt oder seinen Wänden an (found), überbrückt Löcher im Boden mit einem Block und meldet Erze in den Wänden (ores_seen); bei neuem Erz hält er an (stop_at_ore). Festungsblöcke (Netherziegel) gräbt er nie ab: Er hält am Festungsrand an, und ein Gang in der Festung endet an ihrer Wand oder Grenze",
 	"args": {
 		"type": "object",

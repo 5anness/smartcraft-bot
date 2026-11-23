@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/places.schema.json",
+	"$id": "smartcraft/commands/places.schema.json",
 	"title": "places: Ortsgedächtnis abfragen. Der Mod merkt sich selbst, was du siehst oder setzt: Werkbänke, Öfen, Truhen, Betten, Netherportale, Lavaseen (ab 10 Quellen), Spawner, Netherfestungen, Dörfer, Endportalräume, Baumstellen. Gilt pro Welt und über Neustarts. Liefert bis 20 Orte, die nächsten zuerst; Orte anderer Dimensionen mit dim statt distance. Antwort kommt sofort",
 	"args": {
 		"type": "object",

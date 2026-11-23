@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/reflex_lava_stuck.schema.json",
+	"$id": "smartcraft/events/reflex_lava_stuck.schema.json",
 	"title": "data von reflex_lava_stuck: Reflex des Mods: Der Bot steckt seit 15 s in Lava (mit Feuerresistenz) und der Lava-Reflex findet keinen Weg hinaus. Er schwimmt weiter Richtung nearest_shore, die Aktion läuft wieder. Wirf eine Enderperle zum Ufer (use mit item ender_pearl und look_at), solange die Feuerresistenz hält",
 	"type": "object",
 	"required": [

@@ -1,7 +1,7 @@
 # Drachen-Serie 10.11.2026 – Übergabe
 
-Auftrag von Hannes: 3 Bots parallel (`tests/server/run_dragon.py`, Start im Nether mit `/aiplayer kit nether`,
-Instanzen 1–3: `AIPLAYER_TEST_RUNDIR=run/inst<k>`, `AIPLAYER_TEST_PORT=2560<k>`, `AIPLAYER_TEST_GAMEPORT=2557<k>`),
+Auftrag von Hannes: 3 Bots parallel (`tests/server/run_dragon.py`, Start im Nether mit `/smartcraft kit nether`,
+Instanzen 1–3: `SMARTCRAFT_TEST_RUNDIR=run/inst<k>`, `SMARTCRAFT_TEST_PORT=2560<k>`, `SMARTCRAFT_TEST_GAMEPORT=2557<k>`),
 Ziel: 3 Drachensiege in Folge. Alle 10 Minuten prüfen; bei Tod oder Hänger Ursache analysieren, beheben, Lauf neu starten.
 Am 10.11. um ~15:55 auf Wunsch von Hannes gestoppt. Ergebnisse je Lauf: `run/logs/dragon_results.log` (Läufe 63–99).
 

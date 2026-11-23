@@ -1,6 +1,6 @@
 package de.hannes.smartcraft.bridge;
 
-import de.hannes.smartcraft.AiPlayerMod;
+import de.hannes.smartcraft.SmartCraftMod;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -40,16 +40,16 @@ public final class BridgeServer {
 		this.port = port;
 	}
 
-	/** Port aus der Umgebungsvariable {@code AIPLAYER_PORT}, sonst {@link #DEFAULT_PORT}. */
+	/** Port aus der Umgebungsvariable {@code SMARTCRAFT_PORT}, sonst {@link #DEFAULT_PORT}. */
 	public static int configuredPort() {
-		String value = System.getenv("AIPLAYER_PORT");
+		String value = System.getenv("SMARTCRAFT_PORT");
 		if (value == null || value.isBlank()) {
 			return DEFAULT_PORT;
 		}
 		try {
 			return Integer.parseInt(value.trim());
 		} catch (NumberFormatException e) {
-			AiPlayerMod.LOGGER.warn("AIPLAYER_PORT={} ist keine Zahl, nehme {}", value, DEFAULT_PORT);
+			SmartCraftMod.LOGGER.warn("SMARTCRAFT_PORT={} ist keine Zahl, nehme {}", value, DEFAULT_PORT);
 			return DEFAULT_PORT;
 		}
 	}
@@ -68,13 +68,13 @@ public final class BridgeServer {
 			// Ausdrücklich 127.0.0.1: von außerhalb dieses Rechners nicht erreichbar.
 			serverSocket = new ServerSocket(port, 1, InetAddress.getByAddress(new byte[]{127, 0, 0, 1}));
 		} catch (IOException e) {
-			AiPlayerMod.LOGGER.error("Brücke: Port {} lässt sich nicht öffnen, der Begleitprozess kann sich nicht verbinden", port, e);
+			SmartCraftMod.LOGGER.error("Brücke: Port {} lässt sich nicht öffnen, der Begleitprozess kann sich nicht verbinden", port, e);
 			return;
 		}
-		Thread thread = new Thread(this::acceptLoop, "aiplayer-bridge-accept");
+		Thread thread = new Thread(this::acceptLoop, "smartcraft-bridge-accept");
 		thread.setDaemon(true);
 		thread.start();
-		AiPlayerMod.LOGGER.info("Brücke: lausche auf 127.0.0.1:{}", port);
+		SmartCraftMod.LOGGER.info("Brücke: lausche auf 127.0.0.1:{}", port);
 	}
 
 	public void stop() {
@@ -123,10 +123,10 @@ public final class BridgeServer {
 				}
 				next.start();
 				clientJustConnected = true;
-				AiPlayerMod.LOGGER.info("Brücke: Begleitprozess verbunden");
+				SmartCraftMod.LOGGER.info("Brücke: Begleitprozess verbunden");
 			} catch (IOException e) {
 				if (serverSocket != null) {
-					AiPlayerMod.LOGGER.warn("Brücke: Verbindungsannahme fehlgeschlagen", e);
+					SmartCraftMod.LOGGER.warn("Brücke: Verbindungsannahme fehlgeschlagen", e);
 				}
 			}
 		}
@@ -152,10 +152,10 @@ public final class BridgeServer {
 		}
 
 		void start() {
-			Thread reader = new Thread(this::readLoop, "aiplayer-bridge-read");
+			Thread reader = new Thread(this::readLoop, "smartcraft-bridge-read");
 			reader.setDaemon(true);
 			reader.start();
-			Thread writer = new Thread(this::writeLoop, "aiplayer-bridge-write");
+			Thread writer = new Thread(this::writeLoop, "smartcraft-bridge-write");
 			writer.setDaemon(true);
 			writer.start();
 		}
@@ -200,7 +200,7 @@ public final class BridgeServer {
 			close();
 			if (client == this) {
 				client = null;
-				AiPlayerMod.LOGGER.info("Brücke: Begleitprozess getrennt");
+				SmartCraftMod.LOGGER.info("Brücke: Begleitprozess getrennt");
 			}
 		}
 	}

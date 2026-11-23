@@ -14,7 +14,7 @@ from test_movement import BOT, FLOOR, STAND, arena  # noqa: E402
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-blocks.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-blocks.log")
     server = TestServer(log)
     report = Report()
     try:
@@ -45,8 +45,8 @@ def run(server, report):
     server.run = run_and_note
     server.console("gamerule spawn_mobs false")
     server.console("time set noon")
-    server.console("aiplayer events off")
-    server.console(f"aiplayer join {BOT}", wait=4)
+    server.console("smartcraft events off")
+    server.console(f"smartcraft join {BOT}", wait=4)
     server.console(f"clear {BOT}")
     server.drain(0.5)
 

@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/goal_requested.schema.json",
-	"title": "data von goal_requested: Ein Mensch hat im Spiel mit /aiplayer goal <text> ein Ziel vorgegeben. Ein neues Ziel ersetzt das laufende. Priorität normal",
+	"$id": "smartcraft/events/goal_requested.schema.json",
+	"title": "data von goal_requested: Ein Mensch hat im Spiel mit /smartcraft goal <text> ein Ziel vorgegeben. Ein neues Ziel ersetzt das laufende. Priorität normal",
 	"type": "object",
 	"required": [
 		"text",

@@ -34,13 +34,13 @@ def walk_on_edge(server, x, z, high):
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-ghast.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-ghast.log")
     server = TestServer(log)
     report = Report()
     try:
         server.console("gamerule spawn_mobs false")
         server.console("difficulty normal")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console(f"smartcraft join {BOT}", wait=5)
         server.console(f"clear {BOT}")
 
         # --- Feuerball von Osten auf Augenhöhe: zurückschlagen.

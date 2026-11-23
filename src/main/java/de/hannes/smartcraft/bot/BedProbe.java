@@ -1,6 +1,6 @@
 package de.hannes.smartcraft.bot;
 
-import de.hannes.smartcraft.AiPlayerMod;
+import de.hannes.smartcraft.SmartCraftMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -46,7 +46,7 @@ final class BedProbe {
 		interval = Math.max(1, every);
 		below = offset;
 		wait = 0;
-		AiPlayerMod.LOGGER.info("bedprobe start count=" + count + " interval=" + interval + " below=" + offset);
+		SmartCraftMod.LOGGER.info("bedprobe start count=" + count + " interval=" + interval + " below=" + offset);
 	}
 
 	static void tick(ServerPlayer bot) {
@@ -54,7 +54,7 @@ final class BedProbe {
 			return;
 		}
 		if (bot == null) {
-			AiPlayerMod.LOGGER.info("bedprobe end no_bot");
+			SmartCraftMod.LOGGER.info("bedprobe end no_bot");
 			left = 0;
 			return;
 		}
@@ -65,7 +65,7 @@ final class BedProbe {
 		EnderDragon dragon = level.getEntitiesOfClass(EnderDragon.class, bot.getBoundingBox().inflate(400), LivingEntity::isAlive)
 				.stream().findFirst().orElse(null);
 		if (dragon == null) {
-			AiPlayerMod.LOGGER.info("bedprobe end no_dragon");
+			SmartCraftMod.LOGGER.info("bedprobe end no_dragon");
 			left = 0;
 			return;
 		}
@@ -80,7 +80,7 @@ final class BedProbe {
 		String phase = dragon.getPhaseManager().getCurrentPhase().getPhase().toString();
 		bot.gameMode.useItemOn(bot, level, ItemStack.EMPTY, InteractionHand.MAIN_HAND,
 				new BlockHitResult(Vec3.atCenterOf(foot), Direction.UP, foot, false));
-		AiPlayerMod.LOGGER.info(String.format(java.util.Locale.ROOT,
+		SmartCraftMod.LOGGER.info(String.format(java.util.Locale.ROOT,
 				"bedprobe boom phase=%s head=%.1f/%.1f/%.1f bot=%.1f/%.1f/%.1f bedY=%d health %.1f -> %.1f phaseAfter=%s",
 				phase, head.getX(), head.getY(), head.getZ(), bot.getX(), bot.getY(), bot.getZ(), foot.getY(), before, dragon.getHealth(),
 				dragon.getPhaseManager().getCurrentPhase().getPhase()));
@@ -93,7 +93,7 @@ final class BedProbe {
 		left--;
 		wait = interval;
 		if (left == 0) {
-			AiPlayerMod.LOGGER.info("bedprobe end done");
+			SmartCraftMod.LOGGER.info("bedprobe end done");
 		}
 	}
 }

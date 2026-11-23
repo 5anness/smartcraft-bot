@@ -13,12 +13,12 @@ from test_movement import BOT, STAND, arena  # noqa: E402
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-hunt.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-hunt.log")
     server = TestServer(log)
     report = Report()
     try:
         server.console("gamerule spawn_mobs false")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console(f"smartcraft join {BOT}", wait=5)
         x, z = 880, 520
         arena(server, x, z)
         server.console(f"clear {BOT}")

@@ -137,7 +137,7 @@ def main():
     seed = int(args[1]) if len(args) > 1 else random.randint(1, 2**31)
     world = f"world_life_{seed}"
     temp = os.environ.get("TEMP", ".")
-    log = os.path.join(temp, "aiplayer-test-life.log")
+    log = os.path.join(temp, "smartcraft-test-life.log")
     print(f"Welt {world}, Seed {seed}, höchstens {minutes} Minuten", flush=True)
     server = TestServer(log, world=world, seed=seed)
     life = Life(server, 0)
@@ -146,8 +146,8 @@ def main():
     try:
         server.console("gamerule spawn_mobs true")
         server.console("difficulty normal")
-        server.console("aiplayer events off")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console("smartcraft events off")
+        server.console(f"smartcraft join {BOT}", wait=5)
         x, z = locate_forest(server, 0, 0)
         server.console(f"spreadplayers {x} {z} 0 6 false {BOT}", wait=4)
         server.console("time set 1000")
@@ -172,7 +172,7 @@ def main():
         except TimeoutError as error:
             outcome = f"Befehl ohne Antwort: {error}"
     finally:
-        dump = os.path.join(temp, "aiplayer-test-life-events.json")
+        dump = os.path.join(temp, "smartcraft-test-life-events.json")
         with open(dump, "w", encoding="utf-8") as file:
             json.dump(server.all_events[-400:], file, ensure_ascii=False, indent=1)
         server.close()

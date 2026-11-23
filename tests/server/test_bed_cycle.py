@@ -1,5 +1,5 @@
 """Messung One-Cycle (30.10.2026): Wie viel Schaden machen Betten direkt unter dem Kopf des Drachen, wenn sie schnell
-hintereinander explodieren, und reicht das gegen das Heilen der Kristalle? Die Testhilfe `/aiplayer debug bedprobe`
+hintereinander explodieren, und reicht das gegen das Heilen der Kristalle? Die Testhilfe `/smartcraft debug bedprobe`
 setzt die Betten ohne Weg und Reichweite (bester Fall). Alle Kristalle bleiben stehen.
 
 Fälle: hockend (Phase erzwungen), im Flug. Je 8 Betten, Abstand und Höhe unter dem Kopf variiert.
@@ -45,7 +45,7 @@ def run_case(server, label, perch, count, interval, below, seen):
         server.console(END + "data merge entity @e[type=ender_dragon,limit=1] {DragonPhase:0}", wait=0.3)
         server.drain(6)
     start = dragon_health(server)
-    server.console(f"aiplayer debug bedprobe {count} {interval} {below}", wait=0.2)
+    server.console(f"smartcraft debug bedprobe {count} {interval} {below}", wait=0.2)
     server.drain(count * interval / 20 + 2)
     end = dragon_health(server)
     server.drain(10)
@@ -59,11 +59,11 @@ def run_case(server, label, perch, count, interval, below, seen):
 
 def main():
     report = Report()
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-bed-cycle.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-bed-cycle.log")
     server = TestServer(log, world=f"ai_test_bedcycle_{int(time.time())}", seed=20261029)
     try:
-        server.console("aiplayer events off")
-        server.console(f"aiplayer join {BOT}", wait=1)
+        server.console("smartcraft events off")
+        server.console(f"smartcraft join {BOT}", wait=1)
         for _ in range(30):
             if server.find_in_output("bot_joined"):
                 break

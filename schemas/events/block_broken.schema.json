@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/block_broken.schema.json",
+	"$id": "smartcraft/events/block_broken.schema.json",
 	"title": "data von block_broken: Ein Spieler hat im Umkreis von 16 Blöcken um den Bot einen Block abgebaut (vom Server bestätigt)",
 	"type": "object",
 	"required": [

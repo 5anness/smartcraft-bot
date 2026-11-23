@@ -2,7 +2,7 @@ package de.hannes.smartcraft.debug;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.hannes.smartcraft.AiPlayerMod;
+import de.hannes.smartcraft.SmartCraftMod;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Debug-Log der Sitzung: eine JSON-Zeile pro Vorgang unter {@code logs/aiplayer/}.
+ * Debug-Log der Sitzung: eine JSON-Zeile pro Vorgang unter {@code logs/smartcraft/}.
  * Geschrieben wird auf einem eigenen Thread, damit der Spiel-Thread nie auf die Platte wartet.
  */
 public final class DebugLog {
@@ -31,10 +31,10 @@ public final class DebugLog {
 
 	/** Legt die Logdatei an und startet den Schreib-Thread. */
 	public static DebugLog start(Path gameDir) {
-		Path dir = gameDir.resolve("logs").resolve("aiplayer");
+		Path dir = gameDir.resolve("logs").resolve("smartcraft");
 		DebugLog log = new DebugLog(dir.resolve(LocalDateTime.now().format(FILE_NAME) + ".jsonl"));
 
-		Thread writer = new Thread(log::writeLoop, "aiplayer-debuglog");
+		Thread writer = new Thread(log::writeLoop, "smartcraft-debuglog");
 		writer.setDaemon(true);
 		writer.start();
 		return log;
@@ -70,7 +70,7 @@ public final class DebugLog {
 				}
 			}
 		} catch (IOException e) {
-			AiPlayerMod.LOGGER.error("Debug-Log {} kann nicht geschrieben werden", file, e);
+			SmartCraftMod.LOGGER.error("Debug-Log {} kann nicht geschrieben werden", file, e);
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}

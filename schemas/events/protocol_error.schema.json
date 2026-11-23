@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/protocol_error.schema.json",
+	"$id": "smartcraft/events/protocol_error.schema.json",
 	"title": "data von protocol_error: Eine Zeile vom Begleitprozess war kein gültiger Befehl und wurde verworfen",
 	"type": "object",
 	"required": [

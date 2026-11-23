@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/seal_lava.schema.json",
+	"$id": "smartcraft/commands/seal_lava.schema.json",
 	"title": "seal_lava: baut Lava im Umkreis mit nicht brennbaren Blöcken zu (Bruchstein, Erde, Netherrack), Quellen zuerst. Macht einen Weg über oder neben Lava sicher, statt sie zu umgehen. Brennbares (Holz) setzt die Figur nie neben Lava",
 	"args": {
 		"type": "object",

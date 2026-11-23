@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/flee.schema.json",
+	"$id": "smartcraft/commands/flee.schema.json",
 	"title": "flee: läuft weg, bis der Abstand erreicht ist. Ohne from flieht der Bot vor allen feindlichen Mobs im Umkreis von 24 Blöcken. Der Weg kommt aus der Wegfindung, führt also nicht in Lava oder über Abgründe. Sprintet, solange der Hunger es zulässt. Schaden bricht die Flucht nicht ab",
 	"args": {
 		"type": "object",

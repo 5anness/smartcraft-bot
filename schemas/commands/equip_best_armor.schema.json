@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/equip_best_armor.schema.json",
+	"$id": "smartcraft/commands/equip_best_armor.schema.json",
 	"title": "equip_best_armor: zieht für Kopf, Brust, Beine und Füße jeweils das Teil mit dem höchsten Rüstungswert an (Rüstung plus Härte) und legt einen Schild in die Zweithand, wenn dort keiner ist. Was vorher getragen wurde, kommt ins Inventar. Antwort kommt sofort",
 	"args": {
 		"type": "object",

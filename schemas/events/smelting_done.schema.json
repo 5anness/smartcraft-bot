@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/smelting_done.schema.json",
+	"$id": "smartcraft/events/smelting_done.schema.json",
 	"title": "data von smelting_done: Ein Ofen, den der Bot befüllt hat, ist fertig oder steht ohne Brennstoff still. Kommt einmal je Befüllung, solange der Ofen geladen ist",
 	"type": "object",
 	"required": [

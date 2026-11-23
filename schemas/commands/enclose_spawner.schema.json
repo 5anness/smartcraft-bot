@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/enclose_spawner.schema.json",
+	"$id": "smartcraft/commands/enclose_spawner.schema.json",
 	"title": "enclose_spawner: baut am nächsten Spawner (bis 16 Blöcke) einen geschlossenen Raum um Spawner und Bot: Wände in 2 Blöcken Abstand, 2 hoch, Dach darüber, etwa 60 Bausteine. Lohen erscheinen dann im Raum, können nicht wegfliegen und keine Feuerbälle von außen schießen; erledige sie mit attack. Vorhandene Wände der Festung zählen mit",
 	"args": {
 		"type": "object",

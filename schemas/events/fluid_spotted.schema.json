@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/fluid_spotted.schema.json",
+	"$id": "smartcraft/events/fluid_spotted.schema.json",
 	"title": "data von fluid_spotted: Eine Wasser- oder Lavaquelle oder Obsidian (auch weinendes, etwa ein zerfallenes Portal) ist neu in Sicht, ebenso ein Spawner, eine Lohe, ein Endportalrahmen oder (im Nether) eine Netherfestung bis 100 Blöcke (Prüfung alle 5 Sekunden, Umkreis 24 Blöcke, im Nether 32, 10 nach oben und unten). Kommt erneut, wenn die Art zwischendurch aus dem Umkreis verschwunden war. Priorität normal",
 	"type": "object",
 	"required": [

@@ -15,7 +15,7 @@ from test_movement import BOT, STAND, arena  # noqa: E402
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-equip.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-equip.log")
     server = TestServer(log)
     report = Report()
     try:
@@ -38,8 +38,8 @@ def slot_item(result, slot):
 
 def run(server, report):
     server.console("gamerule spawn_mobs false")
-    server.console("aiplayer events off")
-    server.console(f"aiplayer join {BOT}", wait=5)
+    server.console("smartcraft events off")
+    server.console(f"smartcraft join {BOT}", wait=5)
     arena(server, 300, 200)
     server.console(f"tp {BOT} 300.5 {STAND} 200.5", wait=0.8)
     server.console(f"clear {BOT}")

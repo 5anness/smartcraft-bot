@@ -19,7 +19,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import de.hannes.smartcraft.AiPlayerMod;
+import de.hannes.smartcraft.SmartCraftMod;
 import de.hannes.smartcraft.bot.BotManager;
 import de.hannes.smartcraft.bridge.BridgeServer;
 import de.hannes.smartcraft.debug.DebugLog;
@@ -66,7 +66,7 @@ import java.util.function.Predicate;
  * Läuft auf dem Server-Thread. Die Befehle und ihre Fehlergründe stehen in ARCHITECTURE.md.
  */
 public final class CommandDispatcher {
-	/** Wird nur über {@code /aiplayer locate on} gesetzt; nach einem Neustart wieder aus. */
+	/** Wird nur über {@code /smartcraft locate on} gesetzt; nach einem Neustart wieder aus. */
 	public static boolean locateEnabled = false;
 	/** Suchradius von {@code locate} in Chunks (1.600 Blöcke), so weit wie es {@code /locate} sinnvoll schafft. */
 	private static final int LOCATE_CHUNKS = 100;
@@ -151,7 +151,7 @@ public final class CommandDispatcher {
 		if (bridge.consumeClientJustConnected()) {
 			ServerPlayer bot = bots.bot();
 			JsonObject data = new JsonObject();
-			data.addProperty("mod_version", FabricLoader.getInstance().getModContainer(AiPlayerMod.MOD_ID)
+			data.addProperty("mod_version", FabricLoader.getInstance().getModContainer(SmartCraftMod.MOD_ID)
 					.map(mod -> mod.getMetadata().getVersion().getFriendlyString()).orElse("?"));
 			if (bot != null) {
 				data.addProperty("bot", bot.getGameProfile().name());
@@ -190,7 +190,7 @@ public final class CommandDispatcher {
 			return;
 		}
 		// Einstellungen gehen auch ohne Bot: Der Begleitprozess holt sie beim Verbinden (und setzt Startwerte aus seiner
-		// Umgebung, etwa AIPLAYER_TTS).
+		// Umgebung, etwa SMARTCRAFT_TTS).
 		if (command.name().equals("settings")) {
 			try {
 				de.hannes.smartcraft.bot.AiSettings.apply(command.args());
@@ -201,7 +201,7 @@ public final class CommandDispatcher {
 			JsonObject settings = de.hannes.smartcraft.bot.AiSettings.toJson();
 			String key = de.hannes.smartcraft.bot.AiSettings.pendingApiKey;
 			if (key != null) {
-				// Vor dem Verbinden gesetzt (/aiplayer apikey): einmal mitgeben; das Log maskiert ihn (EventBus).
+				// Vor dem Verbinden gesetzt (/smartcraft apikey): einmal mitgeben; das Log maskiert ihn (EventBus).
 				settings.addProperty("api_key", key);
 				de.hannes.smartcraft.bot.AiSettings.pendingApiKey = null;
 			}
@@ -696,7 +696,7 @@ public final class CommandDispatcher {
 	}
 
 	/**
-	 * Nächste Struktur über die Weltdaten, wie {@code /locate}. Nur nach {@code /aiplayer locate on}: Das ist
+	 * Nächste Struktur über die Weltdaten, wie {@code /locate}. Nur nach {@code /smartcraft locate on}: Das ist
 	 * Wissen, das ein Spieler nicht hat, also entscheidet der Mensch, ob die KI es bekommt. Schema: {@code locate}.
 	 */
 	/** {@code places}: das Ortsgedächtnis abfragen (Antwort sofort, keine Aktion). */

@@ -138,7 +138,7 @@ public final class DestroyCrystalsAction extends Action {
 			return skip(bot, "too_long");
 		}
 		if (phase != loggedPhase) {
-			de.hannes.smartcraft.AiPlayerMod.LOGGER.info("destroy_crystals phase " + loggedPhase + " -> " + phase + " pos=" + bot.blockPosition()
+			de.hannes.smartcraft.SmartCraftMod.LOGGER.info("destroy_crystals phase " + loggedPhase + " -> " + phase + " pos=" + bot.blockPosition()
 					+ " tower=" + tower + " onTower=" + onTower);
 			loggedPhase = phase;
 		}
@@ -279,7 +279,7 @@ public final class DestroyCrystalsAction extends Action {
 												.replace("block.minecraft.", "")).append(' ');
 							}
 						}
-						de.hannes.smartcraft.AiPlayerMod.LOGGER.info("destroy_crystals roof {} stage={} feet={} {}", why, bedStage, feet, around);
+						de.hannes.smartcraft.SmartCraftMod.LOGGER.info("destroy_crystals roof {} stage={} feet={} {}", why, bedStage, feet, around);
 						// Über dem Kopf fehlt ein Halt (End-Lauf 85): erst einen Block auf ein Geländer daneben setzen.
 						boolean propped = false;
 						for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.Plane.HORIZONTAL) {
@@ -336,7 +336,7 @@ public final class DestroyCrystalsAction extends Action {
 					}
 				}
 				if (!bot.level().getBlockState(bedPos).canBeReplaced() || !bot.level().getBlockState(bedPos.relative(out)).canBeReplaced()) {
-					de.hannes.smartcraft.AiPlayerMod.LOGGER.info("destroy_crystals no_bed_space feet=" + feet + " roofTop="
+					de.hannes.smartcraft.SmartCraftMod.LOGGER.info("destroy_crystals no_bed_space feet=" + feet + " roofTop="
 							+ bot.level().getBlockState(roofTop).getBlock() + " bedPos=" + bot.level().getBlockState(bedPos).getBlock());
 					return finishBed(bot, "no_bed_space");
 				}
@@ -380,12 +380,12 @@ public final class DestroyCrystalsAction extends Action {
 
 	private Outcome finishBed(ServerPlayer bot, String failure) {
 		if (placedBed != null && crystal != null) {
-			de.hannes.smartcraft.AiPlayerMod.LOGGER.info("destroy_crystals bed at " + placedBed + " still_bed="
+			de.hannes.smartcraft.SmartCraftMod.LOGGER.info("destroy_crystals bed at " + placedBed + " still_bed="
 					+ (bot.level().getBlockState(placedBed).getBlock() instanceof net.minecraft.world.level.block.BedBlock)
 					+ " crystal=" + crystal.blockPosition());
 		}
 		placedBed = null;
-		de.hannes.smartcraft.AiPlayerMod.LOGGER.info("destroy_crystals bed " + (failure == null ? "ok" : failure) + " crystal_alive="
+		de.hannes.smartcraft.SmartCraftMod.LOGGER.info("destroy_crystals bed " + (failure == null ? "ok" : failure) + " crystal_alive="
 				+ (crystal != null && crystal.isAlive()));
 		bedStage = 0;
 		bedMode = false;
@@ -705,7 +705,7 @@ public final class DestroyCrystalsAction extends Action {
 	}
 
 	private Outcome skip(ServerPlayer bot, String why) {
-		de.hannes.smartcraft.AiPlayerMod.LOGGER.info("destroy_crystals skip " + why + " pos=" + bot.blockPosition());
+		de.hannes.smartcraft.SmartCraftMod.LOGGER.info("destroy_crystals skip " + why + " pos=" + bot.blockPosition());
 		if (crystal != null && attempts.getOrDefault(crystal.getId(), 0) >= MAX_ATTEMPTS) {
 			JsonObject entry = new JsonObject();
 			entry.add("pos", GameJson.pos(crystal.blockPosition()));

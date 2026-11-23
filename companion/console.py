@@ -10,7 +10,7 @@ Befehl:  <name> [argumente]
                      pickup_items         pickup_items 12
                      equip stone_pickaxe  equip iron_helmet kopf
                      drop dirt            drop dirt 5
-                     craft stick 4        recipe iron_pickaxe   locate fortress (nur nach /aiplayer locate on)
+                     craft stick 4        recipe iron_pickaxe   locate fortress (nur nach /smartcraft locate on)
                      smelt raw_iron 3     smelt raw_iron 3 coal     smelt_collect
                      place_utility werkbank    place_utility ofen 10 64 -3
                      store cobblestone 32      store all      take coal 8
@@ -23,7 +23,7 @@ Befehl:  <name> [argumente]
          Allgemein:  <name> {"argument": wert}   z. B.  goto {"pos": [10, 64, -3], "tolerance": 0}
 Beenden: quit oder Strg+C
 
-Die Konsole verbindet sich mit dem Mod (127.0.0.1, Port aus AIPLAYER_PORT, sonst 25599)
+Die Konsole verbindet sich mit dem Mod (127.0.0.1, Port aus SMARTCRAFT_PORT, sonst 25599)
 und versucht es alle zwei Sekunden erneut, solange das Spiel nicht läuft.
 """
 
@@ -36,7 +36,7 @@ import threading
 import time
 
 HOST = "127.0.0.1"
-PORT = int(os.environ.get("AIPLAYER_PORT", "25599"))
+PORT = int(os.environ.get("SMARTCRAFT_PORT", "25599"))
 PROTOCOL_VERSION = 1
 RETRY_SECONDS = 2
 

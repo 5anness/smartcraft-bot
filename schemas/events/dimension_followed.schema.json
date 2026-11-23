@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/dimension_followed.schema.json",
+	"$id": "smartcraft/events/dimension_followed.schema.json",
 	"title": "data von dimension_followed: Dimension Follow ist an, der verfolgte Spieler hat die Dimension gewechselt, und der Mod hat den Bot neben ihn teleportiert (die laufende Aktion wurde angehalten). Erst look, dann hier weitermachen oder über ein Portal zurück. Priorität hoch",
 	"type": "object",
 	"required": [

@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/use.schema.json",
+	"$id": "smartcraft/commands/use.schema.json",
 	"title": "use: Rechtsklick wie ein Spieler, mit einem Item aus dem Inventar (item) oder leerer Hand. Mit pos auf einen Block: Feuerzeug (Netherportal anzünden: auf die Innenseite des Obsidianrahmens unten), Tür, Falltür, Zauntor, Hebel, Knopf, Knochenmehl, Hacke, Samen pflanzen, Enderauge in einen Endportalrahmen, Behälter öffnen und Inhalt ansehen. Mit entity auf ein Wesen: Kuh melken (bucket), Schaf scheren (shears), Tiere füttern/züchten (wheat, seeds, carrot), Boot oder Lore besteigen, Leine. Ohne pos und entity in die Luft, ausgerichtet auf look_at: Enderperle, Enderauge, Bogen/Dreizack (spannt und schießt), Trank trinken. Läuft vorher in Reichweite. Lava gießt nur bucket aus Enderperle nur mit look_at auf festen Boden ohne Lava (sonst unsafe_landing).",
 	"args": {
 		"type": "object",

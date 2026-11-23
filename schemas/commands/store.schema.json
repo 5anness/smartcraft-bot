@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/store.schema.json",
+	"$id": "smartcraft/commands/store.schema.json",
 	"title": "store: legt Items in die nächste Truhe (läuft selbst hin, auch zu einer gemerkten). Teilerfolg ist ok mit stopped_because. Mit pos jeder Behälter an dieser Stelle",
 	"args": {
 		"type": "object",

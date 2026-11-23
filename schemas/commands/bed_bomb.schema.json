@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/bed_bomb.schema.json",
+	"$id": "smartcraft/commands/bed_bomb.schema.json",
 	"title": "bed_bomb: nur im End, nach destroy_crystals, braucht Betten. Besiegt den Drachen mit EINEM Befehl: wartet am Boden etwa 18 Blöcke vom Brunnen; hockt der Drache, geht er 3 Blöcke vor den Kopf, stellt eine Wand vor sich, setzt ein Bett unter den Kopf und sprengt es (im End explodieren Betten), so lange er hockt. Endet mit dragon_dead, no_beds (dann fight_dragon) oder health_low (essen, dann wieder bed_bomb). Ergebnis: dragon_health, beds_used",
 	"args": {
 		"type": "object",

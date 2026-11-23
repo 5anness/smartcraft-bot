@@ -257,7 +257,7 @@ final class LavaEscape {
 		bot.setXRot((float) -Math.toDegrees(pitch));
 		de.hannes.smartcraft.skill.Inv.hold(bot, slot);
 		bot.gameMode.useItem(bot, bot.level(), bot.getMainHandItem(), net.minecraft.world.InteractionHand.MAIN_HAND);
-		de.hannes.smartcraft.AiPlayerMod.LOGGER.info("lava_escape pearl to " + target.toShortString() + " from " + bot.blockPosition().toShortString());
+		de.hannes.smartcraft.SmartCraftMod.LOGGER.info("lava_escape pearl to " + target.toShortString() + " from " + bot.blockPosition().toShortString());
 		return true;
 	}
 

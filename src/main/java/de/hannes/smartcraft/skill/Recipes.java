@@ -148,7 +148,7 @@ public final class Recipes {
 
 	/** Name einer Zutat: das Tag ({@code #minecraft:planks}), wenn sie eins ist, sonst das Item. */
 	public static String name(Ingredient ingredient) {
-		return ((IngredientAccessor) (Object) ingredient).aiplayer$values().unwrapKey()
+		return ((IngredientAccessor) (Object) ingredient).smartcraft$values().unwrapKey()
 				.map(tag -> "#" + tag.location())
 				.orElseGet(() -> ingredient.items().findFirst().map(holder -> id(holder.value())).orElse("?"));
 	}

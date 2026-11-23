@@ -2,20 +2,20 @@
 
 Aufruf:  python companion/agent.py ["Ziel in Worten"]
 
-Der Prozess verbindet sich mit dem Mod (127.0.0.1, Port aus AIPLAYER_PORT, sonst 25599) und wartet
-auf ein Ziel: entweder als Argument beim Start oder im Spiel mit `/aiplayer goal <text>`.
+Der Prozess verbindet sich mit dem Mod (127.0.0.1, Port aus SMARTCRAFT_PORT, sonst 25599) und wartet
+auf ein Ziel: entweder als Argument beim Start oder im Spiel mit `/smartcraft goal <text>`.
 Für jedes Ziel läuft eine Schleife: Das Modell wählt ein Tool, der Mod führt es aus, das Ergebnis
 geht zurück an das Modell, bis das Modell ohne Tool antwortet (Ziel beendet).
 
 - Jeder Befehl aus `schemas/commands/` ist ein Tool; dazu `remember` (Notizblock) und `wait`.
 - Der Systemprompt steht in `companion/prompts/system.md`.
 - Die Kosten werden aus den gemeldeten Tokens berechnet und angezeigt. Ein Kostenlimit pro Ziel
-  gibt es nur, wenn AIPLAYER_COST_LIMIT gesetzt ist.
+  gibt es nur, wenn SMARTCRAFT_COST_LIMIT gesetzt ist.
 - Schreibt jemand im Spielchat, liest die KI mit: Im Leerlauf beginnt damit ein Gespräch, während
   eines Ziels kommt die Nachricht mit dem nächsten Ergebnis beim Modell an.
 - Was der Bot im Chat schreibt, liest der Prozess auch laut vor (companion/speech.py).
-- `/aiplayer tts on | off` schaltet die Sprachausgabe um.
-- `/aiplayer pause | resume | stop` im Spiel halten die Schleife an oder beenden das Ziel.
+- `/smartcraft tts on | off` schaltet die Sprachausgabe um.
+- `/smartcraft pause | resume | stop` im Spiel halten die Schleife an oder beenden das Ziel.
 - Nähert sich während einer längeren Aktion ein Gegner oder wird das Leben knapp, hält der
   Prozess die Aktion an und gibt dem Modell die Entscheidung.
 
@@ -57,25 +57,23 @@ load_key_file()
 
 
 def save_key(key):
-    """Neuer Schlüssel aus /aiplayer apikey: in api_key.txt speichern (steht in .gitignore) und sofort benutzen."""
+    """Neuer Schlüssel aus /smartcraft apikey: in api_key.txt speichern (steht in .gitignore) und sofort benutzen."""
     with open(KEY_FILE, "w", encoding="utf-8") as file:
-        file.write("# Anthropic-API-Schlüssel, gesetzt mit /aiplayer apikey. Nie committen.
-" + key.strip() + "
-")
+        file.write("# Anthropic-API-Schlüssel, gesetzt mit /smartcraft apikey. Nie committen.\n" + key.strip() + "\n")
     os.environ["ANTHROPIC_API_KEY"] = key.strip()
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROJECT = os.path.dirname(HERE)
 HOST = "127.0.0.1"
-PORT = int(os.environ.get("AIPLAYER_PORT", "25599"))
+PORT = int(os.environ.get("SMARTCRAFT_PORT", "25599"))
 
-MODEL = os.environ.get("AIPLAYER_MODEL", "claude-haiku-5-5")
-EFFORT = os.environ.get("AIPLAYER_EFFORT", "medium")
+MODEL = os.environ.get("SMARTCRAFT_MODEL", "claude-haiku-5-5")
+EFFORT = os.environ.get("SMARTCRAFT_EFFORT", "medium")
 # Kostenlimit pro Ziel in Dollar; 0 heißt kein Limit.
-COST_LIMIT = float(os.environ.get("AIPLAYER_COST_LIMIT", "0"))
+COST_LIMIT = float(os.environ.get("SMARTCRAFT_COST_LIMIT", "0"))
 # 0 = unbegrenzt (Standard, Wunsch von Hannes: bis zum Ziel arbeiten); eine Zahl setzt eine Obergrenze pro Ziel.
-MAX_STEPS = int(os.environ.get("AIPLAYER_MAX_STEPS", "0"))
-USE_FALLBACKS = os.environ.get("AIPLAYER_FALLBACKS", "1") != "0"
+MAX_STEPS = int(os.environ.get("SMARTCRAFT_MAX_STEPS", "0"))
+USE_FALLBACKS = os.environ.get("SMARTCRAFT_FALLBACKS", "1") != "0"
 MAX_TOKENS = 8000
 
 # Dollar pro Million Tokens: (Eingabe, Ausgabe). Cache-Lesen 10 %, Cache-Schreiben 125 % der Eingabe.
@@ -144,7 +142,7 @@ MAX_REVIVES = 3
 # So viele Orte erfolgloser Suche bekommt das Modell mit.
 MAX_SEARCHED = 12
 # Herzschlag: Alle so viele Schritte erinnert der Prozess das Modell an das Ziel.
-HEARTBEAT_STEPS = int(os.environ.get("AIPLAYER_HEARTBEAT_STEPS", "15"))
+HEARTBEAT_STEPS = int(os.environ.get("SMARTCRAFT_HEARTBEAT_STEPS", "15"))
 # So viele Schritte nur warten oder schauen in Folge gelten als Leerlauf; dann kommt ein Anstoß.
 IDLE_STEPS = 4
 IDLE_TOOLS = {"wait", "look", "inventory"}
@@ -167,7 +165,7 @@ IDLE_TEXT = ("[Herzschlag] {steps} Schritte nur gewartet oder geschaut. Ziel: {g
 # Plaudern: Nach so vielen Schritten ohne `chat` erinnert der Prozess ans Reden (0 schaltet ab).
 # Chat des Bots (Tokens sparen): "plans" (Standard) nur kurze, witzige Ansagen der Pläne, "full" gesprächig mit Humor
 # und [Publikum]-Anstößen, "off" gar kein Chat.
-# Talkmode (/aiplayer talkmode): wie oft der Bot von sich aus chattet. Zentral einstellbar:
+# Talkmode (/smartcraft talkmode): wie oft der Bot von sich aus chattet. Zentral einstellbar:
 # nudge_steps = stille Modellschritte bis zum [Publikum]-Anstoß (0 = nie), min_gap = Sekunden zwischen zwei eigenen
 # Chatnachrichten (Spam-Schutz; Antworten auf eine Nachricht an den Bot gehen immer), highlights = Funde kommentieren.
 TALK_SETTINGS = {
@@ -175,7 +173,7 @@ TALK_SETTINGS = {
     "medium": {"nudge_steps": 6, "min_gap": 25, "highlights": True},
     "hard": {"nudge_steps": 2, "min_gap": 8, "highlights": True},
 }
-# Humor (/aiplayer humor): Stil der Chat- und Sprachausgabe, unabhängig vom Talkmode.
+# Humor (/smartcraft humor): Stil der Chat- und Sprachausgabe, unabhängig vom Talkmode.
 HUMOR_NOTES = {
     "light": "dezenter Humor: sachlich mit gelegentlich einer lockeren Bemerkung.",
     "medium": "regelmäßig Witze und Wortspiele, trocken und selbstironisch wie ein Let's-Player.",
@@ -191,8 +189,8 @@ TALK_NOTES = {
 REPLY_WINDOW = 60
 SETTINGS_TEXT = ("[Einstellung] Humor {humor}: {humor_note} Talkmode {talk}: {talk_note} Das gilt ab jetzt für jedes `chat`, "
                  "bis ein neuer Hinweis kommt.")
-CHAT_MODE = {"1": "full", "0": "off"}.get(os.environ.get("AIPLAYER_CHAT", "plans"), os.environ.get("AIPLAYER_CHAT", "plans"))
-# Startwert des Talkmode aus AIPLAYER_CHAT (plans = light, full = hard); danach gilt /aiplayer talkmode.
+CHAT_MODE = {"1": "full", "0": "off"}.get(os.environ.get("SMARTCRAFT_CHAT", "plans"), os.environ.get("SMARTCRAFT_CHAT", "plans"))
+# Startwert des Talkmode aus SMARTCRAFT_CHAT (plans = light, full = hard); danach gilt /smartcraft talkmode.
 START_TALKMODE = {"full": "hard", "plans": "light"}.get(CHAT_MODE, "light")
 CHAT_NOTES = {
     "plans": ("\n\n## Chat: Humor und Talkmode\n\nWie oft du von dir aus im Chat schreibst (Talkmode) und wie witzig "
@@ -416,7 +414,7 @@ class Agent:
         self.use_effort = bool(EFFORT)
         self.paused = False
         self.pending_goal = None
-        # Wer das wartende Ziel in den Chat geschrieben hat; None bei /aiplayer goal.
+        # Wer das wartende Ziel in den Chat geschrieben hat; None bei /smartcraft goal.
         self.pending_from = None
         self.busy = False
         self.chat_log = deque(maxlen=CHAT_HISTORY)
@@ -457,7 +455,7 @@ class Agent:
         # gegart im Ofen, der Bot hielt sich für essenlos und sank in der Hütte auf 2,4 Leben.
         if not hasattr(self, "food_in_furnace"):
             self.food_in_furnace = None
-        # Das letzte Ziel aus /aiplayer goal; nach einem Gespräch macht der Bot damit weiter, bis /aiplayer stop.
+        # Das letzte Ziel aus /smartcraft goal; nach einem Gespräch macht der Bot damit weiter, bis /smartcraft stop.
         if not hasattr(self, "main_goal"):
             self.main_goal = None
         # Wonach das Modell mit search_for sucht (water, lava); ein Fund hält die laufende Aktion an.
@@ -516,7 +514,7 @@ class Agent:
             action = data.get("action")
             if action == "pause":
                 self.paused = True
-                print("  [pausiert, weiter mit /aiplayer resume]", flush=True)
+                print("  [pausiert, weiter mit /smartcraft resume]", flush=True)
             elif action == "resume":
                 self.paused = False
                 print("  [weiter]", flush=True)
@@ -539,7 +537,7 @@ class Agent:
         print("  [API-Schlüssel übernommen und in companion/api_key.txt gespeichert]", flush=True)
 
     def apply_settings(self, data):
-        """Einstellungen aus dem Mod übernehmen (/aiplayer tts|humor|talkmode|streamer); sofort wirksam."""
+        """Einstellungen aus dem Mod übernehmen (/smartcraft tts|humor|talkmode|streamer); sofort wirksam."""
         if "tts" in data:
             SPEAKER.set_enabled(bool(data["tts"]))
         humor = data.get("humor", self.humor)
@@ -558,9 +556,9 @@ class Agent:
     def sync_settings(self):
         """Beim Verbinden: Startwerte aus der Umgebung an den Mod, dann seine Einstellungen übernehmen."""
         args = {}
-        if "AIPLAYER_TTS" in os.environ:
-            args["tts"] = os.environ["AIPLAYER_TTS"] == "1"
-        if "AIPLAYER_CHAT" in os.environ:
+        if "SMARTCRAFT_TTS" in os.environ:
+            args["tts"] = os.environ["SMARTCRAFT_TTS"] == "1"
+        if "SMARTCRAFT_CHAT" in os.environ:
             args["talkmode"] = START_TALKMODE
         try:
             result, _ = self.command("settings", args, [], timeout=10, may_interrupt=False)
@@ -969,12 +967,12 @@ class Agent:
             except GoalEnded as ended:
                 outcome = f"beendet: {ended}"
             except anthropic.AuthenticationError:
-                outcome = "API-Schlüssel fehlt oder ist ungültig (/aiplayer apikey <key> im Spiel, ANTHROPIC_API_KEY setzen oder `ant auth login`)"
+                outcome = "API-Schlüssel fehlt oder ist ungültig (/smartcraft apikey <key> im Spiel, ANTHROPIC_API_KEY setzen oder `ant auth login`)"
             except TypeError as error:
                 # Ohne Schlüssel wirft das SDK schon vor dem Senden einen TypeError.
                 if not is_missing_key(error):
                     raise
-                outcome = "Kein API-Schlüssel gefunden (/aiplayer apikey <key> im Spiel, ANTHROPIC_API_KEY setzen oder `ant auth login`)"
+                outcome = "Kein API-Schlüssel gefunden (/smartcraft apikey <key> im Spiel, ANTHROPIC_API_KEY setzen oder `ant auth login`)"
             except anthropic.RateLimitError:
                 outcome = "Ratenlimit der API erreicht, später noch einmal versuchen"
             except anthropic.APIStatusError as error:
@@ -991,7 +989,7 @@ class Agent:
         pending.clear()
         look, _ = self.command("look", {}, pending, timeout=15, may_interrupt=False)
         if look.get("status") != "ok":
-            return "kein KI-Spieler im Spiel: erst /aiplayer join"
+            return "kein KI-Spieler im Spiel: erst /smartcraft join"
         self.last_pos = look.get("data", {}).get("pos")
         self.world = world_key(look.get("data", {}))
         notes = load_notes(self.world)
@@ -1107,7 +1105,7 @@ class Agent:
                     print(f"  [zurück zum Ziel: {self.main_goal}]", flush=True)
                     self.pending_goal = self.main_goal
                 continue
-            print("Warte auf ein Ziel: im Spiel /aiplayer goal <text> oder einfach in den Chat schreiben", flush=True)
+            print("Warte auf ein Ziel: im Spiel /smartcraft goal <text> oder einfach in den Chat schreiben", flush=True)
             while not self.pending_goal:
                 self.handle_control(self.bridge.events.get())
 

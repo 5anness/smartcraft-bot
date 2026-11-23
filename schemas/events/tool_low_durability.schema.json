@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/tool_low_durability.schema.json",
+	"$id": "smartcraft/events/tool_low_durability.schema.json",
 	"title": "data von tool_low_durability: Das Werkzeug in der Hand hat höchstens 10 % Haltbarkeit übrig. Kommt einmal je Werkzeug",
 	"type": "object",
 	"required": [

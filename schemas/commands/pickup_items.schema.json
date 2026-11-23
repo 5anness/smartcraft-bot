@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/pickup_items.schema.json",
+	"$id": "smartcraft/commands/pickup_items.schema.json",
 	"title": "pickup_items: sammelt herumliegende Items im Umkreis ein",
 	"args": {
 		"type": "object",

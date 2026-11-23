@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * Einstiegspunkt. Der Mod arbeitet serverseitig: im integrierten Server einer
  * Einzelspieler-/LAN-Welt oder auf einem lokalen Dedicated Server.
  */
-public class AiPlayerMod implements ModInitializer {
+public class SmartCraftMod implements ModInitializer {
 	public static final String MOD_ID = "smartcraft";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 

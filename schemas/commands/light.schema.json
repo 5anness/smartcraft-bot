@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/light.schema.json",
+	"$id": "smartcraft/commands/light.schema.json",
 	"title": "light: setzt eine Fackel. Ohne pos auf ein freies Feld direkt neben dem Bot, sonst an die Stelle (läuft in Reichweite). Hat er keine Fackel, aber Kohle oder Holzkohle und einen Stock, craftet er vorher vier",
 	"args": {
 		"type": "object",

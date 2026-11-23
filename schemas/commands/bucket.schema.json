@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/bucket.schema.json",
+	"$id": "smartcraft/commands/bucket.schema.json",
 	"title": "bucket: füllt einen leeren Eimer an einer Lava- oder Wasserquelle (fill) oder gießt Lava oder Wasser aus (empty). Läuft vorher in Reichweite. fill ohne pos sucht die nächste erreichbare Quelle der Flüssigkeit. Bei empty darf pos auch ein fester Block sein, dann landet die Flüssigkeit oben drauf. Obsidian: empty mit fluid water und pos = eine Lavaquelle gießt das Wasser über (oder neben) die Quelle, die Quelle wird zu Obsidian (lava_now); danach das Wasser mit fill an block_pos wieder aufnehmen. Für Lava sucht er sich selbst einen sicheren Standplatz: nie unterhalb der Stelle, auf gleicher Höhe mindestens 4 Blöcke entfernt",
 	"args": {
 		"type": "object",

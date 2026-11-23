@@ -17,7 +17,7 @@ Z = 600
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-tools.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-tools.log")
     server = TestServer(log)
     report = Report()
     try:
@@ -48,8 +48,8 @@ def failed(result, reason):
 def run(server, report):
     server.console("gamerule spawn_mobs false")
     server.console("gamerule fire_spread_radius_around_player 0")
-    server.console("aiplayer events off")
-    server.console(f"aiplayer join {BOT}", wait=5)
+    server.console("smartcraft events off")
+    server.console(f"smartcraft join {BOT}", wait=5)
 
     # --- Obsidian: Wasser auf eine Lavaquelle, Wasser zurück, Obsidian abbauen
     x = 1000
@@ -247,7 +247,7 @@ def run(server, report):
     report.check("Bei Lava wird der See (16) gemeldet, nicht der nahe Einzelblock",
                  lava.get("size") == 16 and lava.get("pos", [0])[0] >= x + 15, str(lava))
     mark = server.output_mark()
-    server.console("aiplayer status", wait=1.0)
+    server.console("smartcraft status", wait=1.0)
     print("   ", (server.find_in_output("Wahrnehmung", mark) or server.find_in_output("µs", mark) or "").strip()[-120:])
 
     # --- Netherfestung in Sicht: Bot neben eine Festung stellen, look meldet sie

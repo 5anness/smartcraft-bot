@@ -22,7 +22,7 @@ LOGS_WANTED = 8
 
 def main():
     runs = int(sys.argv[1]) if len(sys.argv) > 1 else 4
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-forest.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-forest.log")
     server = TestServer(log, world=WORLD, seed=SEED)
     report = Report()
     try:
@@ -52,8 +52,8 @@ def run(server, report, runs):
     server.console("gamerule spawn_mobs false")
     server.console("time set noon")
     server.console("weather clear")
-    server.console("aiplayer events off")
-    server.console(f"aiplayer join {BOT}", wait=5)
+    server.console("smartcraft events off")
+    server.console(f"smartcraft join {BOT}", wait=5)
     server.drain(0.5)
 
     for number in range(runs):

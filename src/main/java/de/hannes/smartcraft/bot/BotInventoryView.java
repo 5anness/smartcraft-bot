@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 /**
- * {@code /aiplayer inventar}: Das Inventar des Bots als Doppelkiste, live mit dem echten Inventar verbunden. Reihe 1: Helm,
+ * {@code /smartcraft inventar}: Das Inventar des Bots als Doppelkiste, live mit dem echten Inventar verbunden. Reihe 1: Helm,
  * Brust, Hose, Schuhe, zweite Hand; Reihe 2: dunkle Glasscheiben als Trenner; Reihen 3–6: die 36 normalen Plätze (Reihe 3 =
  * Schnellleiste). Darunter das eigene Inventar des Spielers. Vanilla-Doppelkiste, geht ohne Mod beim Client. Wunsch von Hannes.
  */

@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/inventory.schema.json",
+	"$id": "smartcraft/commands/inventory.schema.json",
 	"title": "inventory: das vollständige Inventar. Nur auf Abruf, weil es viele Tokens kostet",
 	"args": {
 		"type": "object",

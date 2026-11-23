@@ -29,13 +29,13 @@ python companion/agent.py                # Begleitprozess starten
 Im Spiel:
 
 ```
-/aiplayer join                  # die KI tritt bei
-/aiplayer apikey sk-ant-...     # API-Schlüssel festlegen (wird in companion/api_key.txt gespeichert)
-/aiplayer goal Baue eine Steinspitzhacke
+/smartcraft join                  # die KI tritt bei
+/smartcraft apikey sk-ant-...     # API-Schlüssel festlegen (wird in companion/api_key.txt gespeichert)
+/smartcraft goal Baue eine Steinspitzhacke
 ```
 
-Weitere Befehle: `/aiplayer pause|resume|stop`, `/aiplayer info`, `/aiplayer stats on|off`, `/aiplayer inventar`,
-`/aiplayer leave` – vollständige Liste in [CLAUDE.md](CLAUDE.md).
+Weitere Befehle: `/smartcraft pause|resume|stop`, `/smartcraft info`, `/smartcraft stats on|off`, `/smartcraft inventar`,
+`/smartcraft leave` – vollständige Liste in [CLAUDE.md](CLAUDE.md).
 
 ## Dokumentation
 
@@ -47,7 +47,7 @@ Weitere Befehle: `/aiplayer pause|resume|stop`, `/aiplayer info`, `/aiplayer sta
 ## Hinweise
 
 - Nur für Einzelspieler und lokale Testwelten gedacht, nicht für öffentliche Server.
-- API-Aufrufe kosten Geld; ein Limit lässt sich mit `AIPLAYER_COST_LIMIT` setzen.
+- API-Aufrufe kosten Geld; ein Limit lässt sich mit `SMARTCRAFT_COST_LIMIT` setzen.
 - Den API-Schlüssel nie committen (`companion/api_key.txt` steht in `.gitignore`).
 
 ## Lizenz

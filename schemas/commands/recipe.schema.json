@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/recipe.schema.json",
+	"$id": "smartcraft/commands/recipe.schema.json",
 	"title": "recipe: nennt das Rezept eines Items und was davon im Inventar fehlt, ohne etwas herzustellen. Antwort kommt sofort",
 	"args": {
 		"type": "object",

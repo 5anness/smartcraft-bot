@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/collect.schema.json",
+	"$id": "smartcraft/commands/collect.schema.json",
 	"title": "collect: sucht die nächsten Blöcke einer Art im Umkreis, läuft hin, baut sie ab und sammelt die Beute ein, bis die Anzahl erreicht ist oder keiner mehr erreichbar ist. Bei Erz baut er die angefangene Ader ganz ab (vein_extra). Nach 8 unerreichbaren Blöcken nacheinander gibt er auf. Hängt ein Block zu hoch (obere Stämme eines Baums), baut sich der Bot mit Blöcken aus dem Inventar hoch und baut den Turm danach wieder ab. Bei Holz und Stein erlegt er in der Oberwelt nebenbei Nutztiere bis 16 Blöcke (animals_killed) und hebt die Beute auf",
 	"args": {
 		"type": "object",

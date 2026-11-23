@@ -346,7 +346,7 @@ def main():
     args = [arg for arg in sys.argv[1:] if not arg.startswith("--")]
     runs = int(args[0]) if args else 3
     with_camera = "--kamera" in sys.argv
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-course.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-course.log")
     server = TestServer(log, world=WORLD, seed=SEED, camera=with_camera)
     report = Report()
     deaths = collections.Counter()
@@ -357,8 +357,8 @@ def main():
             server.camera.start()
         server.console("gamerule spawn_mobs true")
         server.console("difficulty normal")
-        server.console("aiplayer events off")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console("smartcraft events off")
+        server.console(f"smartcraft join {BOT}", wait=5)
         server.drain(0.5)
         for number in range(runs):
             passed, detail, run = play(server, number)

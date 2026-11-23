@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/goto_entity.schema.json",
+	"$id": "smartcraft/commands/goto_entity.schema.json",
 	"title": "goto_entity: läuft zu einem Spieler oder Wesen und endet, sobald der Abstand erreicht ist. Folgt dem Ziel, wenn es sich bewegt",
 	"args": {
 		"type": "object",

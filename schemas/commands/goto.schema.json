@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/goto.schema.json",
+	"$id": "smartcraft/commands/goto.schema.json",
 	"title": "goto: läuft zu einer Blockposition. Findet selbst den Weg: springt einen Block hoch, umgeht Hindernisse, schwimmt, klettert Leitern, geht über Platten und Treppen, fällt höchstens 3 Blöcke, meidet Lava und Feuer. Zäune, Zauntore und Türen sind Hindernisse. Ohne allow_dig/allow_place ändert er nichts an der Welt",
 	"args": {
 		"type": "object",

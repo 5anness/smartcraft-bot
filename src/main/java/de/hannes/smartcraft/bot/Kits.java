@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Ausrüstungspakete für Tests: {@code /aiplayer kit nether} gibt dem Bot alles, um ins Nether zu kommen und dort zu
+ * Ausrüstungspakete für Tests: {@code /smartcraft kit nether} gibt dem Bot alles, um ins Nether zu kommen und dort zu
  * bestehen, Obsidian für das Portal eingeschlossen. Rüstung und Schild legt er gleich an.
  */
 final class Kits {
@@ -28,7 +28,7 @@ final class Kits {
 			"cobblestone 64", "cobblestone 64", "dirt 64", "water_bucket", "bucket", "crafting_table", "furnace",
 			"torch 64", "stick 16", "oak_planks 32", "iron_ingot 16", "coal 32", "gold_ingot 16");
 
-	/** Für {@code /aiplayer kit end}: alles, was {@code end_missing} verlangt, dazu Reserve (Wunsch von Hannes, 04.11.2026). */
+	/** Für {@code /smartcraft kit end}: alles, was {@code end_missing} verlangt, dazu Reserve (Wunsch von Hannes, 04.11.2026). */
 	private static final List<String> END_ITEMS = List.of(
 			"diamond_sword", "diamond_pickaxe", "diamond_pickaxe", "bow", "arrow 64", "arrow 64",
 			"ender_eye 18", "white_bed 16", "cooked_beef 64", "golden_apple 8", "cobblestone 64", "cobblestone 64",

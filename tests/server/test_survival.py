@@ -15,14 +15,14 @@ from test_movement import BOT, FLOOR, STAND, arena  # noqa: E402
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-survival.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-survival.log")
     server = TestServer(log)
     report = Report()
     try:
         server.console("gamerule spawn_mobs false")
         server.console("difficulty normal")
-        server.console("aiplayer events off")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console("smartcraft events off")
+        server.console(f"smartcraft join {BOT}", wait=5)
         eating(server, report)
         armor(server, report)
         fighting(server, report)

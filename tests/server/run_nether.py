@@ -2,7 +2,7 @@
 
 Aufruf:  python tests/server/run_nether.py <Laufnummer> [Stunden, Standard 1]
 
-- Ausrüstung und Start wie in run_dragon.py (neue Welt `ai_nether_<n>`, `/aiplayer locate on`).
+- Ausrüstung und Start wie in run_dragon.py (neue Welt `ai_nether_<n>`, `/smartcraft locate on`).
 - Erfolg: Bot in der Oberwelt, nie gestorben, mindestens 7 Lohenruten im Inventar.
 - Gescheitert: Tod (Lauf endet sofort), Zeit um oder Begleitprozess beendet.
 - Ergebnis als eine Zeile in run/logs/nether_results.log, Verlauf in run/logs/nether_<n>.log und nether_<n>_agent.log.
@@ -60,13 +60,13 @@ def main():
     agent = None
     try:
         server.console("difficulty normal")
-        server.console(f"aiplayer join {BOT}", wait=6)
+        server.console(f"smartcraft join {BOT}", wait=6)
         for _ in range(30):
             answer, _ = server.run("inventory", timeout=10)
             if answer and answer.get("status") == "ok":
                 break
             time.sleep(2)
-        server.console("aiplayer locate on")
+        server.console("smartcraft locate on")
         server.console(f"clear {BOT}")
         skip = {"dirt 64", "oak_planks 32", "stick 16", "iron_ingot 16", "coal 32"}
         for item in [i for i in ITEMS if i not in skip] + EXTRA:
@@ -84,7 +84,7 @@ def main():
         server.console(f"execute in minecraft:the_nether run spreadplayers 0 0 0 16 under 100 false {BOT}", wait=4)
         log(f"Lauf {run}: Welt {world} (Seed {seed}), Start: {where(server)}")
 
-        env = {**os.environ, "AIPLAYER_PORT": str(PORT), "AIPLAYER_TTS": "0", "AIPLAYER_MAX_STEPS": "3000",
+        env = {**os.environ, "SMARTCRAFT_PORT": str(PORT), "SMARTCRAFT_TTS": "0", "SMARTCRAFT_MAX_STEPS": "3000",
                "PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1"}
         agent_out = open(os.path.join(PROJECT, "run", "logs", f"nether_{run}_agent.log"), "w", encoding="utf-8")
         agent = subprocess.Popen([sys.executable, os.path.join(PROJECT, "companion", "agent.py"), GOAL],

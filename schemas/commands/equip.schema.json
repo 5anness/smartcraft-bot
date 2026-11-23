@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/equip.schema.json",
+	"$id": "smartcraft/commands/equip.schema.json",
 	"title": "equip: nimmt ein Item in die Hand oder legt es an",
 	"args": {
 		"type": "object",

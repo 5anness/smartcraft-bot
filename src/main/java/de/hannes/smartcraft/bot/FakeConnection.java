@@ -127,7 +127,7 @@ public final class FakeConnection extends Connection {
 
 	@Override
 	public String getLoggableAddress(boolean logIps) {
-		return "aiplayer-bot";
+		return "smartcraft-bot";
 	}
 
 	@Override

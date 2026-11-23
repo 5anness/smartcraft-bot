@@ -2,7 +2,7 @@
 
 Aufruf:  python tests/server/run_full.py <Laufnummer> [Stunden, Standard 8] [--ohne-locate] [--mit-nacht]
 
-- Neue Welt `ai_kit_<n>`, Start mit `/aiplayer kit nether` ohne Obsidian, Ziel Enderdrache.
+- Neue Welt `ai_kit_<n>`, Start mit `/smartcraft kit nether` ohne Obsidian, Ziel Enderdrache.
 - Standard: dauerhaft Mittag (Zeit angehalten), damit keine Nachtpausen in Hütten anfallen (Gesamtlauf 3: grob ein Viertel
   der Zeit); `--mit-nacht` lässt den Tag-Nacht-Wechsel an.
 - Ein Tod beendet den Lauf nicht (der Begleitprozess schickt die KI bis zu 3-mal zurück ans Ziel); Tode werden gezählt.
@@ -62,20 +62,20 @@ def main():
         if always_day:
             server.console("time set noon")
             server.console("gamerule advance_time false")
-        server.console(f"aiplayer join {BOT}", wait=6)
+        server.console(f"smartcraft join {BOT}", wait=6)
         for _ in range(30):
             answer, _ = server.run("inventory", timeout=10)
             if answer and answer.get("status") == "ok":
                 break
             time.sleep(2)
-        server.console("aiplayer locate on" if locate else "aiplayer locate off")
+        server.console("smartcraft locate on" if locate else "smartcraft locate off")
         server.console(f"clear {BOT}", wait=0.5)
-        server.console("aiplayer kit nether", wait=1)
+        server.console("smartcraft kit nether", wait=1)
         server.console(f"clear {BOT} minecraft:obsidian", wait=0.5)
         log(f"Lauf {run}: Welt {world} (Seed {seed}), Start: {where(server)}, locate {'an' if locate else 'aus'}, "
             f"{'immer Tag' if always_day else 'mit Nacht'}")
 
-        env = {**os.environ, "AIPLAYER_PORT": str(PORT), "AIPLAYER_TTS": "0", "AIPLAYER_MAX_STEPS": "20000",
+        env = {**os.environ, "SMARTCRAFT_PORT": str(PORT), "SMARTCRAFT_TTS": "0", "SMARTCRAFT_MAX_STEPS": "20000",
                "PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1"}
         agent_out = open(os.path.join(PROJECT, "run", "logs", f"kit_{run}_agent.log"), "w", encoding="utf-8")
         agent = subprocess.Popen([sys.executable, os.path.join(PROJECT, "companion", "agent.py"), GOAL],
@@ -94,7 +94,7 @@ def main():
                 if name not in reached and server.find_in_output(f"[{name}]", watch_from):
                     reached.append(name)
                     log(f"Fortschritt: {name}")
-            deaths = [line for line in server._output[watch_from:] if "player_died" in line and "(aiplayer) Event" in line]
+            deaths = [line for line in server._output[watch_from:] if "player_died" in line and "(smartcraft) Event" in line]
             for line in deaths[deaths_seen:]:
                 cause = re.search(r'"message":"([^"]*)"', line)
                 log(f"TOD: {cause.group(1) if cause else '?'}")
@@ -108,7 +108,7 @@ def main():
                     result(f"Modell gab 6-mal auf ({where(server)}, {deaths_seen} Tode, zuletzt {reached[-1:] or '-'})")
                     break
                 log(f"Modell beendete das Ziel ({goal_ends}. Mal), Ziel neu gesetzt")
-                server.console(f"aiplayer goal {GOAL} Du hattest aufgehört, das Ziel ist aber nicht erreicht: mach weiter.")
+                server.console(f"smartcraft goal {GOAL} Du hattest aufgehört, das Ziel ist aber nicht erreicht: mach weiter.")
             if "Free the End" in reached:
                 result(f"ERFOLG (Drache besiegt, {deaths_seen} Tode)")
                 break

@@ -22,23 +22,23 @@ public abstract class ItemEntityMixin {
 	public abstract Entity getOwner();
 
 	@Unique
-	private int aiplayer$countBefore;
+	private int smartcraft$countBefore;
 	@Unique
-	private String aiplayer$itemBefore;
+	private String smartcraft$itemBefore;
 
 	/** Fabric API hat kein Event für „Item aufgehoben“: vorher Anzahl merken, danach vergleichen. */
 	@Inject(method = "playerTouch", at = @At("HEAD"))
-	private void aiplayer$beforePickup(Player player, CallbackInfo ci) {
+	private void smartcraft$beforePickup(Player player, CallbackInfo ci) {
 		ItemStack stack = getItem();
-		aiplayer$countBefore = stack.getCount();
-		aiplayer$itemBefore = Inv.itemId(stack);
+		smartcraft$countBefore = stack.getCount();
+		smartcraft$itemBefore = Inv.itemId(stack);
 	}
 
 	@Inject(method = "playerTouch", at = @At("RETURN"))
-	private void aiplayer$afterPickup(Player player, CallbackInfo ci) {
-		int picked = aiplayer$countBefore - getItem().getCount();
+	private void smartcraft$afterPickup(Player player, CallbackInfo ci) {
+		int picked = smartcraft$countBefore - getItem().getCount();
 		if (picked > 0 && !player.level().isClientSide()) {
-			Perception.onItemPickedUp(player, getOwner(), aiplayer$itemBefore, picked);
+			Perception.onItemPickedUp(player, getOwner(), smartcraft$itemBefore, picked);
 		}
 	}
 }

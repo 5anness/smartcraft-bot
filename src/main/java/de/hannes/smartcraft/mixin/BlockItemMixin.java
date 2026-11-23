@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class BlockItemMixin {
 	/** Fabric API hat kein Event für „Block gesetzt“, deshalb der Hook direkt nach dem Setzen. */
 	@Inject(method = "place", at = @At("RETURN"))
-	private void aiplayer$reportPlacedBlock(BlockPlaceContext context, CallbackInfoReturnable<InteractionResult> cir) {
+	private void smartcraft$reportPlacedBlock(BlockPlaceContext context, CallbackInfoReturnable<InteractionResult> cir) {
 		if (cir.getReturnValue().consumesAction() && !context.getLevel().isClientSide()) {
 			Perception.onBlockPlaced(context.getLevel(), context.getPlayer(), context.getClickedPos());
 		}

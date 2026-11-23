@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/make_obsidian.schema.json",
+	"$id": "smartcraft/commands/make_obsidian.schema.json",
 	"title": "make_obsidian: besorgt Obsidian bis count, ein Befehl für die ganze Arbeit. Baut erst liegendes Obsidian ab (nicht aus Portalrahmen), wandelt dann selbst Lavaquellen mit dem Wassereimer um (findet die Quelle und den Platz fürs Wasser allein), holt das Wasser zurück und baut ab. Braucht Diamantspitzhacke und Wassereimer. Nutze es statt bucket mit eigenen Koordinaten, sobald Lava oder Obsidian gemeldet ist.",
 	"args": {
 		"type": "object",

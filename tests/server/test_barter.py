@@ -15,7 +15,7 @@ PIGLIN = "{IsImmuneToZombification:1b,PersistenceRequired:1b}"
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-barter.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-barter.log")
     server = TestServer(log)
     report = Report()
     try:
@@ -24,7 +24,7 @@ def main():
         server.console("weather clear 1000000")
         server.console("time set midnight")
         server.console("gamerule advance_time false")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console(f"smartcraft join {BOT}", wait=5)
 
         # --- Ohne Gold: missing_item.
         x, z = 1100, 520
@@ -152,12 +152,12 @@ def main():
                      result["status"] == "failed" and result.get("reason") == "evaporates", summary(result))
 
         # --- Perlen-Lauf 5: Piglins finden über das Biom.
-        server.console("aiplayer locate on")
+        server.console("smartcraft locate on")
         server.console(f"execute in minecraft:the_nether run tp {BOT} 0 70 0", wait=3)
         result, _ = server.run("locate", {"structure": "crimson_forest"}, timeout=30)
         report.check("locate crimson_forest im Nether: ok mit approx_pos",
                      result["status"] == "ok" and "approx_pos" in result.get("data", {}), summary(result))
-        server.console("aiplayer locate off")
+        server.console("smartcraft locate off")
     finally:
         # Die Testwelt teilen sich alle Servertests: Zeit wieder laufen lassen (sonst scheitern night_falling und sleep).
         server.console("gamerule advance_time true")

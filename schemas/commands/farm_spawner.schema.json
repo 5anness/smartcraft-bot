@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/farm_spawner.schema.json",
+	"$id": "smartcraft/commands/farm_spawner.schema.json",
 	"title": "farm_spawner: geht zum nächsten Spawner (bis 24 Blöcke, ±12 in der Höhe), tötet alle Feinde dort (bis 12 Blöcke; in Reichweite mit dem Schwert, hoch schwebende Lohen mit dem Bogen, falls da; Feuer am Boden löscht er), hebt die Beute auf und bleibt am Spawner, bis count Stück von item im Inventar sind (outcome: enough) oder seconds um sind (outcome: time_up). Ein Befehl für das ganze Farmen. Schaden und Feuer brechen nicht ab, nur Leben bis min_health (cancelled: health_low). Er entfernt sich im Kampf höchstens 16 Blöcke vom Spawner: dann essen und erneut starten",
 	"args": {
 		"type": "object",

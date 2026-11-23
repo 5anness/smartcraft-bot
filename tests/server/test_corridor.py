@@ -18,12 +18,12 @@ Y = 100
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-corridor.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-corridor.log")
     server = TestServer(log)
     report = Report()
     try:
         server.console("gamerule spawn_mobs false")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console(f"smartcraft join {BOT}", wait=5)
         server.console(f"clear {BOT}")
         server.console(f"give {BOT} cobblestone 64")
         server.console(f"give {BOT} cobblestone 64")

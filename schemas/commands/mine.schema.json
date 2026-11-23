@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/mine.schema.json",
+	"$id": "smartcraft/commands/mine.schema.json",
 	"title": "mine: baut einen Block mit dem besten vorhandenen Werkzeug ab. Läuft vorher selbst in Reichweite und hebt danach auf, was herausfällt. Abbauen nur mit Sichtlinie wie ein Spieler: Liegt ein Block davor, baut er bis zu 4 solche Blöcke zuerst ab. Baut den Block unter den eigenen Füßen nur ab, wenn darunter fester Boden ist",
 	"args": {
 		"type": "object",

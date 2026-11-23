@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/bridge_connected.schema.json",
+	"$id": "smartcraft/events/bridge_connected.schema.json",
 	"title": "data von bridge_connected: erstes Event nach dem Verbinden des Begleitprozesses",
 	"type": "object",
 	"required": [

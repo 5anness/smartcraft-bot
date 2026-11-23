@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/reflex_left_lava.schema.json",
+	"$id": "smartcraft/events/reflex_left_lava.schema.json",
 	"title": "data von reflex_left_lava: Reflex des Mods: Der Bot stand in Lava und ist zum nächsten sicheren Feld gelaufen. Eine laufende Aktion hat so lange gewartet. Brennt er noch (on_fire), lauf weiter weg von Lava und iss",
 	"type": "object",
 	"required": [

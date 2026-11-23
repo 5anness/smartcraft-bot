@@ -2,7 +2,7 @@ package de.hannes.smartcraft.bot;
 
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
-import de.hannes.smartcraft.AiPlayerMod;
+import de.hannes.smartcraft.SmartCraftMod;
 import de.hannes.smartcraft.debug.DebugLog;
 import de.hannes.smartcraft.perception.DeathRecord;
 import de.hannes.smartcraft.perception.EventBus;
@@ -156,7 +156,7 @@ public final class BotManager {
 		onBotGone.accept(server.overworld().getGameTime());
 		forgetBot();
 		// Gleicher Weg wie bei einem echten Verbindungsende: Leave-Nachricht, Speichern, Tab-Liste.
-		leaving.connection.onDisconnect(new DisconnectionDetails(Component.literal("/aiplayer leave")));
+		leaving.connection.onDisconnect(new DisconnectionDetails(Component.literal("/smartcraft leave")));
 		botId = null;
 		log(server, "bot_left", leaving.getGameProfile().name(), leaving);
 		return Result.OK;
@@ -256,7 +256,7 @@ public final class BotManager {
 			pending = null;
 			forgetBot();
 			botId = null;
-			AiPlayerMod.LOGGER.error("KI-Spieler {} konnte nicht beitreten", name, e);
+			SmartCraftMod.LOGGER.error("KI-Spieler {} konnte nicht beitreten", name, e);
 			join.feedback().accept(Component.literal("Beitritt fehlgeschlagen: " + e));
 			log(server, "bot_join_failed", name, null);
 		}
@@ -287,6 +287,6 @@ public final class BotManager {
 			msg.add("pos", GameJson.pos(player.blockPosition()));
 		}
 		debugLog.write("session", server.overworld().getGameTime(), msg);
-		AiPlayerMod.LOGGER.info("{}", msg);
+		SmartCraftMod.LOGGER.info("{}", msg);
 	}
 }

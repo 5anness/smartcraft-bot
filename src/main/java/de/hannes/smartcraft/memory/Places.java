@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import de.hannes.smartcraft.AiPlayerMod;
+import de.hannes.smartcraft.SmartCraftMod;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Ortsgedächtnis: Werkbänke, Öfen, Truhen und Betten, die der Bot gesetzt oder gesehen hat, dazu wichtige Orte als
  * Gebiete (Bäume, Netherportale, Lavaseen, Spawner, Netherfestungen, Dörfer, Endportalräume).
- * Gilt pro Welt und liegt als {@code aiplayer/places.json} im Weltordner, übersteht also Neustarts.
+ * Gilt pro Welt und liegt als {@code smartcraft/places.json} im Weltordner, übersteht also Neustarts.
  * Nur auf dem Server-Thread benutzen.
  */
 public final class Places {
@@ -269,12 +269,14 @@ public final class Places {
 
 	private static void load(MinecraftServer server) {
 		PLACES.clear();
-		file = server.getWorldPath(LevelResource.ROOT).resolve("aiplayer").resolve("places.json");
-		if (!Files.exists(file)) {
+		file = server.getWorldPath(LevelResource.ROOT).resolve("smartcraft").resolve("places.json");
+		// Welten von vor der Umbenennung (23.11.2026): Orte aus dem alten Ordner übernehmen, gespeichert wird im neuen.
+		Path source = Files.exists(file) ? file : server.getWorldPath(LevelResource.ROOT).resolve("aiplayer").resolve("places.json");
+		if (!Files.exists(source)) {
 			return;
 		}
 		try {
-			JsonObject root = JsonParser.parseString(Files.readString(file, StandardCharsets.UTF_8)).getAsJsonObject();
+			JsonObject root = JsonParser.parseString(Files.readString(source, StandardCharsets.UTF_8)).getAsJsonObject();
 			for (JsonElement element : root.getAsJsonArray("places")) {
 				JsonObject json = element.getAsJsonObject();
 				Kind kind = Kind.byName(json.get("kind").getAsString());
@@ -286,7 +288,7 @@ public final class Places {
 			}
 		} catch (IOException | RuntimeException e) {
 			// Ein kaputtes Gedächtnis ist kein Grund, die Welt nicht zu starten: leer anfangen.
-			AiPlayerMod.LOGGER.warn("Ortsgedächtnis {} nicht lesbar, beginne leer", file, e);
+			SmartCraftMod.LOGGER.warn("Ortsgedächtnis {} nicht lesbar, beginne leer", file, e);
 			PLACES.clear();
 		}
 	}
@@ -314,7 +316,7 @@ public final class Places {
 			Files.createDirectories(file.getParent());
 			Files.writeString(file, root.toString(), StandardCharsets.UTF_8);
 		} catch (IOException e) {
-			AiPlayerMod.LOGGER.warn("Ortsgedächtnis {} nicht schreibbar", file, e);
+			SmartCraftMod.LOGGER.warn("Ortsgedächtnis {} nicht schreibbar", file, e);
 		}
 	}
 }

@@ -18,12 +18,12 @@ Y = 100
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-lava-island.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-lava-island.log")
     server = TestServer(log)
     report = Report()
     try:
         server.console("gamerule spawn_mobs false")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console(f"smartcraft join {BOT}", wait=5)
         server.console(f"clear {BOT}")
         x, z = 4200, 4200
         server.console(f"{NETHER} tp {BOT} {x}.5 {Y + 5} {z}.5", wait=2)

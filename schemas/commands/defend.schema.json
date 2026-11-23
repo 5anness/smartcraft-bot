@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/defend.schema.json",
+	"$id": "smartcraft/commands/defend.schema.json",
 	"title": "defend: bekämpft nacheinander alle feindlichen Mobs im Umkreis, den nächsten zuerst, ein zischender Creeper hat Vorrang. Endet mit ok, wenn keiner mehr da ist. Neutrale Wesen (Enderman, Zombie-Piglin, Wolf) nur, wenn sie den Bot angreifen. Kampfregeln wie bei attack",
 	"args": {
 		"type": "object",

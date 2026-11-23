@@ -11,7 +11,7 @@ import java.util.Locale;
 /**
  * Verbrauch der KI in der XP-Leiste der menschlichen Spieler: Level = ganze Cent, Balken = Bruchteil des nächsten Cents,
  * darüber als Text in der Aktionsleiste Tokens und Dollar. Wunsch von Hannes (28.10.2026), Standard an beim Join,
- * {@code /aiplayer xpbar on|off}.
+ * {@code /smartcraft xpbar on|off}.
  * <p>
  * Nur angezeigt: Der Mod schickt den Clients eigene XP-Pakete, die echten Erfahrungspunkte auf dem Server bleiben
  * unverändert. Beim Ausschalten bekommen die Clients wieder ihre echten Werte. Die Zahlen kommen vom Begleitprozess

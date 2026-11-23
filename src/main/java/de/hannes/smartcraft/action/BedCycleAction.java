@@ -1,7 +1,7 @@
 package de.hannes.smartcraft.action;
 
 import com.google.gson.JsonObject;
-import de.hannes.smartcraft.AiPlayerMod;
+import de.hannes.smartcraft.SmartCraftMod;
 import de.hannes.smartcraft.nav.Moves;
 import de.hannes.smartcraft.nav.Pos;
 import de.hannes.smartcraft.perception.GameJson;
@@ -159,7 +159,7 @@ public final class BedCycleAction extends Action {
 				return false;
 			}
 			if (breathNear(bot, bot.getX(), bot.getZ()) || breathNear(bot, approachX, approachZ)) {
-				AiPlayerMod.LOGGER.info("bed_cycle approach_aborted breath");
+				SmartCraftMod.LOGGER.info("bed_cycle approach_aborted breath");
 				approach.release(bot);
 				approach = null;
 				approachBlockedUntil = bot.tickCount + 100;
@@ -192,7 +192,7 @@ public final class BedCycleAction extends Action {
 		stopWalk(bot);
 		approachX = tx;
 		approachZ = tz;
-		AiPlayerMod.LOGGER.info("bed_cycle approach to " + ground.toShortString() + " from " + bot.blockPosition().toShortString());
+		SmartCraftMod.LOGGER.info("bed_cycle approach to " + ground.toShortString() + " from " + bot.blockPosition().toShortString());
 		approach = new GotoAction(bot, new Pos(ground.getX(), ground.getY(), ground.getZ()), 0.8, new Moves.Options(true, true));
 		return true;
 	}
@@ -229,7 +229,7 @@ public final class BedCycleAction extends Action {
 				best = dir;
 			}
 		}
-		AiPlayerMod.LOGGER.info("bed_cycle post_dir " + String.format("%.2f/%.2f", best.x, best.z) + " crystals=" + crystals.size()
+		SmartCraftMod.LOGGER.info("bed_cycle post_dir " + String.format("%.2f/%.2f", best.x, best.z) + " crystals=" + crystals.size()
 				+ " score=" + String.format("%.1f", bestScore));
 		return best;
 	}
@@ -326,7 +326,7 @@ public final class BedCycleAction extends Action {
 			if (failure == null) {
 				return true;
 			}
-			AiPlayerMod.LOGGER.info("bed_cycle cage_failed " + failure + " at " + cell.toShortString());
+			SmartCraftMod.LOGGER.info("bed_cycle cage_failed " + failure + " at " + cell.toShortString());
 		}
 		return false;
 	}
@@ -388,7 +388,7 @@ public final class BedCycleAction extends Action {
 				return null;
 			}
 			if (rest++ % 100 == 0) {
-				AiPlayerMod.LOGGER.info("bed_cycle on_post at " + bot.blockPosition());
+				SmartCraftMod.LOGGER.info("bed_cycle on_post at " + bot.blockPosition());
 			}
 			return null;
 		}
@@ -398,7 +398,7 @@ public final class BedCycleAction extends Action {
 				return null;
 			}
 			if (state == PillarUp.State.FAILED) {
-				AiPlayerMod.LOGGER.info("bed_cycle pillar_failed " + pillar.failure());
+				SmartCraftMod.LOGGER.info("bed_cycle pillar_failed " + pillar.failure());
 				if ("no_blocks".equals(pillar.failure())) {
 					JsonObject data = progress(bot);
 					data.addProperty("hint", "need building blocks (cobblestone/end_stone) for the post");
@@ -427,7 +427,7 @@ public final class BedCycleAction extends Action {
 			walk.release(bot);
 			walk = null;
 			if (done.status() != de.hannes.smartcraft.protocol.Event.Status.OK) {
-				AiPlayerMod.LOGGER.info("bed_cycle walk_failed " + done.reason());
+				SmartCraftMod.LOGGER.info("bed_cycle walk_failed " + done.reason());
 				shift++;
 			}
 		}
@@ -469,7 +469,7 @@ public final class BedCycleAction extends Action {
 		Vec3 eye = bot.getEyePosition();
 		if (eye.distanceTo(head.position()) > REACH + 4) {
 			if (bot.tickCount - lastBoomTick <= 40) {
-				AiPlayerMod.LOGGER.info(String.format(java.util.Locale.ROOT, "bed_cycle far +%d phase=%s head=%.1f/%.1f/%.1f eye=%.1f/%.1f/%.1f",
+				SmartCraftMod.LOGGER.info(String.format(java.util.Locale.ROOT, "bed_cycle far +%d phase=%s head=%.1f/%.1f/%.1f eye=%.1f/%.1f/%.1f",
 						bot.tickCount - lastBoomTick, dragon.getPhaseManager().getCurrentPhase().getPhase(), head.getX(), head.getY(), head.getZ(), eye.x, eye.y, eye.z));
 			}
 			return false;
@@ -478,7 +478,7 @@ public final class BedCycleAction extends Action {
 		BlockPos feet = bot.blockPosition();
 		boolean afterBoom = bot.tickCount - lastBoomTick <= 40;
 		if (afterBoom || debugTicks++ % 10 == 0) {
-			AiPlayerMod.LOGGER.info(String.format(java.util.Locale.ROOT, "bed_cycle near phase=%s head=%.1f/%.1f/%.1f eye=%.1f/%.1f/%.1f",
+			SmartCraftMod.LOGGER.info(String.format(java.util.Locale.ROOT, "bed_cycle near phase=%s head=%.1f/%.1f/%.1f eye=%.1f/%.1f/%.1f",
 					dragon.getPhaseManager().getCurrentPhase().getPhase(), head.getX(), head.getY(), head.getZ(), eye.x, eye.y, eye.z));
 		}
 		java.util.Map<String, Integer> why = new java.util.TreeMap<>();
@@ -534,7 +534,7 @@ public final class BedCycleAction extends Action {
 			}
 		}
 		if (afterBoom || debugTicks % 10 == 1) {
-			AiPlayerMod.LOGGER.info("bed_cycle why " + why);
+			SmartCraftMod.LOGGER.info("bed_cycle why " + why);
 		}
 		return false;
 	}
@@ -601,7 +601,7 @@ public final class BedCycleAction extends Action {
 		}
 		String failure = BlockPlacer.place(bot, bedSlot(bot), cell);
 		if (failure != null || !(level.getBlockState(cell).getBlock() instanceof BedBlock)) {
-			AiPlayerMod.LOGGER.info("bed_cycle place_failed " + failure + " at " + cell);
+			SmartCraftMod.LOGGER.info("bed_cycle place_failed " + failure + " at " + cell);
 			cooldown = 2;
 			return false;
 		}
@@ -614,7 +614,7 @@ public final class BedCycleAction extends Action {
 		if (after < before) {
 			hits++;
 		}
-		AiPlayerMod.LOGGER.info(String.format(java.util.Locale.ROOT, "bed_cycle boom mode=%s phase=%s headY=%.1f bed=%s self=%.1f dragon %.1f -> %.1f", mode,
+		SmartCraftMod.LOGGER.info(String.format(java.util.Locale.ROOT, "bed_cycle boom mode=%s phase=%s headY=%.1f bed=%s self=%.1f dragon %.1f -> %.1f", mode,
 				dragon.getPhaseManager().getCurrentPhase().getPhase(), dragon.getSubEntities()[0].getY(), cell.toShortString(), selfDamage(bot, cell), before, after));
 		cooldown = COOLDOWN;
 		lastBoomTick = bot.tickCount;

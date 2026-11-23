@@ -22,16 +22,16 @@ def counts(server):
 
 
 def main():
-    log = os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-junk.log")
+    log = os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-junk.log")
     server = TestServer(log)
     report = Report()
     try:
         server.console("gamerule spawn_mobs false")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console(f"smartcraft join {BOT}", wait=5)
         x, z = 820, 520
         arena(server, x, z)
         server.console(f"clear {BOT}")
-        server.console("aiplayer kit nether", wait=1)
+        server.console("smartcraft kit nether", wait=1)
         for item, amount in (("raw_iron", 5), ("coal_ore", 3), ("diamond", 2), ("redstone", 9), ("lapis_lazuli", 4),
                              ("cobblestone", 64), ("cobblestone", 64), ("cobbled_deepslate", 64), ("granite", 30),
                              ("tuff", 20), ("gravel", 5), ("diorite", 12), ("andesite", 7), ("calcite", 9),

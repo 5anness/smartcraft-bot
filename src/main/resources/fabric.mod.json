@@ -11,7 +11,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"de.hannes.smartcraft.AiPlayerMod"
+			"de.hannes.smartcraft.SmartCraftMod"
 		],
 		"client": [
 			"de.hannes.smartcraft.client.ShotClient"

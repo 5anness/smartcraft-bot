@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/bed_cycle.schema.json",
+	"$id": "smartcraft/commands/bed_cycle.schema.json",
 	"title": "bed_cycle: nur im End, braucht Betten (mind. 5) und 32 Bausteine. Besiegt den Drachen OHNE Kristalle zu zerstören: baut einen Käfig etwa 8 Blöcke vom Brunnen, geht beim Hocken unter den Kopf und sprengt jedes Mal, wenn der Kopf in Reichweite ist (Hocken, Abheben, Vorbeiflug), ein Bett direkt unter dem Kopf, alle 0,5 s. Vier Treffer in Folge töten den Drachen. Endet mit dragon_dead, no_beds, no_blocks oder health_low (essen, dann wieder bed_cycle). Ergebnis: dragon_health, beds_used, hits",
 	"args": {
 		"type": "object",

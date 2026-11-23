@@ -128,18 +128,18 @@ def main():
 
     # Alte Welt gleichen Namens löschen: Lauf 101 lief in der Welt eines abgebrochenen Versuchs ohne Drachen.
     import shutil
-    shutil.rmtree(os.path.join(PROJECT, os.environ.get("AIPLAYER_TEST_RUNDIR", "run"), world), ignore_errors=True)
+    shutil.rmtree(os.path.join(PROJECT, os.environ.get("SMARTCRAFT_TEST_RUNDIR", "run"), world), ignore_errors=True)
     server = TestServer(os.path.join(PROJECT, "run", "logs", f"end_fight_{run}_server.log"), world=world, seed=seed)
     agent = None
     try:
         server.console("difficulty normal")
-        server.console(f"aiplayer join {BOT}", wait=6)
+        server.console(f"smartcraft join {BOT}", wait=6)
         for _ in range(30):
             answer, _ = server.run("inventory", timeout=10)
             if answer and answer.get("status") == "ok":
                 break
             time.sleep(2)
-        server.console("aiplayer locate off")
+        server.console("smartcraft locate off")
         server.console(f"clear {BOT}")
         for item in ITEMS:
             server.console(f"give {BOT} {item}", wait=0.1)
@@ -170,7 +170,7 @@ def main():
             result("ungültig (nicht im End)")
             return 1
 
-        env = {**os.environ, "AIPLAYER_PORT": str(PORT), "AIPLAYER_TTS": "0", "AIPLAYER_MAX_STEPS": "3000",
+        env = {**os.environ, "SMARTCRAFT_PORT": str(PORT), "SMARTCRAFT_TTS": "0", "SMARTCRAFT_MAX_STEPS": "3000",
                "PYTHONIOENCODING": "utf-8", "PYTHONUNBUFFERED": "1"}
         agent_out = open(os.path.join(PROJECT, "run", "logs", f"end_fight_{run}_agent.log"), "w", encoding="utf-8")
         agent = subprocess.Popen([sys.executable, os.path.join(PROJECT, "companion", "agent.py"), GOAL],

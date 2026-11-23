@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/eat.schema.json",
+	"$id": "smartcraft/commands/eat.schema.json",
 	"title": "eat: isst ein Item aus dem Inventar. Ohne item wählt der Bot das beste Essen: am meisten Sättigung, nichts Schädliches (verdorbenes Fleisch, Spinnenauge, rohes Huhn), solange es etwas anderes gibt; Essen mit Sonderwirkung (goldener Apfel) erst danach. Schaden bricht das Essen nicht ab",
 	"args": {
 		"type": "object",

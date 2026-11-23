@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/chat.schema.json",
+	"$id": "smartcraft/commands/chat.schema.json",
 	"title": "chat: schreibt eine Nachricht in den Chat, sichtbar für alle Spieler wie die Nachricht eines echten Spielers. Für kurze Mitteilungen an den Menschen (was der Bot vorhat, was fehlt, dass er fertig ist), nicht für jeden Handgriff. Geht auch, während eine Aktion läuft, und bricht sie nicht ab",
 	"args": {
 		"type": "object",

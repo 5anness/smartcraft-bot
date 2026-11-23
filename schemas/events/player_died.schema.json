@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/events/player_died.schema.json",
+	"$id": "smartcraft/events/player_died.schema.json",
 	"title": "data von player_died: Der Bot ist gestorben. Priorität high",
 	"type": "object",
 	"required": [

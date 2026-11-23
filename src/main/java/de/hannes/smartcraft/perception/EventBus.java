@@ -1,7 +1,7 @@
 package de.hannes.smartcraft.perception;
 
 import com.google.gson.JsonObject;
-import de.hannes.smartcraft.AiPlayerMod;
+import de.hannes.smartcraft.SmartCraftMod;
 import de.hannes.smartcraft.debug.DebugLog;
 import de.hannes.smartcraft.protocol.Command;
 import de.hannes.smartcraft.protocol.Event;
@@ -64,7 +64,7 @@ public final class EventBus {
 		JsonObject json = event.toJson();
 		JsonObject logged = masked(json);
 		debugLog.write(kind, event.tick(), logged);
-		AiPlayerMod.LOGGER.info("Event: {}", logged);
+		SmartCraftMod.LOGGER.info("Event: {}", logged);
 
 		for (Consumer<Event> listener : listeners) {
 			listener.accept(event);

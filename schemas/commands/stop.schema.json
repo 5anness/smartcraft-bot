@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/stop.schema.json",
+	"$id": "smartcraft/commands/stop.schema.json",
 	"title": "stop: bricht die laufende Aktion ab. Deren Ergebnis kommt als cancelled mit reason stopped; stop selbst ist immer ok",
 	"args": {
 		"type": "object",

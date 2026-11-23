@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/event.schema.json",
+	"$id": "smartcraft/event.schema.json",
 	"title": "Event (Mod → Begleitprozess), Protokollversion 1",
 	"type": "object",
 	"required": [

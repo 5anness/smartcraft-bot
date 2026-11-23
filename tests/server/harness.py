@@ -20,13 +20,13 @@ import time
 PROJECT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 # Eigener Port für Tests: Auf dem Standardport 25599 kann gleichzeitig ein echtes Spiel laufen,
 # und dessen Bot darf keine Testbefehle bekommen.
-PORT = int(os.environ.get("AIPLAYER_TEST_PORT", "25598"))
+PORT = int(os.environ.get("SMARTCRAFT_TEST_PORT", "25598"))
 # Ticks pro Sekunde für die Tests (Spiel: 20). Mehr Ticks lassen die Aktionen schneller ablaufen; die
 # Zeitgrenzen der Tests in echten Sekunden werden dadurch nur großzügiger.
-TICK_RATE = int(os.environ.get("AIPLAYER_TEST_TICK_RATE", "20"))
+TICK_RATE = int(os.environ.get("SMARTCRAFT_TEST_TICK_RATE", "20"))
 # Mehrere Testserver gleichzeitig: eigener Spielordner (relativ zum Projekt) und eigener Spielport je Instanz.
-RUN_DIR = os.environ.get("AIPLAYER_TEST_RUNDIR", "run")
-TEST_GAME_PORT = os.environ.get("AIPLAYER_TEST_GAMEPORT")
+RUN_DIR = os.environ.get("SMARTCRAFT_TEST_RUNDIR", "run")
+TEST_GAME_PORT = os.environ.get("SMARTCRAFT_TEST_GAMEPORT")
 
 
 class TestServer:
@@ -76,7 +76,7 @@ class TestServer:
         gradlew = "gradlew.bat" if os.name == "nt" else "./gradlew"
         self._process = subprocess.Popen(
             [os.path.join(PROJECT, gradlew), "runServer", "--console=plain", f"-PaiRunDir={RUN_DIR}"],
-            cwd=PROJECT, env={**os.environ, "AIPLAYER_PORT": str(PORT)}, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            cwd=PROJECT, env={**os.environ, "SMARTCRAFT_PORT": str(PORT)}, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             text=True, encoding="utf-8", errors="replace", shell=(os.name == "nt"))
         threading.Thread(target=self._read_server_output, daemon=True).start()
 
@@ -227,7 +227,7 @@ class TestServer:
             pass
 
 
-SHOT_PORT = int(os.environ.get("AIPLAYER_SHOT_PORT", "25597"))
+SHOT_PORT = int(os.environ.get("SMARTCRAFT_SHOT_PORT", "25597"))
 GAME_PORT = 25565  # server.properties: server-port
 
 
@@ -266,15 +266,15 @@ class Camera:
         args = f"--username {self.spectator} --quickPlayMultiplayer 127.0.0.1:{GAME_PORT}"
         self._process = subprocess.Popen(
             [gradlew, "runClient", "--console=plain", f"--args={args}"], cwd=PROJECT,
-            env={**os.environ, "AIPLAYER_SHOT_PORT": str(SHOT_PORT)},
-            stdout=open(os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-client.log"), "w", encoding="utf-8"),
+            env={**os.environ, "SMARTCRAFT_SHOT_PORT": str(SHOT_PORT)},
+            stdout=open(os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-client.log"), "w", encoding="utf-8"),
             stderr=subprocess.STDOUT, shell=(os.name == "nt"))
         deadline = time.time() + timeout
         while time.time() < deadline:
             if self.server.find_in_output(f"{self.spectator} joined the game", mark):
                 break
             if self._process.poll() is not None:
-                raise RuntimeError("Kamera-Client ist beendet, siehe aiplayer-test-client.log")
+                raise RuntimeError("Kamera-Client ist beendet, siehe smartcraft-test-client.log")
             time.sleep(1.0)
         else:
             raise RuntimeError("Kamera ist dem Server nicht beigetreten")

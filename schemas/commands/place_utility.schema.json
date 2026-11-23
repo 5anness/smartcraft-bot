@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/place_utility.schema.json",
+	"$id": "smartcraft/commands/place_utility.schema.json",
 	"title": "place_utility: stellt Werkbank, Ofen oder Truhe aus dem Inventar auf einen freien Platz mit festem Boden neben dem Bot (oder nahe einer Position) und merkt sich die Stelle für craft, smelt, store und take",
 	"args": {
 		"type": "object",

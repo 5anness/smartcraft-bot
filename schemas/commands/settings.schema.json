@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/commands/settings.schema.json",
+	"$id": "smartcraft/commands/settings.schema.json",
 	"title": "settings: nur für den Begleitprozess, nicht für das Modell. Setzt die übergebenen Einstellungen (Startwerte aus seiner Umgebung) und liefert alle aktuellen zurück; geht auch ohne Bot. Der Mod ist die Quelle der Wahrheit, spätere Änderungen kommen als control_requested mit action settings",
 	"args": {
 		"type": "object",
@@ -46,7 +46,7 @@
 			},
 			"api_key": {
 				"type": "string",
-				"description": "Nur wenn vor dem Verbinden /aiplayer apikey gegeben wurde (einmalig); der Begleitprozess speichert ihn in companion/api_key.txt, in Logs steht ***"
+				"description": "Nur wenn vor dem Verbinden /smartcraft apikey gegeben wurde (einmalig); der Begleitprozess speichert ihn in companion/api_key.txt, in Logs steht ***"
 			}
 		}
 	},

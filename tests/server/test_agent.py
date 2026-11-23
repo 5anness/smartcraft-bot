@@ -4,13 +4,13 @@ Aufruf:  python tests/server/test_agent.py
 
 Geprüft wird alles um den Modellaufruf herum: Tools aus den Schemas, Befehle an den Mod und
 Ergebnisse zurück, `chat` im Spielchat, Notizblock, `wait`, Kostenrechnung und Kostenlimit sowie
-`/aiplayer goal` und `/aiplayer stop` aus dem Spiel. Der echte Aufruf der API ist nicht Teil des Tests.
+`/smartcraft goal` und `/smartcraft stop` aus dem Spiel. Der echte Aufruf der API ist nicht Teil des Tests.
 """
 
 import os
 
 # Der Test prüft auch den Chat des Bots, der sonst vorübergehend aus ist.
-os.environ.setdefault("AIPLAYER_CHAT", "full")
+os.environ.setdefault("SMARTCRAFT_CHAT", "full")
 import sys
 import tempfile
 import threading
@@ -20,8 +20,8 @@ from types import SimpleNamespace
 sys.path.insert(0, os.path.dirname(__file__))
 from harness import PORT, PROJECT, Report, TestServer  # noqa: E402
 
-os.environ["AIPLAYER_PORT"] = str(PORT)
-os.environ["AIPLAYER_COST_LIMIT"] = "2.0"  # Standard ist kein Limit; der Test prüft das Limit
+os.environ["SMARTCRAFT_PORT"] = str(PORT)
+os.environ["SMARTCRAFT_COST_LIMIT"] = "2.0"  # Standard ist kein Limit; der Test prüft das Limit
 os.environ.setdefault("ANTHROPIC_API_KEY", "test-kein-echter-schluessel")
 sys.path.insert(0, os.path.join(PROJECT, "companion"))
 import agent as agent_module  # noqa: E402
@@ -71,12 +71,12 @@ def main():
     # Das Drehbuch beendet jedes Ziel zweimal: einmal fragt der Herzschlag nach, dann ist Schluss.
     agent_module.MAX_END_CHECKS = 1
     agent_module.LOG_DIR = tempfile.mkdtemp()
-    server = TestServer(os.path.join(os.environ.get("TEMP", "."), "aiplayer-test-agent.log"))
+    server = TestServer(os.path.join(os.environ.get("TEMP", "."), "smartcraft-test-agent.log"))
     try:
         server.console("gamerule spawn_mobs false")
         server.console("time set noon")
-        server.console("aiplayer events off")
-        server.console(f"aiplayer join {BOT}", wait=5)
+        server.console("smartcraft events off")
+        server.console(f"smartcraft join {BOT}", wait=5)
         server.console(f"tp {BOT} 300 -60 300", wait=1)
 
         tools = agent_module.load_tools()
@@ -174,19 +174,19 @@ def main():
                      and server.find_in_output("Kostenlimit", mark) is not None,
                      f"{len(model.requests)} Aufrufe, {bot.cost:.2f} $")
 
-        # --- Ziel 3 aus dem Spiel, mit /aiplayer stop während einer langen Aktion
+        # --- Ziel 3 aus dem Spiel, mit /smartcraft stop während einer langen Aktion
         model = ScriptedModel([[tool("goto", pos=[380, -60, 300])], [text("Sollte nie gefragt werden.")]])
         bot.client = SimpleNamespace(messages=model, beta=SimpleNamespace(messages=model))
         runner = threading.Thread(target=bot.run_forever, args=(None,), daemon=True)
         runner.start()
         time.sleep(1.0)
         mark = server.output_mark()
-        server.console("aiplayer goal Lauf nach Osten", wait=3)
-        report.check("/aiplayer goal: Ziel kommt beim Begleitprozess an, Modell wird gefragt",
+        server.console("smartcraft goal Lauf nach Osten", wait=3)
+        report.check("/smartcraft goal: Ziel kommt beim Begleitprozess an, Modell wird gefragt",
                      len(model.requests) == 1 and "Lauf nach Osten" in model.requests[0]["messages"][0]["content"],
                      (server.find_in_output("Ziel an die KI", mark) or "").strip()[-60:])
-        server.console("aiplayer stop", wait=3)
-        report.check("/aiplayer stop: Ziel endet, das Modell wird nicht mehr gefragt",
+        server.console("smartcraft stop", wait=3)
+        report.check("/smartcraft stop: Ziel endet, das Modell wird nicht mehr gefragt",
                      len(model.requests) == 1 and server.find_in_output("KI gestoppt", mark) is not None)
 
         # --- Chat im Leerlauf beginnt ein Gespräch; eine Nachricht während einer Aktion hält sie an

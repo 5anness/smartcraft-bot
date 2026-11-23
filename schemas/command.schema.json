@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "aiplayer/command.schema.json",
+	"$id": "smartcraft/command.schema.json",
 	"title": "Befehl (Begleitprozess → Mod), Protokollversion 1. Jeder Befehl wird mit genau einem <name>_result beantwortet",
 	"type": "object",
 	"required": [
